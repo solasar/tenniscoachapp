@@ -1,0 +1,232 @@
+<html>
+<html lang="en"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="description" content="">
+		<meta name="author" content="">
+		<link rel="icon" href="http://getbootstrap.com/favicon.ico">
+
+		<title>Practice</title>
+
+		<!-- Bootstrap core CSS -->
+		<link href="../css/bootstrap.css" rel="stylesheet">
+
+		<!-- Custom styles for this template -->
+		<link href="../css/custom.css" rel="stylesheet">
+		<link href="../css/addplayer.css" rel="stylesheet">
+
+		<!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+		<!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+		<script src="../js/ie-emulation-modes-warning.js"></script>
+
+		<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+		<script src="../js/ie10-viewport-bug-workaround.js"></script>
+
+		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+		<!--[if lt IE 9]>
+			<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+			<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+		<![endif]-->
+		
+		<!-- other css -->
+		<link href="../css/style.css" rel="stylesheet">
+	</head>
+<body>
+
+	<!-- Fixed navbar -->
+	<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="#">Tennis In or Out</a>
+			</div>
+			<div class="navbar-collapse collapse">
+				<ul class="nav navbar-nav">
+					<li><a href="http://54.88.27.81:8080/TennisInOrOutCode/pages/home.html">Home</a></li>
+					<li class="active"><a href="http://54.88.27.81:8080/TennisInOrOutCode/pages/manageplayers.html">Manage Players</a></li>
+				</ul>
+				<ul class="nav navbar-nav navbar-right">
+					<li><a href="http://54.88.27.81:8080/TennisInOrOutCode/pages/manageaccount.html">Manage Account</a></li>
+					<li><a href="http://54.88.27.81:8080/TennisInOrOutCode/pages/">Logout</a></li>
+				</ul>
+			</div><!--/.nav-collapse -->
+		</div>
+	</div>
+	
+	<div class="container">
+		<form class="form-horizontal" role="form" style="max-width:400px;">
+			<fieldset>
+			
+			<!-- Form Name -->
+			<legend>Practice Session</legend>
+			
+			<div>
+				<label for="ShotAttemptNumber">Shot attempt:</label>
+				<div id="ShotAttemptNumber" name="ShotAttemptNumber">1</div>
+			</div>
+			
+			<!-- Select Basic -->
+			<div class="control-group">
+			  <label class="control-label" for="PlayerID">Player</label>
+			  <div class="controls">
+			    <select id="PlayerID" name="PlayerID" class="input-xlarge">
+			    </select>
+			  </div>
+			</div>
+			
+			<!-- Select Basic -->
+			<div class="control-group">
+			  <label class="control-label" for="ExpectedTargetZoneID">Expected Target</label>
+			  <div class="controls">
+			    <select id="ExpectedTargetZoneID" name="ExpectedTargetZoneID" class="input-xlarge">
+			      <option value="147">Left Baseline</option>
+			      <option value="148">Centre Mark</option>
+			    </select>
+			  </div>
+			</div>
+			
+			<!-- Select Basic -->
+			<div class="control-group">
+			  <label class="control-label" for="ActualTargetZoneID">Actual Target</label>
+			  <div class="controls">
+			    <select id="ActualTargetZoneID" name="ActualTargetZoneID" class="input-xlarge">
+			      <option value="147">Left Baseline</option>
+			      <option value="148">Centre Mark</option>
+			    </select>
+			  </div>
+			</div>
+			
+			<!-- Select Basic -->
+			<div class="control-group">
+			  <label class="control-label" for="ActualShotTypeID">Actual Stroke Type</label>
+			  <div class="controls">
+			    <select id="ActualShotTypeID" name="ActualShotTypeID" class="input-xlarge">
+			      <option value="70">Forehand</option>
+			      <option value="71">Backhand</option>
+			    </select>
+			  </div>
+			</div>
+			
+			<!-- Select Basic -->
+			<div class="control-group">
+			  <label class="control-label" for="HitQualityID">Hit Quality</label>
+			  <div class="controls">
+			    <select id="HitQualityID" name="HitQualityID" class="input-xlarge">
+			      <option value="103">On Target</option>
+			      <option value="104">Beyond Baseline and Left Singles Line</option>
+			    </select>
+			  </div>
+			</div>
+			
+			<!-- Button (Double) -->
+			<div class="control-group">
+			  <div class="controls">
+			    <button id="log" name="log" class="btn btn-default">Log Attempt</button>
+			    <button id="next" name="next" class="btn btn-success">Next Shot</button>
+			    <button id="done" name="done" class="btn btn-danger">Done</button>
+			  </div>
+			</div>
+			
+			</fieldset>
+		</form>
+	</div>
+	
+	<div class="toshow" align="center" id="error">
+		<div class="alert alert-danger" style="max-width:400px;">
+			<strong id="errorMessage"></strong>
+		</div>
+	</div>
+
+	<script
+		src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+	<script src="../js/bootstrap.min.js"></script>
+	<script src="../js/jquery-1.11.1.min.js"></script>
+    <script src="../js/jasny-bootstrap.min.js"></script>
+
+	<script>		
+		$(document).ready(function() {
+			var attempt = 1;
+			
+			$.ajax({
+				type: "GET",
+				url: "http://54.88.27.81:8080/TennisInOrOutCode/SVC/User/GetPlayerByCoachId?CoachID=" + getCookie("CoachID"),
+				success: function(xml, textStatus, jqXHR){
+					$(xml).find("Player").each(function() {
+						var playerId = $(this).find("PlayerID").text();
+						var firstName = $(this).find("FirstName").text();
+	                	var lastName = $(this).find("LastName").text();
+						$("#PlayerID").append($("<option/>", {
+							value: playerId,
+							text: firstName + " " + lastName
+						}));
+					});
+				},
+				error: function(jqXHR, textStatus, errorThrown) {
+					alert(errorThrown);
+				},
+				beforeSend:function(){
+				}
+			});
+			
+			$("#log").click(function(){
+				var gameId = "GameID=" + getCookie("GameID") + "&";
+				var expectedShotTypeId = "ExpectedShotTypeID=" + getCookie("StrokeTypeID") + "&";
+				var playerPosition = "PlayerAPositionID=" + getCookie("PositionTypeID") + "&";
+				var shotAttemptNumber = "ShotAttemptNumber=" + attempt + "&";
+				
+				var data=$("form").serialize();
+				var extra="HitQualityDescription=OnTarget&PlayerTypeID=49&UnforcedForcedConditionID=0&OpponentAPositionID=0&OpponentBPositionID=0&PlayerBPositionID=0&ShotPoints=0&WinErrorConditionID=0&";
+				$.ajax({
+					type: "POST",
+					dataType: "xml",
+					url: "http://54.88.27.81:8080/TennisInOrOutCode/SVC/Feature/CreateShotByGameIdAndPlayerId?" + gameId + expectedShotTypeId + playerPosition + shotAttemptNumber + extra + data,
+					success: function(xml, textStatus, jqXHR){
+						var status = $(xml).find("StatusMessage").text();
+						if (status == "Shot created") {
+							attempt += 1;
+							$("#ShotAttemptNumber").html(attempt);
+						} else {
+							$("#errorMessage").html(status);
+							$("#error").show();
+						}
+					},
+					error: function(jqXHR, textStatus, errorThrown) {
+						alert(errorThrown);
+					},
+					beforeSend:function(){
+					}
+				});
+				return false;
+			});
+			
+			$("#next").click(function(){
+				attempt = 1;
+				$("#ShotAttemptNumber").html(attempt);
+				return false;
+			});
+			
+			$("#done").click(function(){
+				window.location="home.html";
+				return false;
+			});
+		});
+		
+		function getCookie(cname) {
+		    var name = cname + "=";
+		    var ca = document.cookie.split(';');
+		    for(var i=0; i<ca.length; i++) {
+		        var c = ca[i].trim();
+		        if (c.indexOf(name) == 0) return c.substring(name.length, c.length);
+		    }
+		    return "";
+		}
+	</script>
+</body>
+</html>

@@ -1,0 +1,400 @@
+<html>
+<html lang="en"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="description" content="">
+		<meta name="author" content="">
+		<link rel="icon" href="http://getbootstrap.com/favicon.ico">
+
+		<title>Select Target Game Players</title>
+
+		<!-- Bootstrap core CSS -->
+		<link href="../../css/bootstrap.css" rel="stylesheet">
+
+		<!-- Custom styles for this template -->
+		<link href="../../css/custom.css" rel="stylesheet">
+
+		<!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+		<!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+		<script src="../../js/ie-emulation-modes-warning.js"></script>
+
+		<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+		<script src="../../js/ie10-viewport-bug-workaround.js"></script>
+
+		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+		<!--[if lt IE 9]>
+			<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+			<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+		<![endif]-->
+	</head>
+<body background-color="#D4D4D4">
+
+	<!-- Fixed navbar -->
+	<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="#">Tennis In or Out</a>
+			</div>
+			<div class="navbar-collapse collapse">
+				<ul class="nav navbar-nav">
+					<li><a href="../home.html">Home</a></li>
+					<li class="active"><a href="../players/manageplayers.html">Manage Players</a></li>
+				</ul>
+				<ul class="nav navbar-nav navbar-right">
+					<li><a href="../manageaccount.html">Manage Account</a></li>
+					<li><a href="http://54.88.27.81:8080/TennisInOrOutCode/pages/">Logout</a></li>
+				</ul>
+			</div><!--/.nav-collapse -->
+		</div>
+	</div>
+
+	<div class="container" style="padding-top:50px;">
+		<div class="col-md-6 col-md-offset-3" align="center">
+			<div class="panel panel-default">
+					<div class="panel-heading">Shot Description</div>
+					<div class="panel-body" align="left">
+						<div id="playername"></div>
+						<div id="targetgametype"></div>
+						<div id="attemptnumber"></div>
+						<div id="playerskill"></div>
+						<div id="playerposition"></div>
+					</div>
+			</div>
+			
+			<div class="panel panel-default">
+					<div class="panel-heading">Shot Result</div>
+					<div class="panel-body" align="left">
+						<div id="strokeType"></div>
+						<div id="expectedTarget"></div>
+						<div id="shotresult"></div>
+						<div id="points"></div>
+					</div>
+			</div>
+			
+			<div class="panel panel-default">
+					<div class="panel-heading">Game Results</div>
+					<div id="playerlist" class="panel-body" align="left">
+
+					</div>
+			</div>
+			
+			<a href="target-game-shot.html" class="btn btn-lg btn-primary">
+            	Continue
+			</a>
+			
+	   		<button id="finish" class="btn btn-lg btn-primary">
+            	Finish
+			</button>
+		</div>
+	
+
+	<script	src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+	<script src="../../js/bootstrap.min.js"></script>
+	<script src="../../js/jquery-1.11.1.min.js"></script>
+    <script src="../../js/jasny-bootstrap.min.js"></script>
+	<script>		
+		$(document).ready(function() {
+				
+				//Gets all the players of the current target game.
+				var players = JSON.parse(localStorage.getItem("targetGamePlayers"));
+				
+				//Gets the current player of the target game that just made a shot.
+				var currentPlayerIndex = localStorage.getItem("targetGameCurrentPlayer");
+				var currentPlayer = players[currentPlayerIndex];
+				
+				//Gets the current attempt number of the current player.
+				var currentPlayerAttemptKey = String(currentPlayer) + "targetGamePlayerAttemptNumber";
+				$('#attemptnumber').append("Attempt Number: " + sessionStorage.getItem(currentPlayerAttemptKey));
+				
+				getCurrentPlayer(currentPlayer);
+				
+				//Gets the expected target and stroke type of the player's shot.
+				var expectedTarget = localStorage.getItem("targetGameExpectedTargetID");
+				var strokeType = localStorage.getItem("targetGameStrokeTypeID");
+				
+				//Sets the text of the score screen based on the expected target zone.
+				if (expectedTarget == 147) {
+					$("#expectedTarget").text("Left Base Line");
+				} else if (expectedTarget == 148) {
+					$("#expectedTarget").text("Center Mark");
+				} else if (expectedTarget == 149) {
+					$("#expectedTarget").text("Right Base Line");
+				} else if (expectedTarget == 150) {
+					$("#expectedTarget").text("Left Service Line");
+				} else if (expectedTarget == 151) {
+					$("#expectedTarget").text("T Service Line");
+				} else if (expectedTarget == 152) {
+					$("#expectedTarget").text("Right Service Line");
+				} else if (expectedTarget == 153) {
+					$("#expectedTarget").text("Left of Deuce Service Box");
+				} else if (expectedTarget == 154) {
+					$("#expectedTarget").text("Middle of Deuce Service Box");
+				} else if (expectedTarget == 155) {
+					$("#expectedTarget").text("Right of Deuce Service Box");
+				} else if (expectedTarget == 156) {
+					$("#expectedTarget").text("Left of Advantage Service Box");
+				} else if (expectedTarget == 157) {
+					$("#expectedTarget").text("Middle of Advantage Service Box");
+				} else if (expectedTarget == 158) {
+					$("#expectedTarget").text("Right of Advantage Service Box");
+				} else if (expectedTarget == 159) {
+					$("#expectedTarget").text("Left Net Area");
+				} else if (expectedTarget == 160) {
+					$("#expectedTarget").text("Middle Net Area");
+				} else if (expectedTarget == 161) {
+					$("#expectedTarget").text("Right Net Area");
+				}
+
+				//Sets the text of the score screen based on the expected stroke type.
+				if (strokeType == 70) {
+					$("#strokeType").text("Forehand");
+				} else if(strokeType == 71) {
+					$("#strokeType").text("Backhand");
+				} else if(strokeType == 72) {
+					$("#strokeType").text("Forehand Volley");
+				} else if(strokeType == 73) {
+					$("#strokeType").text("Backhand Volley");
+				} else if(strokeType == 74) {
+					$("#strokeType").text("Serve Deuce");
+				} else if(strokeType == 75) {
+					$("#strokeType").text("Serve Advantage");
+				} else if(strokeType == 76) {
+					$("#strokeType").text("Serve");
+				} else if(strokeType == 77) {
+					$("#strokeType").text("Forehand Approach");
+				} else if(strokeType == 78) {
+					$("#strokeType").text("Backhand Approach");
+				} else if(strokeType == 79) {
+					$("#strokeType").text("Forehand Lob");
+				} else if(strokeType == 80) {
+					$("#strokeType").text("Backhand Lob");
+				} else if(strokeType == 81) {
+					$("#strokeType").text("Overhead");
+				} else if(strokeType == 82) {
+					$("#strokeType").text("Forehand Drop");
+				} else if(strokeType == 83) {
+					$("#strokeType").text("Backhand Drop");
+				}
+				
+				//Creates a key to be used to store the current player's score in session storage.
+				var currentPlayerScoreKey = String(currentPlayer) + "scoreKey";
+				
+				//Uses another variable to get the player score after the shot incase the session storage does not update immediately.
+				var immediatePlayerScore;
+				if (sessionStorage.getItem(currentPlayerScoreKey) === null || sessionStorage.getItem(currentPlayerAttemptKey) === "") {
+					immediatePlayerScore = 0;
+				}
+				
+				immediatePlayerScore = parseInt(sessionStorage.getItem(currentPlayerScoreKey));
+				
+				if (isNaN(immediatePlayerScore)) {
+					immediatePlayerScore = 0;
+				}
+				
+				//Gets the current target game id 
+				var gameID = localStorage.getItem("targetGameID");
+
+				
+
+				
+				//Gets the shot result of whether the player hit or not based on the previous shot page.
+				var shotResult = sessionStorage.getItem("targetHit");
+
+				//Gets the target zone value from the database and if the shot is a success, adds the correct number of points to the player's score in the sesion storage.
+				var a = "http://54.88.27.81:8080/TennisInOrOutCode/SVC/Feature/GetTargetZoneValueByGameIdAndTargetZoneId?";
+				var b = "GameID=" + gameID + "&TargetZoneID=" + expectedTarget;
+				$.ajax({
+					type: "GET",
+					dataType: "xml",
+					url: a + b,
+					success: function(xml, textStatus, jqXHR){
+
+						var status = $(xml).find("StatusMessage").text();
+						if (status == "Generic success") {
+
+							if (shotResult == "1") {
+								var pointValue = $(xml).find("TargetZoneValue").text();
+								$("#shotresult").append("Shot Result: Hit!");
+								$("#points").append("Points Earned: " + pointValue);
+								
+								if (sessionStorage.getItem(currentPlayerScoreKey) === null || sessionStorage.getItem(currentPlayerAttemptKey) === "") {
+									sessionStorage.setItem(currentPlayerScoreKey, "0");
+								}
+								if (isNaN(pointValue)) {
+									pointValue = 0;	
+								}
+
+								immediatePlayerScore = parseInt(immediatePlayerScore) + parseInt(pointValue);
+
+								sessionStorage.setItem(currentPlayerScoreKey, parseInt(sessionStorage.getItem(currentPlayerScoreKey)) + parseInt(pointValue));
+								
+							} else {
+								$("#shotresult").append("Shot Result: Miss!");
+								$("#points").append("Points Earned: 0");
+							}
+							
+				    		players.sort();
+				    		
+				    		for (var i = 0; i < players.length; i++) {
+				    		    listPlayer(players[i]);
+				    		}
+
+						} else {
+							$("#errorMessage").html(status);
+							$("#error").show();
+						}
+					},
+					error: function(jqXHR, textStatus, errorThrown) {
+						alert(errorThrown);
+					}
+				});
+				
+				//Gets the current player's information to display.
+	    		function getCurrentPlayer(playerID) {
+					$.ajax({
+						type: "GET",
+						dataType: "xml",
+						url: "http://54.88.27.81:8080/TennisInOrOutCode/SVC/User/GetPlayerByPlayerId?PlayerID=" + playerID,
+						success: function(xml, textStatus, jqXHR){
+							var status = $(xml).find("StatusMessage").text();
+							if (status == "Generic success") {
+	
+								var firstName = $(xml).find("FirstName").text();
+								var lastName = $(xml).find("LastName").text();
+								var skillID = $(xml).find("SkillLevelTypeID").text();
+								
+								$('#playername').append("Name: " + firstName + " " + lastName);
+								
+								var skill = "";
+								
+								if (skillID === "47") {
+									skill = "Novice";
+								} else {
+									skill = "Intermediate";
+								}
+								
+								$('#playerskill').append("Player Skill: " + skill);
+								
+								var playerposition = localStorage.getItem("targetGamePlayerPosition");
+								
+								if (playerposition == 89) {
+									$('#playerposition').append("Player Position: Baseline");
+								} else {
+									$('#playerposition').append("Player Position: Serviceline");
+								}
+								
+				    			var matchTypeID = localStorage.getItem("targetGameType");
+	
+								if (matchTypeID == "63") {
+									$('#targetgametype').append("Game Type: Base");
+								} else if (matchTypeID == "64") {
+									$('#targetgametype').append("Game Type: Rally");
+								} else {
+									$('#targetgametype').append("Game Type: Option");
+								}
+
+								
+							} else {
+								$("#errorMessage").html(status);
+								$("#error").show();
+							}
+						},
+						error: function(jqXHR, textStatus, errorThrown) {
+							alert(errorThrown);
+						}
+					});
+	    		}
+
+				//Used to get a cookie value
+	    		function getCookie(cname) {
+				    var name = cname + "=";
+				    var ca = document.cookie.split(';');
+				    for(var i=0; i<ca.length; i++) {
+				        var c = ca[i].trim();
+				        if (c.indexOf(name) == 0) return c.substring(name.length, c.length);
+				    }
+			    return "";
+				}
+	    		
+
+	    		//Used to obtain the player information for all of the current target game players.
+	    		function listPlayer(playerID) {
+	    			$.ajax({
+						type: "GET",
+						dataType: "xml",
+						url: "http://54.88.27.81:8080/TennisInOrOutCode/SVC/User/GetPlayerByPlayerId?PlayerID=" + playerID,
+						success: function(xml, textStatus, jqXHR){
+							var status = $(xml).find("StatusMessage").text();
+							if (status == "Generic success") {
+	
+								var firstName = $(xml).find("FirstName").text();
+								var lastName = $(xml).find("LastName").text();
+								var skillID = $(xml).find("SkillLevelTypeID").text();
+								
+								var listPlayerScoreKey = String(playerID) + "scoreKey";
+
+								var playerScore = sessionStorage.getItem(listPlayerScoreKey);
+	
+								var skill = "";
+								
+								if (skillID === "47") {
+									skill = "Novice";
+								} else {
+									skill = "Intermediate";
+								}
+								
+								if (playerScore === null) {
+									playerScore = 0;
+								}
+								
+					
+								if (playerID == currentPlayer) {
+
+									playerScore = String(immediatePlayerScore);	
+
+								}
+								
+			                	var $player = $('<a href="#" id="' + playerID + '" class="list-group-item">' +
+			            				'<h4 class="list-group-item-heading">' + firstName + " " + lastName + '</h4>' +
+			            				'<p class="list-group-item-text\">Skill Level: ' + skill + '</p>' +
+			            				'<p class="list-group-item-text">Score: ' + playerScore + '</p>' +
+			            				'</a>');
+	                	
+
+	                			$('#playerlist').append($player);
+								
+								
+									
+							} else {
+								$("#errorMessage").html(status);
+								$("#error").show();
+							}
+						},
+						error: function(jqXHR, textStatus, errorThrown) {
+							alert(errorThrown);
+						}
+					});
+	    		}
+	    		
+	    		
+	    		//Finishes the target game and clears the local and session storage.
+	    		$("#finish").click(function() {
+	    			localStorage.clear();
+	    			sessionStorage.clear();
+	    			window.location = "../home.html";
+	    		});
+	    		
+		});
+
+	</script>
+
+</body>
+</html>

@@ -1,0 +1,19 @@
+body {
+  min-height: 2000px;
+  padding-top: 50px;
+}
+
+.navbar {
+	margin-bottom:0;
+}
+
+.jumbotron {
+    height:500px;
+    background-image: url(../img/IntroBannerPlaceholder.png);
+    background-position: 0% 25%;
+    background-size: cover;
+    background-repeat: no-repeat;
+    color: white;
+    text-shadow: black 0.3em 0.3em 0.3em;
+}
+

@@ -1,0 +1,152 @@
+<html>
+<html lang="en"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="description" content="">
+		<meta name="author" content="">
+		<link rel="icon" href="http://getbootstrap.com/favicon.ico">
+
+		<title>Manage Players</title>
+
+		<!-- Bootstrap core CSS -->
+		<link href="../../css/bootstrap.css" rel="stylesheet">
+
+		<!-- Custom styles for this template -->
+		<link href="../../css/custom.css" rel="stylesheet">
+		<link href="../../css/manageplayers.css" rel="stylesheet">
+
+		<!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+		<!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+		<script src="../../js/ie-emulation-modes-warning.js"></script>
+
+		<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+		<script src="../../js/ie10-viewport-bug-workaround.js"></script>
+
+		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+		<!--[if lt IE 9]>
+			<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+			<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+		<![endif]-->
+	</head>
+<body background-color="#D4D4D4">
+
+	<!-- Fixed navbar -->
+	<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="#">Tennis In or Out</a>
+			</div>
+			<div class="navbar-collapse collapse">
+				<ul class="nav navbar-nav">
+					<li><a href="../home.html">Home</a></li>
+					<li class="active"><a href="manageplayers.html">Manage Players</a></li>
+				</ul>
+				<ul class="nav navbar-nav navbar-right">
+					<li><a href="../manageaccount.html">Manage Account</a></li>
+					<li><a href="http://54.88.27.81:8080/TennisInOrOutCode/pages/">Logout</a></li>
+				</ul>
+			</div><!--/.nav-collapse -->
+		</div>
+	</div>
+
+	<div class="container">
+		<div class="list-group" id="playerlist">
+		</div>
+
+
+	<a href="addplayer.html" class="btn btn-default btn-lg" style="display: table;margin: 0 auto;">Add Player</a>
+
+	</div>
+	
+
+	<script	src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+	<script src="../../js/bootstrap.min.js"></script>
+	<script src="../../js/jquery-1.11.1.min.js"></script>
+    <script src="../../js/jasny-bootstrap.min.js"></script>
+	<script>		
+		$(document).ready(function() {
+
+				coachID = getCookie("CoachID");
+				//Gets the players of the current coach.
+				var a = "http://54.88.27.81:8080/TennisInOrOutCode/SVC/User/GetPlayerByCoachId?";
+				var b = "CoachID="+coachID;
+				$.ajax({
+					type: "GET",
+					url: a+b,
+					success: function(xml, textStatus, jqXHR){
+						parseXML(xml);
+					},
+					error: function(jqXHR, textStatus, errorThrown) {
+						alert(errorThrown);
+					},
+					beforeSend:function(){
+					}
+				});
+
+				function parseXML(xml) {
+					//Populates the list of players based on the response from the server
+	                $(xml).find('Player').each(function() {
+	                	var firstName = $(this).find("FirstName").text();
+	                	var lastName = $(this).find("LastName").text();
+	                	var skillID = $(this).find("SkillLevelTypeID").text();
+	                	var handID = $(this).find("HandednessTypeID").text();
+	                	var playerID = $(this).find("PlayerID").text();
+	                	var imageURL = $(this).find("MainImageURL").text();
+	                	
+	     				var skill = "Intermediate";
+	                	
+	                	if (skillID === "47") {
+	                		skill = "Novice";
+	                	}
+	                	
+	                	var hand = "Left";
+	                	
+	                	if (handID === "43") {
+	                		hand = "Right";
+	                	} else if (handID === "44") {
+	                		hand = "Ambidextrous";
+	                	}
+	                	
+	                	var playerURL = "http://54.88.27.81:8080/TennisInOrOutCode/pages/players/viewplayer.html?playerID=" + playerID;
+	                	
+	                	//Creates an element to be appended to the player list element.
+	                	var $player = $('<a href="' + playerURL + '" class="list-group-item">' +
+				            				'<h4 class="list-group-item-heading">' + firstName + " " + lastName + '</h4>' +
+				            				'<p class="list-group-item-text\">Skill Level: ' + skill + '</p>' +
+				            				'<p class="list-group-item-text">Hand: ' + hand + '</p>' +
+			            				'</a>');
+	                	
+
+	                	$('#playerlist').append($player);
+
+	                });
+				}
+
+				//Used to get a cookie value
+	    		function getCookie(cname) {
+				    var name = cname + "=";
+				    var ca = document.cookie.split(';');
+				    for(var i=0; i<ca.length; i++) {
+				        var c = ca[i].trim();
+				        if (c.indexOf(name) == 0) return c.substring(name.length, c.length);
+				    }
+			    return "";
+				}
+
+		});
+
+	</script>
+
+	<script type="text/javascript">
+
+	</script>
+</body>
+</html>

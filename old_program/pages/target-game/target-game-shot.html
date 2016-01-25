@@ -1,0 +1,283 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="http://getbootstrap.com/favicon.ico">
+
+<!-- Bootstrap core CSS -->
+<link href="../../css/bootstrap.css" rel="stylesheet">
+  	
+<!-- Custom styles for this template -->
+<link href="../../css/custom.css" rel="stylesheet">
+<link href="../../css/targetgame.css" rel="stylesheet">
+
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+<script src="../../js/ie10-viewport-bug-workaround.js"></script>
+
+<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+	<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+	<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+<title>Target Game Shot</title>
+</head>
+<body background-color="#D4D4D4">
+
+	<!-- Fixed navbar -->
+	<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="../index.html">Tennis In or Out</a>
+			</div>
+			<div class="navbar-collapse collapse">
+				<ul class="nav navbar-nav">
+					<li><a href="../home.html">Home</a></li>
+				</ul>
+				<ul class="nav navbar-nav navbar-right">
+					<li><a href="../manageaccount.html">Manage Account</a></li>
+					<li><a href="http://54.88.27.81:8080/TennisInOrOutCode/pages/">Logout</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+
+	<div class="container" style="padding-top:50px;">
+		<div class="col-md-6 col-md-offset-3" align="center">
+			<div class="panel panel-default">
+					<div class="panel-heading">Current Player</div>
+					<div class="panel-body" align="left" id="playerpanel">
+						<div id="playername"></div>
+						<div id="targetgametype"></div>
+						<div id="attemptnumber"></div>
+						<div id="playerskill"></div>
+						<p>Player Position:</p>
+						<select class="form-control" id="playerposition">
+							<option value="89">Baseline</option>
+							<option value="92">Serviceline</option>
+						</select>
+					</div>
+	        <div class="row">
+            	<div class="col-md-6" style="padding-bottom:10px;">
+            		<h5>Shot Generated</h5>
+            		<div id="randomserve"></div>
+            	</div>
+            	<div class="col-md-6" style="padding-bottom:10px;">
+            		<h5>Target Generated</h5>
+					<div id="randomtarget"></div>
+            	</div>
+      		</div> 
+			</div>
+	   		<button id="logshot" class="btn btn-lg btn-primary">
+            	Log Shot
+			</button>
+		</div>
+		
+
+
+	</div>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+	<script src="../../js/bootstrap.min.js"></script>
+	<script src="../../js/jquery-1.11.1.min.js"></script>
+	<script>		
+		$(document).ready(function() {
+			
+			//Gets the target game type. If the target game type is not option, the player must shoot from the baseline.
+			if (localStorage.getItem("targetGameType") != "65") {
+				$("#playerposition").hide();
+				$("#playerpanel").append('<div>Baseline</div>')
+			}
+			
+			//Gets the players of the current target game.
+			var players = JSON.parse(localStorage.getItem("targetGamePlayers"));
+			
+			
+			//Increments the attempt number for each player in local storage with a unique key.
+			for (var i = 0; i < players.length; i++) {
+				var playerattemptkey = String(players[i]) + "targetGamePlayerAttemptNumber";
+				localStorage.setItem(playerattemptkey, parseInt(localStorage.getItem("playerattemptkey")) + 1);
+
+			}
+
+			
+			//Sets the index of the current target player in the player list in local storage.
+			if (localStorage.getItem("targetGameCurrentPlayer") === null || localStorage.getItem("targetGameCurrentPlayer") === "") {
+				localStorage.setItem("targetGameCurrentPlayer", 0);
+			} else if (localStorage.getItem("targetGameCurrentPlayer") >= players.length - 1) {
+				localStorage.setItem("targetGameCurrentPlayer", 0);
+			} else {
+				localStorage.setItem("targetGameCurrentPlayer", parseInt(localStorage.getItem("targetGameCurrentPlayer")) + 1);
+			}
+
+			//Gets the current player based on the current player index.
+			var currentPlayerIndex = localStorage.getItem("targetGameCurrentPlayer");
+			var currentPlayer = players[currentPlayerIndex];
+			
+
+			//Creates the current player's attempt key to set their new attempt number.
+			var currentPlayerAttemptKey = String(currentPlayer) + "targetGamePlayerAttemptNumber";
+
+			
+			//Sets the current player's attempt number.
+			if (sessionStorage.getItem(currentPlayerAttemptKey) === null || sessionStorage.getItem(currentPlayerAttemptKey) === "") {
+				sessionStorage.setItem(currentPlayerAttemptKey, "1");
+			}
+			else {
+				sessionStorage.setItem(currentPlayerAttemptKey, parseInt(sessionStorage.getItem(currentPlayerAttemptKey)) + 1);
+			}
+
+			//Displays the current attempt number and displays the player's information.
+			$('#attemptnumber').append("Attempt Number: " + sessionStorage.getItem(currentPlayerAttemptKey));
+			getPlayer(currentPlayer);
+
+		});
+		
+		//Used to get the current player's information
+		function getPlayer(playerID) {
+				$.ajax({
+				type: "GET",
+				dataType: "xml",
+				url: "http://54.88.27.81:8080/TennisInOrOutCode/SVC/User/GetPlayerByPlayerId?PlayerID=" + playerID,
+				success: function(xml, textStatus, jqXHR){
+					var status = $(xml).find("StatusMessage").text();
+					if (status == "Generic success") {
+
+						var firstName = $(xml).find("FirstName").text();
+						var lastName = $(xml).find("LastName").text();
+						var skillID = $(xml).find("SkillLevelTypeID").text();
+						
+						$('#playername').append("Name: " + firstName + " " + lastName);
+						
+						var skill = "";
+						
+						//The following randomly determines a serve type and target zone for the player to attempt based on their skill.
+						var randomServe;
+						var randomTarget;
+						
+						randomTarget = (Math.floor(Math.random() * (161 - 147 + 1) + 147));
+						
+						if (skillID === "47") {
+							randomServe = (Math.floor(Math.random() * (75 - 70 + 1) + 70));			
+
+							skill = "Novice";
+						} else {
+							var randomServeRange = [70, 71, 72, 73, 76, 77, 78, 79, 80, 81, 82, 83];
+							randomServe = randomServeRange[Math.floor(Math.random() * randomServeRange.length)];
+
+							skill = "Intermediate";
+						}
+						
+						$('#playerskill').append("Player Skill: " + skill);
+						
+						//Sets the target zone text display based on the random target determined.
+						if (randomTarget == 147) {
+							$("#randomtarget").text("Left Base Line");
+						} else if (randomTarget == 148) {
+							$("#randomtarget").text("Center Mark");
+						} else if (randomTarget == 149) {
+							$("#randomtarget").text("Right Base Line");
+						} else if (randomTarget == 150) {
+							$("#randomtarget").text("Left Service Line");
+						} else if (randomTarget == 151) {
+							$("#randomtarget").text("T Service Line");
+						} else if (randomTarget == 152) {
+							$("#randomtarget").text("Right Service Line");
+						} else if (randomTarget == 153) {
+							$("#randomtarget").text("Left of Deuce Service Box");
+						} else if (randomTarget == 154) {
+							$("#randomtarget").text("Middle of Deuce Service Box");
+						} else if (randomTarget == 155) {
+							$("#randomtarget").text("Right of Deuce Service Box");
+						} else if (randomTarget == 156) {
+							$("#randomtarget").text("Left of Advantage Service Box");
+						} else if (randomTarget == 157) {
+							$("#randomtarget").text("Middle of Advantage Service Box");
+						} else if (randomTarget == 158) {
+							$("#randomtarget").text("Right of Advantage Service Box");
+						} else if (randomTarget == 159) {
+							$("#randomtarget").text("Left Net Area");
+						} else if (randomTarget == 160) {
+							$("#randomtarget").text("Middle Net Area");
+						} else if (randomTarget == 161) {
+							$("#randomtarget").text("Right Net Area");
+						}
+						
+						//Sets the random stroke type text display based on the random stroke type determined.
+						if (randomServe == 70) {
+							$("#randomserve").text("Forehand");
+						} else if(randomServe == 71) {
+							$("#randomserve").text("Backhand");
+						} else if(randomServe == 72) {
+							$("#randomserve").text("Forehand Volley");
+						} else if(randomServe == 73) {
+							$("#randomserve").text("Backhand Volley");
+						} else if(randomServe == 74) {
+							$("#randomserve").text("Serve Deuce");
+						} else if(randomServe == 75) {
+							$("#randomserve").text("Serve Advantage");
+						} else if(randomServe == 76) {
+							$("#randomserve").text("Serve");
+						} else if(randomServe == 77) {
+							$("#randomserve").text("Forehand Approach");
+						} else if(randomServe == 78) {
+							$("#randomserve").text("Backhand Approach");
+						} else if(randomServe == 79) {
+							$("#randomserve").text("Forehand Lob");
+						} else if(randomServe == 80) {
+							$("#randomserve").text("Backhand Lob");
+						} else if(randomServe == 81) {
+							$("#randomserve").text("Overhead");
+						} else if(randomServe == 82) {
+							$("#randomserve").text("Forehand Drop");
+						} else if(randomServe == 83) {
+							$("#randomserve").text("Backhand Drop");
+						}
+						
+						//Sets the expected target zone and stroke type in local storage.
+						localStorage.setItem("targetGameExpectedTargetID", randomTarget);
+						localStorage.setItem("targetGameStrokeTypeID", randomServe);
+
+						
+					} else {
+						$("#errorMessage").html(status);
+						$("#error").show();
+					}
+				},
+				error: function(jqXHR, textStatus, errorThrown) {
+					alert(errorThrown);
+				}
+			});
+		}
+		
+		//Sets the player's position in local storage and goes to the log shot screen.
+		$("#logshot").click(function() {
+			if (localStorage.getItem("targetGameType") == "65") {
+				localStorage.setItem("targetGamePlayerPosition", $("#playerposition").val());
+			} else {
+				localStorage.setItem("targetGamePlayerPosition", "89");
+			}
+			window.location = "target-game-log-shot.html";
+		});
+		
+		//Used to get a cookie value.
+		function getCookie(cname) {
+		    var name = cname + "=";
+		    var ca = document.cookie.split(';');
+		    for(var i=0; i<ca.length; i++) {
+		        var c = ca[i].trim();
+		        if (c.indexOf(name) == 0) return c.substring(name.length, c.length);
+		    }
+	    return "";
+		}
+	</script>
+</body>
+</html>

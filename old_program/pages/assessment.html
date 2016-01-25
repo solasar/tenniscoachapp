@@ -1,0 +1,210 @@
+<html>
+<html lang="en"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="description" content="">
+		<meta name="author" content="">
+		<link rel="icon" href="http://getbootstrap.com/favicon.ico">
+
+		<title>Assessment</title>
+
+		<!-- Bootstrap core CSS -->
+		<link href="../css/bootstrap.css" rel="stylesheet">
+
+		<!-- Custom styles for this template -->
+		<link href="../css/custom.css" rel="stylesheet">
+		<link href="../css/addplayer.css" rel="stylesheet">
+
+		<!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+		<!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+		<script src="../js/ie-emulation-modes-warning.js"></script>
+
+		<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+		<script src="../js/ie10-viewport-bug-workaround.js"></script>
+
+		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+		<!--[if lt IE 9]>
+			<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+			<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+		<![endif]-->
+		
+		<!-- other css -->
+		<link href="../css/style.css" rel="stylesheet">
+	</head>
+<body>
+
+	<!-- Fixed navbar -->
+	<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="#">Tennis In or Out</a>
+			</div>
+			<div class="navbar-collapse collapse">
+				<ul class="nav navbar-nav">
+					<li><a href="http://54.88.27.81:8080/TennisInOrOutCode/pages/home.html">Home</a></li>
+					<li class="active"><a href="http://54.88.27.81:8080/TennisInOrOutCode/pages/manageplayers.html">Manage Players</a></li>
+				</ul>
+				<ul class="nav navbar-nav navbar-right">
+					<li><a href="http://54.88.27.81:8080/TennisInOrOutCode/pages/manageaccount.html">Manage Account</a></li>
+					<li><a href="http://54.88.27.81:8080/TennisInOrOutCode/pages/">Logout</a></li>
+				</ul>
+			</div><!--/.nav-collapse -->
+		</div>
+	</div>
+	
+	<div class="container">
+		<div class="list-group" id="playerlist">
+	</div>
+	
+	<div class="toshow" align="center" id="error">
+		<div class="alert alert-danger" style="max-width:400px;">
+			<strong id="errorMessage"></strong>
+		</div>
+	</div>
+
+	<a href="assessmentaddplayer.html" class="btn btn-default btn-lg" style="display: table;margin: 0 auto;">Add Player</a>
+	<a href="#" id="create" class="btn btn-default btn-lg" style="display: table;margin: 0 auto;">Play Assessment Game</a>
+
+	</div>
+
+	<script
+		src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+	<script src="../js/bootstrap.min.js"></script>
+	<script src="../js/jquery-1.11.1.min.js"></script>
+    <script src="../js/jasny-bootstrap.min.js"></script>
+
+	<script>
+		$(document).ready(function() {
+			// if a game is already in progress, proceed to the shot details screen
+			if (localStorage.getItem("assessmentGameID") != null) {
+				window.location = "assessmentshot.html";
+			} else {
+				var coachId = getCookie("CoachID");
+
+				// populate the player selection
+				var a = "http://54.88.27.81:8080/TennisInOrOutCode/SVC/User/GetPlayerByCoachId?";
+				var b = "CoachID="+coachId;
+				$.ajax({
+					type: "GET",
+					url: a+b,
+					success: function(xml, textStatus, jqXHR){
+						parseXML(xml);
+					},
+					error: function(jqXHR, textStatus, errorThrown) {
+						alert(errorThrown);
+					},
+					beforeSend:function(){
+					}
+				});
+				
+	    		var selectedPlayers = [];
+	    		
+	    		// allow player selection
+	    		$('#playerlist').on('click','a.list-group-item', function(e) {
+	    			e.preventDefault();
+	    			var playerID = $(this).attr('id');
+	    			
+	    			var idx = $.inArray(playerID, selectedPlayers);
+	    			if (idx == -1) {
+	    				$(this).css('background-color', '#66C2FF');
+	    				selectedPlayers.push(playerID);
+	    			} else {
+	    				$(this).css('background-color', '#FFFFFF');
+	    				selectedPlayers.splice(idx, 1);
+	    			}
+	    		});
+	    		
+	    		// create a game and log the selected players
+	    		$("#create").click(function(){
+	    			if (selectedPlayers.length == 0) {
+						$("#errorMessage").html("No players selected");
+						$('#error').css('display','block');
+						return false;
+	    			}
+	    			
+					$.ajax({
+						type: "POST",
+						dataType: "xml",
+						url: "http://54.88.27.81:8080/TennisInOrOutCode/SVC/Game/CreateGameByGameTypeAndCoachId?GameType=63&CoachID=" + coachId,
+						success: function(xml, textStatus, jqXHR){
+							var status = $(xml).find("StatusMessage").text();
+							if (status == "Generic success") {
+								localStorage.setItem("assessmentGameID", $(xml).find("GameID").text());
+								localStorage.setItem("assessmentPlayerIDs", JSON.stringify(selectedPlayers));
+								window.location = "assessmentshot.html";
+							} else {
+								$("#errorMessage").html(status);
+								$("#error").show();
+							}
+						},
+						error: function(jqXHR, textStatus, errorThrown) {
+							alert(errorThrown);
+						},
+						beforeSend:function(){
+						}
+					});
+					return false;
+				});
+				
+				/* $("#back").click(function() {
+					window.location = "home.html";
+					return false;
+				}); */
+			}
+		});
+	    		
+   		function parseXML(xml) {
+
+               $(xml).find('Player').each(function() {
+               	var firstName = $(this).find("FirstName").text();
+               	var lastName = $(this).find("LastName").text();
+               	var skillID = $(this).find("SkillLevelTypeID").text();
+               	var handID = $(this).find("HandednessTypeID").text();
+               	var playerID = $(this).find("PlayerID").text();
+               	
+    				var skill = "Intermediate";
+               	
+               	if (skillID === "47") {
+               		skill = "Novice";
+               	}
+               	
+               	var hand = "Left";
+               	
+               	if (handID === "43") {
+               		hand = "Right";
+               	} else if (handID === "44") {
+               		hand = "Ambidextrous";
+               	}
+               	
+               	var $player = $('<a href="#" id="' + playerID + '" class="list-group-item">' +
+	            				'<h4 class="list-group-item-heading">' + firstName + " " + lastName + '</h4>' +
+	            				'<p class="list-group-item-text\">Skill Level: ' + skill + '</p>' +
+	            				'<p class="list-group-item-text">Hand: ' + hand + '</p>' +
+	            				'</a>');
+               	
+
+               	$('#playerlist').append($player);
+
+               });
+		}
+		
+		function getCookie(cname) {
+		    var name = cname + "=";
+		    var ca = document.cookie.split(';');
+		    for(var i=0; i<ca.length; i++) {
+		        var c = ca[i].trim();
+		        if (c.indexOf(name) == 0) return c.substring(name.length, c.length);
+		    }
+		    return "";
+		}
+	</script>
+</body>
+</html>

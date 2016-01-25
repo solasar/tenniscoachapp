@@ -1,0 +1,290 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="http://getbootstrap.com/favicon.ico">
+
+<!-- Bootstrap core CSS -->
+<link href="../../css/bootstrap.css" rel="stylesheet">
+<link href="../../css/jquery-ui.min.css" rel="stylesheet">
+<link href="../../css/jquery-ui.structure.min.css" rel="stylesheet">
+<link href="../../css/jquery-ui.theme.min.css" rel="stylesheet">
+<!-- Custom styles for this template -->
+<link href="../../css/custom.css" rel="stylesheet">
+<link href="../../css/targetgame.css" rel="stylesheet">
+
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+<script src="../../js/ie10-viewport-bug-workaround.js"></script>
+
+<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+	<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+	<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+<title>Set Target Zone Values</title>
+</head>
+<body background-color="#D4D4D4">
+
+	<!-- Fixed navbar -->
+	<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="../index.html">Tennis In or Out</a>
+			</div>
+			<div class="navbar-collapse collapse">
+				<ul class="nav navbar-nav">
+					<li><a href="../home.html">Home</a></li>
+				</ul>
+				<ul class="nav navbar-nav navbar-right">
+					<li><a href="../manageaccount.html">Manage Account</a></li>
+					<li><a href="http://54.88.27.81:8080/TennisInOrOutCode/pages/">Logout</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+
+
+
+	<div class="container" style="text-align:center;">
+
+	<h1 id="gameheader">Base Target Game</h1>
+
+		<div id="box">
+			<canvas id="CanvasArea" width="420" height="463"></canvas>
+		</div>
+
+        <div id="dialog" title="Set Target Zone Value">
+        	<form class="form-horizontal">
+				<fieldset>
+								
+				<!-- Text input-->
+				<div class="control-group" style="padding-bottom:10px;">
+				  <label id="targetzonename" class="control-label"></label>
+				  <div class="controls">
+				    <input id="customtargetzonevalue" size="10" style="color: black;" class="input" type="text">
+				  </div>
+				</div>
+				
+		    	<button id="settargetzonevalue" class="btn btn-lg btn-primary">Submit</button>
+				
+				
+				</fieldset>
+			</form>
+
+        </div>
+
+    	<div>
+    	<button id="showtarget" class="btn btn-lg btn-primary">Show Target Game Target Zones</button>
+	    <button id="showserve" class="btn btn-lg btn-primary">Show Target Game Serve Zones</button>
+	    </div>
+
+		<p id="description"></p>
+		
+    	<button id="play" class="btn btn-lg btn-primary">
+             Play
+  		</button>
+  		
+
+		
+	</div>
+
+
+	
+	<script src="../../js/tennis-court-interface-helper.js" type="text/javascript"></script>
+	<script src="../../js/bootstrap.min.js"></script>
+	<script src="../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../js/jquery-ui.min.js"></script>
+	<script>		
+		$(document).ready(function() {
+			//Sets variables to disable drawing shots on the tennis court canvas and show the correct zones.
+			drawMainShotLine = 0;
+			zoneDrawingShowing = 11;
+			
+			//Draws the tennis court canvas and the target game zones.
+			drawTennisCourt();
+			drawTargetGameTargetZones2();		
+			
+			//Gets the current target game type from local storage.
+			var targetGameType = $.trim(localStorage.getItem("targetGameType"));
+			
+			//Variable for the coordinates of the user's click on the canvas.
+			var clickCoords;
+
+			//Sets the game description based on the target game type.
+			if (targetGameType == "64") {
+				$("#gameheader").text("Rally Target Game");
+				$('#description').html("Choose a value for each target zone.");
+			} else if(targetGameType == "65") {
+				$("#gameheader").text("Option Target Game");
+				$('#description').html("Choose a value for each target zone.");
+			} else {
+				$('#customzonevalues').hide();
+				$('#description').html("Aim for the specified target zone. Each target zone is worth 1 point.");
+			}
+
+			//Shows the default target game zones when the user chooses to do so.
+			$('#showtarget').click(function() {
+				zoneDrawingShowing = 11;
+				drawTennisCourt();
+				drawTargetGameTargetZones2();
+			});
+			
+			//Shows the target game serve zones when the user chooses to do so.
+			$('#showserve').click(function() {
+				zoneDrawingShowing = 8;
+				drawTennisCourt();
+				drawTargetGameServeZones3();
+			});	
+
+			//Object to store the custom target zone values set.
+			var targetZoneValues = {};
+			
+			//Initializes the target zone values to a default value of 1.
+			for (var i = 147; i <= 161; i++) {
+				
+				var key = String(i);
+
+				targetZoneValues[key] = localStorage.getItem(key);
+				
+
+				if (localStorage.getItem(key) == null || localStorage.getItem(key) == "") {
+
+					localStorage.setItem(key, 1);
+					targetZoneValues[key] = 1;
+				}
+			}			
+			
+			//Function to open a dialog box to set a custom target zone's value when that target zone is clicked on the canvas.
+			$('#CanvasArea').click(function() {
+				clickCoords = readClick();
+				target = getOurIdByCoordinates(clickCoords[0], clickCoords[1], currentTableShowing + zoneDrawNumberShowing);
+				if (target != "None") {
+					$("#dialog").dialog({
+						autoOpen: false,
+						modal: true,
+						resizable: false,
+			            width: 300,
+			            height: 200
+			        });
+				
+					//Notifies the user of the selected target zone's name.
+					if (localStorage.getItem("targetGameType") != "63") {
+					    $("#dialog").dialog("open");
+					    if (target == 147) {
+							$("#targetzonename").text("Left Base Line");
+						} else if (target == 148) {
+							$("#targetzonename").text("Center Mark");
+						} else if (target == 149) {
+							$("#targetzonename").text("Right Base Line");
+						} else if (target == 150) {
+							$("#targetzonename").text("Left Service Line");
+						} else if (target == 151) {
+							$("#targetzonename").text("T Service Line");
+						} else if (target == 152) {
+							$("#targetzonename").text("Right Service Line");
+						} else if (target == 153) {
+							$("#targetzonename").text("Left of Deuce Service Box");
+						} else if (target == 154) {
+							$("#targetzonename").text("Middle of Deuce Service Box");
+						} else if (target == 155) {
+							$("#targetzonename").text("Right of Deuce Service Box");
+						} else if (target == 156) {
+							$("#targetzonename").text("Left of Advantage Service Box");
+						} else if (target == 157) {
+							$("#targetzonename").text("Middle of Advantage Service Box");
+						} else if (target == 158) {
+							$("#targetzonename").text("Right of Advantage Service Box");
+						} else if (target == 159) {
+							$("#targetzonename").text("Left Net Area");
+						} else if (target == 160) {
+							$("#targetzonename").text("Middle Net Area");
+						} else if (target == 161) {
+							$("#targetzonename").text("Right Net Area");
+						}
+						
+					    //Sets the form's value in the dialog box to show the current target zone value.
+						$("#customtargetzonevalue").val(targetZoneValues[target]);	
+					}
+
+
+				}
+			});
+			
+			//Initializes the dialog box.
+			$("#dialog").dialog({
+				autoOpen: false,
+				modal: true,
+				resizable: false,
+	            width: 200,
+	            height: 200,
+	            close: function(ev, ui) {
+	            	$(this).hide();
+	            	return false;
+	            }
+	        });
+			
+			//Sets the target zone value in the object created previously after the dialog box is submitted.
+			$('#settargetzonevalue').click(function() {
+				
+				targetZoneValues[target] = $("#customtargetzonevalue").val();
+				localStorage.setItem(target, $("#customtargetzonevalue").val());
+				
+				$("#dialog").dialog('close');
+				return false;
+			});
+			
+			
+			//Begins the target game and updates the target zone values in the database.
+			$('#play').click(function() {
+				var targetZoneData = "";
+				var pair;
+				for (var i = 147; i <= 161; i++) {
+
+					pair = String(i) + "t" + String(localStorage.getItem(i)) + "v" + ":";
+					targetZoneData += pair;
+				}
+				
+				//Sends a POST request to the server to update the target zone values for this target game.
+				var a = "http://54.88.27.81:8080/TennisInOrOutCode/SVC/Feature/UpdateTargetZoneValueByGameIdAndTargetZoneNumber?";
+				var b = "GameID=" + localStorage.getItem("targetGameID") + "&TargetZoneData=" + targetZoneData;
+				$.ajax({
+					type: "POST",
+					url: a+b,
+					success: function(response, textStatus, jqXHR){
+						window.location = "target-game-shot.html";
+					},
+					error: function(jqXHR, textStatus, errorThrown) {
+						alert(jqXHR.status);
+						window.location = "target-game-shot.html";
+					}
+
+				});
+
+				
+				
+			});
+			
+		});
+
+		//Used to get a cookie value.
+   		function getCookie(cname) {
+		    var name = cname + "=";
+		    var ca = document.cookie.split(';');
+		    for(var i=0; i<ca.length; i++) {
+		        var c = ca[i].trim();
+		        if (c.indexOf(name) == 0) return c.substring(name.length, c.length);
+		    }
+	    return "";
+		}
+	</script>
+</body>
+</html>

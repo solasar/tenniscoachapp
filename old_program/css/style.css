@@ -1,0 +1,13 @@
+.toshow
+{
+	display: none;
+}
+
+body {
+  min-height: 2000px;
+  padding-top: 50px;
+}
+
+.navbar {
+ margin-bottom:0;
+}

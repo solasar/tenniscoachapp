@@ -1,0 +1,241 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="http://getbootstrap.com/favicon.ico">
+
+<!-- Bootstrap core CSS -->
+<link href="../../css/bootstrap.css" rel="stylesheet">
+<link href="../../css/jquery-ui.min.css" rel="stylesheet">
+<link href="../../css/jquery-ui.structure.min.css" rel="stylesheet">
+<link href="../../css/jquery-ui.theme.min.css" rel="stylesheet">
+<!-- Custom styles for this template -->
+<link href="../../css/custom.css" rel="stylesheet">
+<link href="../../css/targetgame.css" rel="stylesheet">
+
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+<script src="../../js/ie10-viewport-bug-workaround.js"></script>
+
+<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+	<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+	<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+<title>Target Game Log Shot</title>
+</head>
+<body background-color="#D4D4D4">
+
+	<!-- Fixed navbar -->
+	<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="../index.html">Tennis In or Out</a>
+			</div>
+			<div class="navbar-collapse collapse">
+				<ul class="nav navbar-nav">
+					<li><a href="../home.html">Home</a></li>
+				</ul>
+				<ul class="nav navbar-nav navbar-right">
+					<li><a href="../manageaccount.html">Manage Account</a></li>
+					<li><a href="http://54.88.27.81:8080/TennisInOrOutCode/pages/">Logout</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+
+
+
+	<div class="container" style="text-align:center;">
+
+	<h1 id="gameheader">Base Target Game</h1>
+
+		<div id="box">
+			<canvas id="CanvasArea" width="420" height="463"></canvas>
+		</div>
+
+    	<div>
+    	<button id="showtarget" class="btn btn-lg btn-primary">Show Target Game Target Zones</button>
+	    <button id="showserve" class="btn btn-lg btn-primary">Show Target Game Serve Zones</button>
+	    </div>
+
+		<p id="description">Enter your shots here.</p>
+		
+
+    	<button id="submitshot" class="btn btn-lg btn-primary">
+             Submit Shot
+  		</button>
+  		
+
+	</div>
+
+
+	
+	<script src="../../js/tennis-court-interface-helper.js" type="text/javascript"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+	<script src="../../js/bootstrap.min.js"></script>
+	<script src="../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../js/jquery-ui.min.js"></script>
+	<script>	
+		// Gets the current player
+		var players = JSON.parse(localStorage.getItem("targetGamePlayers"));
+		var playerIndex = localStorage.getItem("targetGameCurrentPlayer");
+		var player = players[playerIndex];
+		var playerId = "PlayerID=" + player + "&";
+		
+		//Gets the current shot attempt number
+		var shotAttempt = "ShotAttemptNumber=" + sessionStorage.getItem(player + "targetGamePlayerAttemptNumber") + "&";
+		
+		//Gets the current target game's game ID
+		var gameID = "GameID=" + localStorage.getItem("targetGameID") + "&";
+		
+		//Gets the current expected stroke type
+		var strokeType = localStorage.getItem("targetGameStrokeTypeID");
+		var strokeTypeID = "ExpectedShotTypeID=" + strokeType + "&ActualShotTypeID=" + strokeType + "&";
+		
+		//Gets the current player's position from
+		var position = localStorage.getItem("targetGamePlayerPosition");
+		var positionID = "PlayerAPositionID=" + position + "&";
+		
+		//Variable for the shot's quality description
+		var hitQualityDesc;
+		
+		//Extra variables for the post request that are not needed for this type of game/shot.
+		var extra = "PlayerTypeID=49&UnforcedForcedConditionID=0&OpponentAPositionID=0&OpponentBPositionID=0&PlayerBPositionID=0&ShotPoints=0&WinErrorConditionID=0&";
+		
+		var basicData = gameID + strokeTypeID + positionID + extra;
+		
+		//Gets the expected target zone.
+		var expectedTarget = localStorage.getItem("targetGameExpectedTargetID");
+		var expectedTargetZoneId = "ExpectedTargetZoneID=" + expectedTarget + "&";
+		
+		//Variable for the actual target hit.
+		var actualTarget;
+		var actualTargetId;
+		
+		//Coordinates of the user's click on the tennis court canvas.
+		var clickCoords;
+		
+		playerCoords = getCoordinatesByOurId(position);
+		globalPlayerPosX = playerCoords[0];
+		globalPlayerPosY = playerCoords[1];
+		
+		$(document).ready(function() {
+			
+			//Allows the canvas to draw the shots
+			drawMainShotLine = 1;
+			
+			//Initializes the zones to show in the canvas
+			zoneDrawingShowing = 11;
+			
+			//Draws the tennis court and the target zones
+			drawTennisCourt();
+			drawTargetGameTargetZones2();		
+			
+			//Gets the target game type.
+			var targetGameType = $.trim(localStorage.getItem("targetGameType"));
+			
+			var clickCoords;
+
+
+			//Submits the shot to the server to be added and determines if the shot was a hit or a miss.
+			$("#submitshot").click(function() {
+				clickCoords = readClick();
+				actualTarget = getOurIdByCoordinates(clickCoords[0], clickCoords[1], currentTableShowing + zoneDrawNumberShowing);
+				if (actualTarget == "None") {
+					actualTarget = "0";
+				}
+				actualTargetId = "ActualTargetZoneID=" + actualTarget + "&";
+				if (actualTarget == expectedTarget) {
+					hitQualityId = "HitQualityID=103&";
+					hitQualityDesc = "HitQualityDescription=OnTarget&";
+					sessionStorage.setItem("targetHit", "1");
+				} else {
+					hitQualityId = "HitQualityID=104&";
+					hitQualityDesc = "HitQualityDescription=Miss&";
+					sessionStorage.setItem("targetHit", "0");
+				}
+				
+				$.ajax({
+					type: "POST",
+					dataType: "xml",
+					url: "http://54.88.27.81:8080/TennisInOrOutCode/SVC/Feature/CreateShotByGameIdAndPlayerId?" + basicData + hitQualityDesc + shotAttempt + expectedTargetZoneId + actualTargetId + hitQualityId + playerId,
+					success: function(xml, textStatus, jqXHR){
+						var status = $(xml).find("StatusMessage").text();
+						if (status == "Shot created") {
+							window.location = "target-game-scorecard.html";
+						} else {
+							$("#errorMessage").html(status);
+							$("#error").show();
+						}
+					},
+					error: function(jqXHR, textStatus, errorThrown) {
+						alert(errorThrown);
+					},
+					beforeSend:function(){
+					}
+				});
+				
+				return false;
+			});
+
+			//Shows the default target game zones on the canvas.
+			$('#showtarget').click(function() {
+				zoneDrawingShowing = 11;
+				drawTennisCourt();
+				drawTargetGameTargetZones2();
+			});
+			
+			//Shows the target game serve zones on the canvas.
+			$('#showserve').click(function() {
+				zoneDrawingShowing = 8;
+				drawTennisCourt();
+				drawTargetGameServeZones3();
+			});	
+
+		});
+		
+		//Used to get the current player's details and display them.
+		function getPlayerDetails(player) {
+			$.ajax({
+				type: "GET",
+				dataType: "xml",
+				url: "http://54.88.27.81:8080/TennisInOrOutCode/SVC/User/GetPlayerByPlayerId?PlayerID=" + player,
+				success: function(xml, textStatus, jqXHR){
+					var status = $(xml).find("StatusMessage").text();
+					if (status == "Generic success") {
+						$("#name").html("Player name: " + $(xml).find("FirstName").text() + " " + $(xml).find("LastName").text());
+					} else {
+						$("#errorMessage").html(status);
+						$("#error").show();
+					}
+				},
+				error: function(jqXHR, textStatus, errorThrown) {
+					alert(errorThrown);
+				},
+				beforeSend:function(){
+				}
+			});
+		}
+
+		//Used to get a cookie value.
+   		function getCookie(cname) {
+		    var name = cname + "=";
+		    var ca = document.cookie.split(';');
+		    for(var i=0; i<ca.length; i++) {
+		        var c = ca[i].trim();
+		        if (c.indexOf(name) == 0) return c.substring(name.length, c.length);
+		    }
+	    return "";
+		}
+	</script>
+</body>
+</html>

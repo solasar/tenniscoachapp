@@ -1,0 +1,294 @@
+<html>
+<html lang="en"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="description" content="">
+		<meta name="author" content="">
+		<link rel="icon" href="http://getbootstrap.com/favicon.ico">
+
+		<title>Assessment</title>
+
+		<!-- Bootstrap core CSS -->
+		<link href="../css/bootstrap.css" rel="stylesheet">
+
+		<!-- Custom styles for this template -->
+		<link href="../css/custom.css" rel="stylesheet">
+		<link href="../css/addplayer.css" rel="stylesheet">
+
+		<!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+		<!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+		<script src="../js/ie-emulation-modes-warning.js"></script>
+
+		<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+		<script src="../js/ie10-viewport-bug-workaround.js"></script>
+
+		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+		<!--[if lt IE 9]>
+			<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+			<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+		<![endif]-->
+		
+		<!-- other css -->
+		<link href="../css/style.css" rel="stylesheet">
+	</head>
+<body>
+
+	<!-- Fixed navbar -->
+	<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="#">Tennis In or Out</a>
+			</div>
+			<div class="navbar-collapse collapse">
+				<ul class="nav navbar-nav">
+					<li><a href="http://54.88.27.81:8080/TennisInOrOutCode/pages/home.html">Home</a></li>
+					<li class="active"><a href="http://54.88.27.81:8080/TennisInOrOutCode/pages/manageplayers.html">Manage Players</a></li>
+				</ul>
+				<ul class="nav navbar-nav navbar-right">
+					<li><a href="http://54.88.27.81:8080/TennisInOrOutCode/pages/manageaccount.html">Manage Account</a></li>
+					<li><a href="http://54.88.27.81:8080/TennisInOrOutCode/pages/">Logout</a></li>
+				</ul>
+			</div><!--/.nav-collapse -->
+		</div>
+	</div>
+	
+	<div class="container">
+		<form class="form-horizontal">
+			<fieldset>
+			
+			<!-- Form Name -->
+			<legend>Shot Attempt</legend>
+
+			<div class="col-md-6 col-md-offset-3" align="center">
+				<div class="panel panel-default">
+						<div class="panel-heading">Attempt Details</div>
+						<div class="panel-body" align="left" id="details">
+							<div id="name"></div>
+							<div id="attempt">Attempt number: 1</div>
+							<br/>
+							<div id="feed"></div>
+							<div id="position"></div>
+							<div id="stroke"></div>
+							<div id="target"></div>
+						</div>
+				</div>
+			</div>
+			
+			<div class="col-md-12" align="center">
+				<canvas id="CanvasArea" width="427" height="500"></canvas>
+			</div>
+			
+			<!-- Button -->
+			<div class="form-group">
+				<div class="col-md-8 col-md-offset-2" align="center">
+					<button id="log" name="log" class="btn btn-success">Log Attempt</button>
+				</div>
+			</div>
+
+			<!-- Button (Double) -->
+			<div class="form-group">
+				<div class="col-md-8 col-md-offset-2" align="center">
+					<button id="repeat" name="repeat" class="btn btn-success"
+						disabled="true">Repeat Shot</button>
+					<button id="next" name="next" class="btn btn-success"
+						disabled="true">Next Shot</button>
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<div class="col-md-8 col-md-offset-2" align="center">
+					<button id="end" name="end" class="btn btn-danger" disabled="true">End
+						Assessment</button>
+				</div>
+			</div>
+
+			</fieldset>
+		</form>
+	</div>
+	
+	<div class="toshow" align="center" id="error">
+		<div class="alert alert-danger" style="max-width:400px;">
+			<strong id="errorMessage"></strong>
+		</div>
+	</div>
+
+	<script
+		src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+	<script src="../js/bootstrap.min.js"></script>
+	<script src="../js/jquery-1.11.1.min.js"></script>
+    <script src="../js/jasny-bootstrap.min.js"></script>
+    <script src="../js/tennis-court-interface-helper.js"></script>
+
+	<script>
+		var targets = ["162", "163", "164"];
+		var targetsDesc = ["Left", "Middle", "Right"];
+		var currTarget = 0;
+		var attempt = 1;
+	
+		var playerIds = JSON.parse(localStorage.getItem("assessmentPlayerIDs"));
+		var playerId;
+		var currPlayer = 0;
+		var gameID = "GameID=" + localStorage.getItem("assessmentGameID") + "&";
+		var strokeType = localStorage.getItem("assesssmentStrokeTypeID");
+		var strokeTypeID = "ExpectedShotTypeID=" + strokeType + "&ActualShotTypeID=" + strokeType + "&";
+		var position = localStorage.getItem("assesssmentPositionID");
+		var positionID = "PlayerAPositionID=" + position + "&";
+		var expectedTarget = targets[currTarget];
+		var hitQualityDesc;
+		var extra = "PlayerTypeID=49&UnforcedForcedConditionID=0&OpponentAPositionID=0&OpponentBPositionID=0&PlayerBPositionID=0&ShotPoints=0&WinErrorConditionID=0&";
+		
+		var basicData = gameID + strokeTypeID + positionID + extra;
+		var attempts = [];
+		var expectedTargetZoneID;
+		var actualTarget;
+		var actualTargetId;
+		var clickCoords;
+		
+		$("#feed").html("Feed type: " + localStorage.getItem("assesssmentFeedMechanismIDDesc"));
+		$("#position").html("Position: " + localStorage.getItem("assesssmentPositionIDDesc"));
+		$("#stroke").html("Stroke type: " + localStorage.getItem("assesssmentStrokeTypeIDDesc"));
+		$("#target").html("Current target: " + targetsDesc[currTarget]);
+		zoneDrawingShowing = 12;
+		playerCoords = getCoordinatesByOurId(position);
+		globalPlayerPosX = playerCoords[0];
+		globalPlayerPosY = playerCoords[1];
+		
+		$(document).ready(function() {
+			getPlayerDetails(0);
+			drawTennisCourt();
+			drawTargetGameTargetZones1();
+			
+			// logs each shot attempt. Cycles through 7 left, 7 middle, and 7 right
+			// attempts for each player
+			$("#log").click(function() {
+				shotAttempt = "ShotAttemptNumber=" + attempt + "&";
+				expectedTargetZoneId = "ExpectedTargetZoneID=" + expectedTarget + "&";
+				clickCoords = readClick();
+				actualTarget = getOurIdByCoordinates(clickCoords[0], clickCoords[1], currentTableShowing + zoneDrawNumberShowing);
+				if (actualTarget == "None") {
+					actualTarget = "0";
+				}
+				actualTargetId = "ActualTargetZoneID=" + actualTarget + "&";
+				if (actualTarget == expectedTarget) {
+					hitQualityId = "HitQualityID=103&";
+					hitQualityDesc = "HitQualityDescription=OnTarget&";
+				} else {
+					hitQualityId = "HitQualityID=104&";
+					hitQualityDesc = "HitQualityDescription=Miss&";
+				}
+				playerId = "PlayerID=" + playerIds[currPlayer] + "&";
+				
+				attempts.push("http://54.88.27.81:8080/TennisInOrOutCode/SVC/Feature/CreateShotByGameIdAndPlayerId?" + basicData + hitQualityDesc + shotAttempt + expectedTargetZoneId + actualTargetId + hitQualityId + playerId);
+				
+				attempt += 1;
+				if (attempt > 7) {
+					currPlayer += 1;
+					if (currPlayer < playerIds.length) {
+						getPlayerDetails(currPlayer);
+						attempt = 1;
+					} else {
+						currTarget += 1;
+						if (currTarget < 3) {
+							expectedTarget = targets[currTarget];
+							$("#target").html("Current target: " + targetsDesc[currTarget]);
+							currPlayer = 0;
+							getPlayerDetails(currPlayer);
+							attempt = 1;
+						} else {
+							attempts.forEach(function(attempt) {
+								$.ajax({
+									type: "POST",
+									dataType: "xml",
+									url: attempt,
+									async: false,
+									success: function(xml, textStatus, jqXHR){
+										var status = $(xml).find("StatusMessage").text();
+										if (status == "Shot created") {
+										} else {
+											$("#errorMessage").html(status);
+											$("#error").show();
+										}
+									},
+									error: function(jqXHR, textStatus, errorThrown) {
+										alert(errorThrown);
+									},
+									beforeSend:function(){
+									}
+								});
+							});
+							
+							$("#details").html("All attempts completed");
+							$("#log").prop("disabled", true);
+							$("#repeat").prop("disabled", false);
+							$("#next").prop("disabled", false);
+							$("#end").prop("disabled", false);
+						}
+					}
+				}
+				$("#attempt").html("Attempt number: " + attempt);
+				
+				return false;
+			});
+			
+			// allows the player to start a new shot
+			$("#next").click(function() {
+				window.location = "assessmentshot.html";
+				return false;
+			});
+			
+			// starts a new shot with the current shot parameters
+			$("#repeat").click(function() {
+				window.location = "assessmentattempt.html";
+				return false;
+			});
+			
+			// proceeds to the assessment scorecard
+			$("#end").click(function() {
+				window.location = "assessmentscorecard.html";
+				return false;
+			});
+		});
+		
+		// populates the player details for the current attempt
+		function getPlayerDetails(index) {
+			$.ajax({
+				type: "GET",
+				dataType: "xml",
+				url: "http://54.88.27.81:8080/TennisInOrOutCode/SVC/User/GetPlayerByPlayerId?PlayerID=" + playerIds[index],
+				success: function(xml, textStatus, jqXHR){
+					var status = $(xml).find("StatusMessage").text();
+					if (status == "Generic success") {
+						$("#name").html("Player name: " + $(xml).find("FirstName").text() + " " + $(xml).find("LastName").text());
+					} else {
+						$("#errorMessage").html(status);
+						$("#error").show();
+					}
+				},
+				error: function(jqXHR, textStatus, errorThrown) {
+					alert(errorThrown);
+				},
+				beforeSend:function(){
+				}
+			});
+		}
+		
+		function getCookie(cname) {
+		    var name = cname + "=";
+		    var ca = document.cookie.split(';');
+		    for(var i=0; i<ca.length; i++) {
+		        var c = ca[i].trim();
+		        if (c.indexOf(name) == 0) return c.substring(name.length, c.length);
+		    }
+		    return "";
+		}
+	</script>
+</body>
+</html>
