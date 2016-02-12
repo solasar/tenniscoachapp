@@ -1,0 +1,17 @@
+<ion-view view-title="Account">
+  <ion-nav-buttons side="left">
+    <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
+  </ion-nav-buttons>
+  <ion-content class="padding text-center">
+    <h1>Hello, {{user.firstname}}</h1>
+    <img src="img/person.png" alt="Person Icon" width="300  " height="400" align="middle"/>
+    <p>
+      Name: {{user.firstname + " " + user.lastname}}<br />
+      Sex: {{user.sex}}<br />
+      Age: {{user.age}}<br />
+      Height: {{user.height}}
+    </p>
+
+
+  </ion-content>
+</ion-view>
