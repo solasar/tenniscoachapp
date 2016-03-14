@@ -1,24 +1,49 @@
-angular.module('starter')
+angular.module('Controllers', ['Services', 'Constants'])
 
-.controller('AppCtrl', function() {})
+.controller('AppCtrl', function($scope, $ionicPopup, AUTH_EVENTS, AuthService) {
+  $scope.$on(AUTH_EVENTS.notAuthorized, function(event) {
+    var alertPopup = $ionicPopup.alert({
+      title: 'Unauthorized!',
+      template: 'You are not allowed to accesss this page.'
+    });
+  });
+})
+
+.controller('LoginCtrl', function($scope, $state, $ionicPopup, AuthService) {
+  $scope.data = {};
+  AuthService.clearCredential();
+  $scope.login =  function(data) {
+    $scope.dataLoading = true;
+    AuthService.login(data.username, data.password).then(function (authenticate) {
+      console.log('AuthService success!');
+      $state.go('nav.dashboard', {}, {reload: true});
+    }, function (err) {
+      var alertPopup = $ionicPopup.alert({
+        title: 'Login failed!',
+        template: 'Please check your credentials.'
+      });
+    });
+  };
+})
+
+.controller('DashCtrl', function($scope, AuthService) {
+  $scope.username = AuthService.username();
+})
+
+.controller('AccessCtrl', function() {
+
+})
+
+.controller('PracticeCtrl', function() {
+
+})
+
 .controller('WelcomeCtrl', function($scope, $state) {
   $scope.toLogin = function () {
     $state.go('nav.login');
   };
 })
-.controller('LoginCtrl', function($scope, $state, $ionicPopup, Accounts) {
-  $scope.data = {};
-  $scope.login = function () {
-    if (Accounts.all().username == $scope.data.username && Accounts.all().password == $scope.data.password) {
-      $state.go('nav.account');
-    } else {
-      var alertPopup = $ionicPopup.alert({
-        title: 'Login Failed!',
-        template: 'Your login information is invalid.'
-      });
-    }
-  };
-})
+
 .controller('AccountCtrl', function($scope, Accounts) {
   $scope.user = Accounts.all();
 });

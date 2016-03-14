@@ -3,7 +3,7 @@
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
-angular.module('starter', ['ionic'])
+angular.module('Tennis', ['ionic', 'Controllers'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -26,42 +26,47 @@ angular.module('starter', ['ionic'])
 .config(function ($stateProvider, $urlRouterProvider) {
   $stateProvider
 
+  .state('login', {
+    url: '/login',
+    templateUrl: 'templates/login.html',
+    controller: 'LoginCtrl'
+  })
+
   .state('nav', {
-    url: "/nav",
+    url: "/",
     abstract: true,
-    templateUrl: "templates/sidemenu.html",
-    controller: 'AppCtrl'
+    templateUrl: "templates/sidemenu.html"
   })
 
-  .state('nav.welcome', {
-    url: "/welcome",
+  .state('nav.dashboard', {
+    url: 'nav/dashboard',
     views: {
-      'menuContent': {
-        templateUrl: "templates/welcome.html",
-        controller: 'WelcomeCtrl'
+      'sideContent': {
+        templateUrl: 'templates/dashboard.html',
+        controller: 'DashCtrl'
+      }
+    }    
+  })
+
+  .state('nav.assessment', {
+    url: 'nav/assessment',
+    views: {
+      'sideContent': {
+        templateUrl: 'templates/assessment.html',
+        controller: 'AssessCtrl'
       }
     }
   })
 
-  .state('nav.account', {
-    url: "/account",
+  .state('nav.practice', {
+    url: 'nav/practice',
     views: {
-      'menuContent': {
-        templateUrl: "templates/account.html",
-        controller: 'AccountCtrl'
-      }
-    }
-  })
-
-  .state('nav.login', {
-    url: "/login",
-    views: {
-      'menuContent': {
-        templateUrl: "templates/login.html",
-        controller: 'LoginCtrl'
+      'sideContent': {
+        templateUrl: 'templates/practice.html',
+        controller: 'PracticeCtrl'
       }
     }
   });
 
-  $urlRouterProvider.otherwise('/nav/welcome');
+  $urlRouterProvider.otherwise('/login');
 });
