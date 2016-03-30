@@ -1,40 +1,56 @@
 angular.module('Services', ['utf8-base64', 'Constants'])
-.service('AuthService', function($http , base64, $q, $ionicPopup, STORAGE_KEYS) {
+.service('AuthService', function($http , base64, $q, $ionicPopup, STORAGE_KEYS, USER_TYPE, Accounts) {
   var isAuthenticated = false;
+  var rootUrl = 'http://jsonplaceholder.typicode.com';
 
 
-  var login = function(username, password) {
-    var hashPassword = CryptoJS.SHA256(password);
-    console.log('username: ' + username);
-    console.log('password: ' + password);
-    console.log('hashPassword:    ' + hashPassword);
-
-    // Temporary local authentication - username = user , password = password
+  var login = function(userid, password) {
+    /* Temporary local authentication - userid = user , password = password
     return $q(function (resolve, reject) {
-      var defaultPassword = CryptoJS.SHA256('password');
-      console.log('username again: ' + username);
+      var defaultPassword = CryptoJS.SHA256(tempUser.password);
+      console.log('userid again: ' + userid);
       console.log('defaultPassword: ' + defaultPassword);
-      if (username == "user" && angular.equals(hashPassword, defaultPassword)) {
-        console.log('yes');
-        setCredential(username, hashPassword);
+      if (userid == tempUser.userid && angular.equals(hashPassword, defaultPassword)) {
         resolve('Login success.');
       } else {console.log('no');
-        reject('Username or password is incorrect.');
+        reject('userid or password is incorrect.');
       }
-    })
-    // Temporary local authentication - username = user , password = password
-
+    });
+    // Temporary local authentication - userid = user , password = password
+*/
     //Actual http post call
-    //return $http.post('/api/authenticate', {username: username, password: hashPassword});
+    return $http.post('/api/authenticate', {userid: userid, password: password});
   };
 
-  var setCredential = function(username, hashPassword) {
-    var authData = base64.encode(username + ':' + hashPassword);
+  var newAccount = function(id, firstname, lastname, email, phone, password, type) {
+    var hashPassword = CryptoJS.SHA256(password);
+    return $http.post('/api/create_account',
+      {userid: id, firstname: firstname, lastname: lastname, email: email, phone: phone, password: password, usertype: type});
+  };
+
+  var setUserInfo = function(data) {
+    window.localStorage.setItem(STORAGE_KEYS.userInfo, JSON.stringify(data));
+    console.log(window.localStorage.getItem(STORAGE_KEYS.userInfo));
+    /*
+    window.localStorage.setItem(STORAGE_KEYS.firstName, data.firstname);
+    window.localStorage.setItem(STORAGE_KEYS.lastName, data.lastname);
+    window.localStorage.setItem(STORAGE_KEYS.email, data.email);
+    window.localStorage.setItem(STORAGE_KEYS.phoneNumber, data.phonenumber);
+    window.localStorage.setItem(STORAGE_KEYS.userType, data.usertype);
+    */
+  };
+
+  var setCredential = function(userid, password) {
+    var hashPassword = CryptoJS.SHA256(password);
+    var authData = base64.encode(userid + ':' + hashPassword);
+    console.log('Basic64: ' + authData);
     $http.defaults.headers.common['Authorization'] = 'Basic ' + authData;
-    window.localStorage.setItem(STORAGE_KEYS.userName, username);
+    window.localStorage.setItem(STORAGE_KEYS.userId, userid);
     window.localStorage.setItem(STORAGE_KEYS.password, hashPassword);
     isAuthenticated = true;
   };
+
+
 
   function clearCredential() {
     window.localStorage.clear();
@@ -44,29 +60,30 @@ angular.module('Services', ['utf8-base64', 'Constants'])
 
   var logout = function() {
     clearCredential();
-  }
+  };
 
   return {
     login: login,
+    setCredential: setCredential,
     clearCredential: clearCredential,
+    setUserInfo: setUserInfo,
+    newAccount: newAccount,
     isAuthenticated: function () {return isAuthenticated;},
-    username: function () {return window.localStorage.getItem(STORAGE_KEYS.userName) || '';},
+    userid: function () {return window.localStorage.getItem(STORAGE_KEYS.userId) || '';},
     password: function () {return window.localStorage.getItem(STORAGE_KEYS.password) || '';}
   };
 })
 
 
-
-
 .factory('Accounts', function () {
   var accounts = {
-    username: 'user',
+    userid: 'user',
     password: 'password',
     firstname: 'Roger',
     lastname: 'Federer',
-    age: '34',
-    sex: 'male',
-    height: '185cm'
+    email: 'roger.federer@gmail.com',
+    phonenumber: '4045056767',
+    usertype: 'Player'
   };
   return {
     all: function() {

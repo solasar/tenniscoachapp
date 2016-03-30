@@ -3,7 +3,7 @@
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
-angular.module('Tennis', ['ionic', 'Controllers'])
+angular.module('Tennis', ['ionic', 'Controllers', 'Services', 'ngMockE2E'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -23,19 +23,33 @@ angular.module('Tennis', ['ionic', 'Controllers'])
   });
 })
 
-.config(function ($stateProvider, $urlRouterProvider) {
+.run(function($httpBackend, Accounts) {
+  $httpBackend.whenGET('/api/get_user_info').respond(Accounts.all());
+  $httpBackend.whenPOST('/api/authenticate', {userid: Accounts.all().userid, password: CryptoJS.SHA256(Accounts.all().password)}).respond(200, {message: 'Fake login success'});
+  $httpBackend.whenPOST('/api/create_account').respond(200, {message: 'Fake new account success'});
+  $httpBackend.whenGET(/templates\/\w+.*/).passThrough();
+})
+
+.config(function ($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
   $stateProvider
 
   .state('login', {
     url: '/login',
     templateUrl: 'templates/login.html',
-    controller: 'LoginCtrl'
+    controller: 'LoginCtrl',
+    cache: false
+  })
+
+  .state('create_account', {
+    url: '/create_account',
+    templateUrl: 'templates/create_account.html',
+    controller: 'CreateAcctCtrl'
   })
 
   .state('nav', {
-    url: "/",
+    url: '/',
     abstract: true,
-    templateUrl: "templates/sidemenu.html"
+    templateUrl: 'templates/sidemenu.html'
   })
 
   .state('nav.dashboard', {
@@ -45,15 +59,26 @@ angular.module('Tennis', ['ionic', 'Controllers'])
         templateUrl: 'templates/dashboard.html',
         controller: 'DashCtrl'
       }
-    }    
+    }
   })
 
   .state('nav.assessment', {
     url: 'nav/assessment',
     views: {
       'sideContent': {
+        templateUrl: 'templates/skill_level.html'
+      }
+    }
+  })
+
+  .state('nav.assessment.test', {
+    url: '/test',
+    views: {
+      '@': {
         templateUrl: 'templates/assessment.html',
-        controller: 'AssessCtrl'
+        controller: function () {
+          console.log('=D');
+        }
       }
     }
   })
@@ -69,4 +94,5 @@ angular.module('Tennis', ['ionic', 'Controllers'])
   });
 
   $urlRouterProvider.otherwise('/login');
+  $ionicConfigProvider.navBar.alignTitle('center')
 });

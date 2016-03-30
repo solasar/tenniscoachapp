@@ -1,12 +1,18 @@
 angular.module('Constants', [])
 .constant('STORAGE_KEYS', {
-  userName: 'username',
-  hashPassword: 'password'
+  userInfo: 'UserInfo',
+  userId: 'UserID',
+  password: 'Password',
+  firstName: 'FirstName',
+  lastName: 'LastName',
+  email: 'Email',
+  phoneNumber: 'PhoneNumber',
+  userType: 'UserType'
 })
 
 .constant('USER_TYPE', {
-  player: 'player',
-  coach: 'coach'
+  player: 'Player',
+  coach: 'Coach'
 })
 
 .constant('AUTH_EVENTS', {
