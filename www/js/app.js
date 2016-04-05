@@ -3,7 +3,9 @@
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
-angular.module('Tennis', ['ionic', 'Controllers', 'Services', 'ngMockE2E'])
+angular.module('assessment', []);
+angular.module('account', ['utf8-base64']);
+angular.module('starter', ['ionic', 'account', 'ngMockE2E'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -95,4 +97,22 @@ angular.module('Tennis', ['ionic', 'Controllers', 'Services', 'ngMockE2E'])
 
   $urlRouterProvider.otherwise('/login');
   $ionicConfigProvider.navBar.alignTitle('center')
+})
+
+.controller('AppCtrl', function($scope, $state, $ionicPopup, AUTH_EVENTS, AuthService) {
+  $scope.$back = function() {
+    window.history.back();
+  };
+
+  $scope.$signoff = function() {
+    AuthService.clearCredential();
+    $state.go('login', {}, {reload: true});
+  }
+
+  $scope.$on(AUTH_EVENTS.notAuthorized, function(event) {
+    var alertPopup = $ionicPopup.alert({
+      title: 'Unauthorized!',
+      template: 'You are not allowed to accesss this page.'
+    });
+  });
 });

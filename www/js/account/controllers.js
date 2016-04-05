@@ -1,22 +1,4 @@
-angular.module('Controllers', ['Services', 'Constants'])
-
-.controller('AppCtrl', function($scope, $state, $ionicPopup, AUTH_EVENTS, AuthService) {
-  $scope.$back = function() {
-    window.history.back();
-  };
-
-  $scope.$signoff = function() {
-    AuthService.clearCredential();
-    $state.go('login', {}, {reload: true});
-  }
-
-  $scope.$on(AUTH_EVENTS.notAuthorized, function(event) {
-    var alertPopup = $ionicPopup.alert({
-      title: 'Unauthorized!',
-      template: 'You are not allowed to accesss this page.'
-    });
-  });
-})
+angular.module('account')
 
 .controller('LoginCtrl', function($scope, $state, $ionicPopup, AuthService) {
   $scope.data = {};

@@ -1,4 +1,4 @@
-angular.module('Services', ['utf8-base64', 'Constants'])
+angular.module('account')
 .service('AuthService', function($http , base64, $q, $ionicPopup, STORAGE_KEYS, USER_TYPE, Accounts) {
   var isAuthenticated = false;
   var rootUrl = 'http://jsonplaceholder.typicode.com';

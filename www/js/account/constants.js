@@ -1,4 +1,4 @@
-angular.module('Constants', [])
+angular.module('account')
 .constant('STORAGE_KEYS', {
   userInfo: 'UserInfo',
   userId: 'UserID',
