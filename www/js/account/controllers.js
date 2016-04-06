@@ -48,6 +48,8 @@ angular.module('account')
 })
 .controller('DashCtrl', function($state, $scope, $http, AuthService, STORAGE_KEYS) {
   $scope.data = {};
+  var keey = 'password';
+  console.log('Storage Key size: ' + Object.keys(STORAGE_KEYS).length + ", or this: " + STORAGE_KEYS.password + ", and this: " + STORAGE_KEYS[keey]);
 
   if (window.localStorage.getItem(STORAGE_KEYS.userInfo)) {
     console.log('localstorage not empty');

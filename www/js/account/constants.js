@@ -1,13 +1,13 @@
 angular.module('account')
 .constant('STORAGE_KEYS', {
-  userInfo: 'UserInfo',
-  userId: 'UserID',
+  userInfo: 'User Info',
+  userId: 'User ID',
   password: 'Password',
-  firstName: 'FirstName',
-  lastName: 'LastName',
+  firstName: 'First Name',
+  lastName: 'Last Name',
   email: 'Email',
-  phoneNumber: 'PhoneNumber',
-  userType: 'UserType'
+  phoneNumber: 'Phone Number',
+  userType: 'User Type'
 })
 
 .constant('USER_TYPE', {

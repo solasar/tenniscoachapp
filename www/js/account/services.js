@@ -3,7 +3,6 @@ angular.module('account')
   var isAuthenticated = false;
   var rootUrl = 'http://jsonplaceholder.typicode.com';
 
-
   var login = function(userid, password) {
     /* Temporary local authentication - userid = user , password = password
     return $q(function (resolve, reject) {

@@ -8,7 +8,7 @@
 
 <!-- Bootstrap core CSS -->
 <link href="../../css/bootstrap.css" rel="stylesheet">
-  	
+
 <!-- Custom styles for this template -->
 <link href="../../css/custom.css" rel="stylesheet">
 <link href="../../css/targetgame.css" rel="stylesheet">
@@ -34,7 +34,7 @@
 					<span class="sr-only">Toggle navigation</span>
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
+					<span class="icon-bar"> </span>
 				</button>
 				<a class="navbar-brand" href="../index.html">Tennis In or Out</a>
 			</div>
@@ -51,34 +51,34 @@
 	</div>
 
 	<div class="container">
-	
+
 	<br /><br />
-	
+
 	<h1>Create Target Game</h1>
-	
+
 	<div class="list-group" id="targetgametypelist">
 		<a href="" class="list-group-item" id="63">
 	       	<h4 class="list-group-item-heading">Base</h4>
 	 		<p class="list-group-item-text">The base version of the target game, with default target zone values and limited movements for each shot attempt.</p>
 		</a>
-		
+
 		<a href="" class="list-group-item" id="64">
 	       	<h4 class="list-group-item-heading">Rally</h4>
 	 		<p class="list-group-item-text">The player stays in the middle of the court and is fed balls from the left and right. Custom target zone values.</p>
 		</a>
-		
+
 		<a href="" class="list-group-item" id="65">
 	       	<h4 class="list-group-item-heading">Option</h4>
 	 		<p class="list-group-item-text">The ball is fed to the player in middle positions who declares target depth and hits the ball in the specified direction. The player can choose to play the shot at the baseline or serviceline. Custom target zone values.</p>
 		</a>
 	</div>
-	
+
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 	<script src="../../js/bootstrap.min.js"></script>
 	<script src="../../js/jquery-1.11.1.min.js"></script>
-	<script>		
+	<script>
 		$(document).ready(function() {
-			
+
 			//Function that runs when one of the game types is chosen to send a request to the server to create the base game in the database.
 			$(".list-group-item").click(function() {
 
@@ -86,27 +86,27 @@
 
 				var gameType = $(this).attr('id');
 				gameType.replace(/\"/g, "");
-				
+
 				var today = new Date();
 				var dd = today.getDate();
 				var mm = today.getMonth()+1;
 				var yyyy = today.getFullYear();
-				
+
 				if (dd < 10) {
 					dd = '0' + dd;
 				}
-				
+
 				if (mm < 10) {
 					mm = '0' + mm;
 				}
-				
-				
-				
+
+
+
 				var date = yyyy + "-" + mm + "-" + dd;
-				
+
 				//Sets the target game type in the local storage to be used by later pages.
 				localStorage.setItem("targetGameType", gameType);
-				
+
 				//Sends a POST request to the server in order to create the base game.
 				var a = "http://54.88.27.81:8080/TennisInOrOutCode/SVC/Game/CreateGameByGameTypeAndGameDateAndCoachID?";
 				var b = "GameType=" + gameType + "&GameDate=" + date + "&CoachID=" + coachID;
@@ -130,8 +130,8 @@
 
 
 		});
-		
-		
+
+
 		//Used to get a cookie value.
 		function getCookie(cname) {
 		    var name = cname + "=";
