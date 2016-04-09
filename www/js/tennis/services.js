@@ -4,7 +4,7 @@ angular.module('tennis')
   var getShotPosition = function() {
     var shotPositionSize = Object.keys(SHOT_POSITIONS).length;
     return Object.keys(SHOT_POSITIONS)[Math.random() % shotPositionSize];
-  }
+  };
 
   var getShotType = function (shotposition) {
     var shotTypeSize = Object.keys(SHOT_TYPES).length;
@@ -22,7 +22,7 @@ angular.module('tennis')
       }
     }
     return randomShotType;
-  }
+  };
 
   var getTargetZone = function (shottype) {
     //Hard-coded count of serve shot target zones
@@ -33,5 +33,11 @@ angular.module('tennis')
     } else {
       return Object.keys(TARGET_ZONES)[Math.random() % targetZoneSize + 1];
     }
-  }
+  };
+
+  return {
+    getShotPosition: getShotPosition,
+    getShotType: getShotType,
+    getTargetZone: getTargetZone
+  };
 })

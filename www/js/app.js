@@ -6,7 +6,7 @@
 angular.module('tennis', []);
 angular.module('assessment', []);
 angular.module('account', ['utf8-base64']);
-angular.module('starter', ['ionic', 'account', 'ngMockE2E'])
+angular.module('starter', ['ionic', 'account', 'assessment','tennis', 'ngMockE2E'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -69,20 +69,13 @@ angular.module('starter', ['ionic', 'account', 'ngMockE2E'])
   .state('nav.assessment', {
     url: 'nav/assessment',
     views: {
-      'sideContent': {
-        templateUrl: 'templates/skill_level.html'
-      }
-    }
-  })
-
-  .state('nav.assessment.test', {
-    url: '/test',
-    views: {
-      '@': {
+      'sideContent@nav': {
         templateUrl: 'templates/assessment.html',
-        controller: function () {
-          console.log('=D');
-        }
+        controller: 'AssessCtrl'
+      },
+      'court@nav.assessment': {
+        templateUrl: 'templates/court.html',
+        controller: 'CourtCtrl'
       }
     }
   })
