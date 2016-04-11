@@ -1,5 +1,5 @@
 angular.module('account')
-.service('AuthService', function($http , base64, $q, $ionicPopup, STORAGE_KEYS, USER_TYPE, Accounts) {
+.service('AuthService', function($http , base64, $q, $ionicPopup, STORAGE_KEYS, USER_SKILLS, USER_TYPES, Accounts) {
   var isAuthenticated = false;
   var rootUrl = 'http://jsonplaceholder.typicode.com';
 
@@ -22,14 +22,43 @@ angular.module('account')
   };
 
   var newAccount = function(id, firstname, lastname, email, phone, password, type) {
-    var hashPassword = CryptoJS.SHA256(password);
     return $http.post('/api/create_account',
-      {userid: id, firstname: firstname, lastname: lastname, email: email, phone: phone, password: password, usertype: type});
+      {userid: id, firstname: firstname, lastname: lastname, email: email, phone: phone, password: password, usertype: type, userSkill: USER_SKILLS.beginner});
   };
 
+  var getUserInfo = function() {
+    console.log('getuserinfo');
+    if (isAuthenticated) {
+      console.log('Authenticated');
+      return $http.get('/api/get_user_info');
+    }
+  }
+
+
   var setUserInfo = function(data) {
+    window.localStorage.setItem(STORAGE_KEYS.userId, data.userid);
+    window.localStorage.setItem(STORAGE_KEYS.password, data.password);
+    window.localStorage.setItem(STORAGE_KEYS.firstName, data.firstname);
+    window.localStorage.setItem(STORAGE_KEYS.lastName, data.lastname);
+    window.localStorage.setItem(STORAGE_KEYS.email, data.email);
+    window.localStorage.setItem(STORAGE_KEYS.phoneNumber, data.phonenumber);
+    window.localStorage.setItem(STORAGE_KEYS.userType, data.usertype);
+    window.localStorage.setItem(STORAGE_KEYS.userSkill, data.userskill);
+    /*
     window.localStorage.setItem(STORAGE_KEYS.userInfo, JSON.stringify(data));
+
+    window.localStorage.setItem(STORAGE_KEYS.userId, JSON.stringify(data.userid));
+    window.localStorage.setItem(STORAGE_KEYS.password, JSON.stringify(data.password));
+    window.localStorage.setItem(STORAGE_KEYS.firstName, JSON.stringify(data.firstname));
+    window.localStorage.setItem(STORAGE_KEYS.lastName, JSON.stringify(data.lastname));
+    window.localStorage.setItem(STORAGE_KEYS.email, JSON.stringify(data.email));
+    window.localStorage.setItem(STORAGE_KEYS.phoneNumber, JSON.stringify(data.phonenumber));
+    window.localStorage.setItem(STORAGE_KEYS.userType, JSON.stringify(data.usertype));
+    window.localStorage.setItem(STORAGE_KEYS.userSkill, JSON.stringify(data.userskill));
+
+
     console.log(window.localStorage.getItem(STORAGE_KEYS.userInfo));
+    */
     /*
     window.localStorage.setItem(STORAGE_KEYS.firstName, data.firstname);
     window.localStorage.setItem(STORAGE_KEYS.lastName, data.lastname);
@@ -39,8 +68,7 @@ angular.module('account')
     */
   };
 
-  var setCredential = function(userid, password) {
-    var hashPassword = CryptoJS.SHA256(password);
+  var setCredential = function(userid, hashPassword) {
     var authData = base64.encode(userid + ':' + hashPassword);
     console.log('Basic64: ' + authData);
     $http.defaults.headers.common['Authorization'] = 'Basic ' + authData;
@@ -65,6 +93,7 @@ angular.module('account')
     login: login,
     setCredential: setCredential,
     clearCredential: clearCredential,
+    getUserInfo: getUserInfo,
     setUserInfo: setUserInfo,
     newAccount: newAccount,
     isAuthenticated: function () {return isAuthenticated;},
@@ -82,7 +111,8 @@ angular.module('account')
     lastname: 'Federer',
     email: 'roger.federer@gmail.com',
     phonenumber: '4045056767',
-    usertype: 'Player'
+    usertype: 'Player',
+    userskill: 'Beginner'
   };
   return {
     all: function() {

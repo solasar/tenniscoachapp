@@ -17,6 +17,10 @@
   align-items: center;
   justify-content: center;
 }
+.zone:active {
+  outline: red medium solid;
+}
+
 .tennis_court {
   background-image: url("../img/court.png");
   background-size: contain;
@@ -30,3 +34,10 @@
   width: 100%;
 }
 
+
+table {
+  height: 20px;
+  width:100%;
+  border-collapse:collapse;
+  table-layout:fixed;
+}

@@ -1,25 +1,16 @@
 angular.module('assessment')
-.service('AssessService', function ($http, $ionicPopup, STORAGE_KEYS) {
-
-
-  var generateAttempt = function() {
-    var attempt = {
-      shotFrom: getRandom(),
-      shotTo: getRandom()
-
+.service('AssessService', function ($http, $ionicPopup, USER_SKILLS) {
+  var calcSkillLevel = function (hitCount) {
+    if (hitCount > 8 ) {
+      return USER_SKILLS.expert;
+    } else if (hitCount > 5) {
+      return USER_SKILLS.intermediate;
+    } else {
+      return USER_SKILLS.beginner;
     }
-    return
-  }
-
-  var getRandomOneDigitNum = function () {
-    return Math.floor(Math.random() * 10);
-  }
-
-
-})
-
-.factory('AssessTest', function() {
-  var tests = {
-
-  }
-})
+  };
+  
+  return {
+    calcSkillLevel: calcSkillLevel
+  };
+});

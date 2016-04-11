@@ -1,16 +1,15 @@
 angular.module('tennis')
 .service('TennisService', function(SHOT_TYPES, SHOT_POSITIONS, TARGET_ZONES) {
-
   var getShotPosition = function() {
     var shotPositionSize = Object.keys(SHOT_POSITIONS).length;
-    return Object.keys(SHOT_POSITIONS)[Math.random() % shotPositionSize];
+    return SHOT_POSITIONS[Object.keys(SHOT_POSITIONS)[Math.floor(Math.random() * shotPositionSize)]];
   };
 
   var getShotType = function (shotposition) {
     var shotTypeSize = Object.keys(SHOT_TYPES).length;
     var randomShotType;
     while (true) {
-      randomShotType = Object.keys(SHOT_TYPES)[Math.random() % shotTypeSize];
+      randomShotType = SHOT_TYPES[Object.keys(SHOT_TYPES)[Math.floor(Math.random() * shotTypeSize)]];
       if (randomShotType == SHOT_TYPES.serve && (shotposition != SHOT_POSITIONS.behindLeftBaseline ||
           shotposition != SHOT_POSITIONS.behindCenterBaseline || shotposition != SHOT_POSITIONS.behindRightBaseline)) {
         continue;
@@ -29,15 +28,28 @@ angular.module('tennis')
     var serveZoneSize = 8;
     var targetZoneSize = Object.keys(TARGET_ZONES).length;
     if (shottype == SHOT_TYPES.serve) {
-      return Object.keys(TARGET_ZONES)[Math.random() % serveZoneSize + 1];
+      return TARGET_ZONES[Object.keys(TARGET_ZONES)[Math.floor(Math.random() * serveZoneSize) + 1]];
     } else {
-      return Object.keys(TARGET_ZONES)[Math.random() % targetZoneSize + 1];
+      return TARGET_ZONES[Object.keys(TARGET_ZONES)[Math.floor(Math.random() * (targetZoneSize - 1)) + 1]];
     }
   };
+
+  var getShotOrder = function() {
+    var shotPosition = getShotPosition();
+    var shotType = getShotType(shotPosition);
+    var targetZone = getTargetZone(shotType);
+    return {
+      shotposition: shotPosition,
+      shottype: shotType,
+      targetzone: targetZone
+    }
+  };
+
 
   return {
     getShotPosition: getShotPosition,
     getShotType: getShotType,
-    getTargetZone: getTargetZone
+    getTargetZone: getTargetZone,
+    getShotOrder: getShotOrder
   };
-})
+});

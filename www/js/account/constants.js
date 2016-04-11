@@ -1,4 +1,5 @@
 angular.module('account')
+  
 .constant('STORAGE_KEYS', {
   userInfo: 'User Info',
   userId: 'User ID',
@@ -7,10 +8,11 @@ angular.module('account')
   lastName: 'Last Name',
   email: 'Email',
   phoneNumber: 'Phone Number',
-  userType: 'User Type'
+  userType: 'User Type',
+  userSkill: 'User Skill'
 })
 
-.constant('USER_TYPE', {
+.constant('USER_TYPES', {
   player: 'Player',
   coach: 'Coach'
 })
@@ -18,4 +20,10 @@ angular.module('account')
 .constant('AUTH_EVENTS', {
   notAuthorized: 'auth-not-authorized',
   notAuthenticated: 'auth-not-authenticated'
+})
+
+.constant('USER_SKILLS', {
+  beginner: 'Beginner',
+  intermediate: 'Intermediate',
+  expert: 'Expert'
 })

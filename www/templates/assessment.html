@@ -1,24 +1,29 @@
-<ion-view view-title="Assessment Test">
-  <ion-nav-buttons side="left">
-    <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
-  </ion-nav-buttons>
-  <ion-nav-buttons side="right">
-    <button class="button ion-log-out button-calm" ng-click="$signoff()"></button>
-  </ion-nav-buttons>
+<ion-view>
 
   <ion-content class="padding">
 
     <div>
-      <p>Shot position: </p>
-      <p>Shot type: </p>
-      <p>Target zone: </p>
+      <p>Shot position: {{shot.shotposition}}</p>
+      <p>Shot type: {{shot.shottype}}</p>
+      <p>Target zone: <b>{{shot.targetzone}}</b></p>
+      <p>Shots made: {{count.shotcount}} / {{count.maxshotnum}}</p>
     </div>
-    <div class="court_container">
+
+    <p>Assessment progress</p>
+    <table>
+      <tr>
+        <td width="{{bar.hit}}%" style="background-color: #4cd964; outline-color: white">
+        </td>
+        <td width="{{bar.miss}}%" style="background-color: yellow; outline-color: white">
+        </td>
+        <td width="{{bar.none}}%" style="background-color: grey; outline-color: white">
+        </td>
+      </tr>
+    </table>
+
+    <div class="court_container container-fluid">
       <ion-nav-view name="court" ></ion-nav-view>
     </div>
-
-
-
 
 
 

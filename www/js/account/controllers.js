@@ -1,6 +1,6 @@
 angular.module('account')
 
-.controller('LoginCtrl', function($scope, $state, $ionicPopup, AuthService) {
+.controller('LoginCtrl', function($scope, $state, $ionicPopup, AuthService, STORAGE_KEYS) {
   $scope.data = {};
   AuthService.clearCredential();
   $scope.login =  function(data) {
@@ -8,8 +8,17 @@ angular.module('account')
     var hashPassword = CryptoJS.SHA256(data.password);
     AuthService.login(data.userid, hashPassword).then(function (authenticate) {
       console.log('AuthService success!');
-      AuthService.setCredential(data.userid, data.password);
-      $state.go('nav.dashboard', {}, {reload: true});
+      AuthService.setCredential(data.userid, hashPassword);
+      AuthService.getUserInfo().then(function(response) {
+        console.log('Respnose: ', response.data);
+        AuthService.setUserInfo(response.data);
+        $state.go('nav.dashboard', {}, {reload: true});
+
+      }, function(err) {
+        console.log(err);
+      });
+
+
     }, function (err) {
       var alertPopup = $ionicPopup.alert({
         title: 'Login failed!',
@@ -23,20 +32,22 @@ angular.module('account')
   };
 })
 
-.controller('CreateAcctCtrl', function($scope, $state, $ionicPopup, AuthService) {
+.controller('CreateAcctCtrl', function($scope, $state, $ionicPopup, AuthService, USER_SKILLS, STORAGE_KEYS) {
   $scope.data = {};
   $scope.newAccount = function (data) {
-    AuthService.newAccount(data.userid, data.firstname, data.lastname, data.email, data.phonenumber, data.password, data.usertype).then(function (authenticate) {
-      var userInfo = {
-        userid: data.userid,
+    var hashPassword = CryptoJS.SHA256(data.password);
+    AuthService.newAccount(data.userid, data.firstname, data.lastname, data.email, data.phonenumber, hashPassword, data.usertype).then(function (authenticate) {
+      var newUser = {
+        userid : data.userid,
         firstname: data.firstname,
         lastname: data.lastname,
         email: data.email,
         phonenumber: data.phonenumber,
-        password: data.password,
-        usertype: data.usertype
+        password: hashPassword,
+        usertype: data.usertype,
+        userskill: USER_SKILLS.beginner
       }
-      AuthService.setUserInfo(userInfo);
+      AuthService.setUserInfo(newUser);
       $state.go('nav.dashboard');
     }, function (err) {
       var alertPopup = $ionicPopup.alert({
@@ -47,24 +58,40 @@ angular.module('account')
   };
 })
 .controller('DashCtrl', function($state, $scope, $http, AuthService, STORAGE_KEYS) {
-  $scope.data = {};
-  var keey = 'password';
-  console.log('Storage Key size: ' + Object.keys(STORAGE_KEYS).length + ", or this: " + STORAGE_KEYS.password + ", and this: " + STORAGE_KEYS[keey]);
+  $scope.data = $scope.data = {
+    firstname: window.localStorage.getItem(STORAGE_KEYS.firstName),
+    lastname: window.localStorage.getItem(STORAGE_KEYS.lastName),
+    userid: window.localStorage.getItem(STORAGE_KEYS.userId),
+    email: window.localStorage.getItem(STORAGE_KEYS.email),
+    phonenumber: window.localStorage.getItem(STORAGE_KEYS.phoneNumber),
+    usertype: window.localStorage.getItem(STORAGE_KEYS.userType),
+    userskill: window.localStorage.getItem(STORAGE_KEYS.userSkill)
+  };
+/*
+  console.log('Stored password:', window.localStorage.getItem(STORAGE_KEYS.password));
 
   if (window.localStorage.getItem(STORAGE_KEYS.userInfo)) {
     console.log('localstorage not empty');
-    var temp = window.localStorage.getItem(STORAGE_KEYS.userInfo);
-    console.log(temp.firstname);
-    $scope.data = JSON.parse(temp);
+    $scope.data = {
+      firstname: JSON.parse(window.localStorage.getItem(STORAGE_KEYS.firstName)),
+      lastname: JSON.parse(window.localStorage.getItem(STORAGE_KEYS.lastName)),
+      userid: JSON.parse(window.localStorage.getItem(STORAGE_KEYS.userId)),
+      email: JSON.parse(window.localStorage.getItem(STORAGE_KEYS.email)),
+      phonenumber: JSON.parse(window.localStorage.getItem(STORAGE_KEYS.phoneNumber)),
+      usertype: JSON.parse(window.localStorage.getItem(STORAGE_KEYS.userType)),
+      userskill: JSON.parse(window.localStorage.getItem(STORAGE_KEYS.userSkill))
+    }
   } else {console.log('localstorage empty');
     $http.get('/api/get_user_info').then(function (response) {
       $scope.data = response.data;
+
       AuthService.setUserInfo(response.data);
       console.log('Test: ' + window.localStorage.getItem(STORAGE_KEYS.userType));
     }, function (err) {
       console.log(err);
     });
   }
+  */
 })
 
 .controller('AccessCtrl', function($state, $scope, $stateParam) {

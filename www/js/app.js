@@ -4,7 +4,7 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 angular.module('tennis', []);
-angular.module('assessment', []);
+angular.module('assessment', ['tennis', 'account']);
 angular.module('account', ['utf8-base64']);
 angular.module('starter', ['ionic', 'account', 'assessment','tennis', 'ngMockE2E'])
 
@@ -35,60 +35,61 @@ angular.module('starter', ['ionic', 'account', 'assessment','tennis', 'ngMockE2E
 
 .config(function ($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
   $stateProvider
+    .state('login', {
+      url: '/login',
+      templateUrl: 'templates/login.html',
+      controller: 'LoginCtrl',
+      cache: false
+    })
 
-  .state('login', {
-    url: '/login',
-    templateUrl: 'templates/login.html',
-    controller: 'LoginCtrl',
-    cache: false
-  })
+    .state('create_account', {
+      url: '/create_account',
+      templateUrl: 'templates/create_account.html',
+      controller: 'CreateAcctCtrl'
+    })
 
-  .state('create_account', {
-    url: '/create_account',
-    templateUrl: 'templates/create_account.html',
-    controller: 'CreateAcctCtrl'
-  })
+    .state('nav', {
+      url: '/',
+      abstract: true,
+      templateUrl: 'templates/sidemenu.html'
+    })
 
-  .state('nav', {
-    url: '/',
-    abstract: true,
-    templateUrl: 'templates/sidemenu.html'
-  })
-
-  .state('nav.dashboard', {
-    url: 'nav/dashboard',
-    cache: false,
-    views: {
-      'sideContent': {
-        templateUrl: 'templates/dashboard.html',
-        controller: 'DashCtrl'
+    .state('nav.dashboard', {
+      url: 'nav/dashboard',
+      cache: false,
+      views: {
+        'sideContent': {
+          templateUrl: 'templates/dashboard.html',
+          controller: 'DashCtrl'
+        }
       }
-    }
-  })
+    })
 
-  .state('nav.assessment', {
-    url: 'nav/assessment',
-    views: {
-      'sideContent@nav': {
-        templateUrl: 'templates/assessment.html',
-        controller: 'AssessCtrl'
-      },
-      'court@nav.assessment': {
-        templateUrl: 'templates/court.html',
-        controller: 'CourtCtrl'
+    .state('nav.assessment', {
+      url: 'nav/assessment',
+      cache: false,
+      views: {
+        'sideContent': {
+          templateUrl: 'templates/assessment.html',
+          controller: 'AssessCtrl'
+        },
+        'court@nav.assessment': {
+          templateUrl: 'templates/court.html',
+          controller: 'CourtCtrl'
+        }
       }
-    }
-  })
+    })
 
-  .state('nav.practice', {
-    url: 'nav/practice',
-    views: {
-      'sideContent': {
-        templateUrl: 'templates/practice.html',
-        controller: 'PracticeCtrl'
+    .state('nav.assess_result', {
+      url: 'nav/assess_result',
+      cache: false,
+      views: {
+        'sideContent': {
+          templateUrl: 'templates/assessment_result.html',
+          controller: 'AssessResultCtrl'
+        }
       }
-    }
-  });
+    })
 
   $urlRouterProvider.otherwise('/login');
   $ionicConfigProvider.navBar.alignTitle('center')
