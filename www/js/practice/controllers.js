@@ -1,59 +1,48 @@
-angular.module('assessment')
-  .controller('AssessCtrl', function ($scope, $state, $ionicPopup, $http, TennisService, STORAGE_KEYS, AssessService) {
+angular.module('practice')
+  .controller('PracticeCtrl', function ($scope, $state, $ionicPopup, $http, TennisService, STORAGE_KEYS, PracticeService) {
     //Always assign the nav bar title from the parent view, using the var name 'title'
-    $scope.title = 'Accessment Test';
+    $scope.title = 'Practice';
 
-    var maxShotNum = 10;
-    var hitCount = 0;
-    var missCount = 0;
-
-    $scope.bar = {
-      hit: 0,
-      miss: 0,
-      none: 100
-    }
-
+    $scope.data = {};
     $scope.shot = {};
-    $scope.count = {
-      shotcount: hitCount + missCount,
-      maxshotnum:  maxShotNum
-    }
-    $scope.shot = TennisService.getShotOrder();
-    console.log('This is random shot order', $scope.shot);
 
     $scope.$on('recordShotEvent', function (event, arg) {
-      console.log('Received event', event);
-      console.log('With args -> ' + arg.hitzone);
+      var PositionSelect = document.getElementById("ShotPosition");
+      var positionS = PositionSelect.options[PositionSelect.selectedIndex].value;
+      window.localStorage.setItem(STORAGE_KEYS.startPosition, positionS);
+      console.log(positionS);
 
-      if ($scope.shot.targetzone == arg.hitzone) {
-        hitCount++;
-        $scope.bar.hit = hitCount * 10;
-      } else {
-        missCount++;
-        $scope.bar.miss = missCount * 10;
-      }
-      $scope.count.shotcount = hitCount + missCount;
-      $scope.bar.none = (maxShotNum - $scope.count.shotcount) * 10;
+      var TypeSelect = document.getElementById("ShotType");
+      var typeS = TypeSelect.options[TypeSelect.selectedIndex].value;
+      window.localStorage.setItem(STORAGE_KEYS.shotType, typeS);
+      console.log(typeS);
 
-      if (hitCount + missCount >= maxShotNum) {
-        console.log('Finished assessment');
-        window.localStorage.setItem(STORAGE_KEYS.userSkill, AssessService.calcSkillLevel(hitCount));
-        console.log(window.localStorage.getItem(STORAGE_KEYS.userSkill));
-        $state.go('nav.assess_result', {}, {reload: true});
-
-
-
-      } else {
-        $scope.shot = TennisService.getShotOrder();
-        console.log('This is random shot order', $scope.shot);
-        console.log('Hit: ' + hitCount + ', Miss: ' + missCount);
-      }
-
+      console.log('Finished practice');
+      window.localStorage.setItem(STORAGE_KEYS.targetZone, arg.hitzone);
+      console.log(window.localStorage.getItem(STORAGE_KEYS.targetZone));
+      $state.go('nav.practice_result', {}, {reload: true});
     })
   })
-  .controller('AssessResultCtrl', function ($scope, $state, STORAGE_KEYS) {
-    console.log('In AssessResultCtrl');
-    $scope.level = window.localStorage.getItem(STORAGE_KEYS.userSkill);
+
+  .controller('PracticeStartCtrl', function($scope, $state, $ionicPopup, $http, STORAGE_KEYS, PracticeService) {
+    $scope.toRandom = function() {
+      console.log("PracticeStartCtrl toRandom() reached");
+      $state.go('nav.practice', {}, {reload: true});
+    };
+
+    $scope.toCoach = function() {
+      console.log("Need to get Data from coach, which currently cannot be entered");
+    };
+  })
+  .controller('PracticeResultCtrl', function ($scope, $state, STORAGE_KEYS) {
+    console.log('In PracticeResultCtrl');
+    $scope.toRandom = function() {
+      $state.go('nav.practice', {}, {reload: true});
+    };
+
+    $scope.toHome = function() {
+      $state.go('nav.dashboard', {}, {reload: true});
+    };
   })
 
 

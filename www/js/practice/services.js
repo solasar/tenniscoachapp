@@ -1,5 +1,5 @@
-angular.module('assessment')
-.service('AssessService', function ($http, $ionicPopup, USER_SKILLS) {
+angular.module('practice')
+.service('PracticeService', function ($http, $ionicPopup, USER_SKILLS) {
   var calcSkillLevel = function (hitCount) {
     if (hitCount > 8 ) {
       return USER_SKILLS.expert;
@@ -9,7 +9,7 @@ angular.module('assessment')
       return USER_SKILLS.beginner;
     }
   };
-  
+
   return {
     calcSkillLevel: calcSkillLevel
   };

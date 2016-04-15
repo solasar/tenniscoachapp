@@ -10,23 +10,15 @@
 
   <ion-content class="padding">
     <div>
-      <!--
-      <img src="img/person.png" alt="Tennis Icon" width="150" height="200" alt="left" />
-    -->
-      <h2>Welcome, {{data.firstname}} {{data.lastname}}</h2>
-      <p>Player ID: {{data.userid}}</p>
+      <h2>Practice</h2>
       <p>
-        Email: {{data.email}}
+        Please choose a practice type
       </p>
-      <p>
-        Phone #: {{data.phonenumber}}
-      </p>
-      <p>
-        User type: {{data.usertype}}
-      </p>
-      <p>
-        User skill: {{data.userskill}}
-      </p>
+    </div>
+
+    <div>
+      <button class="button button-block button-positive" ng-click="toRandom()">Enter Data</button>
+      <button class="button button-block button-positive" ng-click="toCoach()">Practice Set</button>
     </div>
   </ion-content>
 </ion-view>

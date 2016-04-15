@@ -1,5 +1,7 @@
-angular.module('assessment')
-  
+angular.module('practice')
+
 .constant('STORAGE_KEYS', {
-  shotResult: 'ShotResult'
+  shotType: 'ShotType',
+  targetZone: 'TargetZone',
+  startPosition: 'StartPosition'
 });
