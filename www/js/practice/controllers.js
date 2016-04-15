@@ -7,6 +7,8 @@ angular.module('practice')
     $scope.shot = {};
 
     $scope.$on('recordShotEvent', function (event, arg) {
+
+      /*
       var PositionSelect = document.getElementById("ShotPosition");
       var positionS = PositionSelect.options[PositionSelect.selectedIndex].value;
       window.localStorage.setItem(STORAGE_KEYS.startPosition, positionS);
@@ -16,11 +18,82 @@ angular.module('practice')
       var typeS = TypeSelect.options[TypeSelect.selectedIndex].value;
       window.localStorage.setItem(STORAGE_KEYS.shotType, typeS);
       console.log(typeS);
+      */
 
-      console.log('Finished practice');
-      window.localStorage.setItem(STORAGE_KEYS.targetZone, arg.hitzone);
-      console.log(window.localStorage.getItem(STORAGE_KEYS.targetZone));
-      $state.go('nav.practice_result', {}, {reload: true});
+      var typePopup = $ionicPopup.alert({
+        title: 'Select Shot Type',
+        template:
+        '<ion-list overflow-scroll="true">'+
+        '<ion-item> 0 </ion-item>'+
+        '<ion-item> 0 </ion-item>'+
+        '<ion-item> 0 </ion-item>'+
+        '<ion-item> 1 </ion-item>'+
+        '<ion-item> 1 </ion-item>'+
+        '<ion-item> 1 </ion-item>'+
+        '<ion-item> 1 </ion-item>'+
+        '<ion-item> 0 </ion-item>'+
+        '<ion-item> 0 </ion-item>'+
+        '<ion-item> 0 </ion-item>'+
+        '<ion-item> 1 </ion-item>'+
+        '<ion-item> 1 </ion-item>'+
+        '<ion-item> 1 </ion-item>'+
+        '<ion-item> 1 </ion-item>'+
+        '<ion-item> 0 </ion-item>'+
+        '<ion-item> 0 </ion-item>'+
+        '<ion-item> 0 </ion-item>'+
+        '<ion-item> 1 </ion-item>'+
+        '<ion-item> 1 </ion-item>'+
+        '<ion-item> 1 </ion-item>'+
+        '<ion-item> 1 </ion-item>'+
+        '</ion-list>',
+        buttons: [
+          {
+            text: 'OK',
+            type: 'button-positive',
+            onTap: function (e) {
+              var positionPopup = $ionicPopup.alert({
+                title: 'Select Start Position',
+                template:
+                '<ion-list overflow-scroll="true">'+
+                '<ion-item> 0 </ion-item>'+
+                '<ion-item> 0 </ion-item>'+
+                '<ion-item> 0 </ion-item>'+
+                '<ion-item> 1 </ion-item>'+
+                '<ion-item> 1 </ion-item>'+
+                '<ion-item> 1 </ion-item>'+
+                '<ion-item> 1 </ion-item>'+
+                '<ion-item> 0 </ion-item>'+
+                '<ion-item> 0 </ion-item>'+
+                '<ion-item> 0 </ion-item>'+
+                '<ion-item> 1 </ion-item>'+
+                '<ion-item> 1 </ion-item>'+
+                '<ion-item> 1 </ion-item>'+
+                '<ion-item> 1 </ion-item>'+
+                '<ion-item> 0 </ion-item>'+
+                '<ion-item> 0 </ion-item>'+
+                '<ion-item> 0 </ion-item>'+
+                '<ion-item> 1 </ion-item>'+
+                '<ion-item> 1 </ion-item>'+
+                '<ion-item> 1 </ion-item>'+
+                '<ion-item> 1 </ion-item>'+
+                '</ion-list>',
+                buttons: [
+                  {
+                    text: 'OK',
+                    type: 'button-positive',
+                    onTap: function (e) {
+                      console.log('Finished practice');
+                      window.localStorage.setItem(STORAGE_KEYS.targetZone, arg.hitzone);
+                      console.log(window.localStorage.getItem(STORAGE_KEYS.targetZone));
+                      $state.go('nav.practice_result', {}, {reload: true});
+                    }
+                  }
+                ]
+              });
+            }
+          }
+        ]
+      });
     })
   })
 
@@ -44,5 +117,3 @@ angular.module('practice')
       $state.go('nav.dashboard', {}, {reload: true});
     };
   })
-
-

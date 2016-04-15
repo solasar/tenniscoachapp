@@ -10,6 +10,10 @@ angular.module('practice')
     }
   };
 
+  var typeChosen = function() {
+    console.log("Made It to type");
+  };
+
   return {
     calcSkillLevel: calcSkillLevel
   };
