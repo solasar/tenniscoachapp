@@ -5,8 +5,9 @@
 // the 2nd parameter is an array of 'requires'
 angular.module('tennis', []);
 angular.module('assessment', ['tennis', 'account']);
+angular.module('practice', ['tennis', 'account']);
 angular.module('account', ['utf8-base64']);
-angular.module('starter', ['ionic', 'account', 'assessment','tennis', 'ngMockE2E'])
+angular.module('starter', ['ionic', 'account', 'assessment','practice','tennis', 'ngMockE2E'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -83,13 +84,50 @@ angular.module('starter', ['ionic', 'account', 'assessment','tennis', 'ngMockE2E
       }
     })
 
-    .state('nav.assess_result', {
-      url: 'nav/assess_result',
+    .state('nav.assessment_result', {
+      url: 'nav/assessment_result',
       cache: false,
       views: {
         'sideContent': {
           templateUrl: 'templates/assessment_result.html',
           controller: 'AssessResultCtrl'
+        }
+      }
+    })
+
+    .state('nav.practice_start', {
+      url: 'nav/practice_start',
+      cache: false,
+      views: {
+        'sideContent': {
+          templateUrl: 'templates/practice_start.html',
+          controller: 'PracticeStartCtrl'
+        }
+      }
+    })
+
+    .state('nav.practice_result', {
+      url: 'nav/practice_result',
+      cache: false,
+      views: {
+        'sideContent': {
+          templateUrl: 'templates/practice_result.html',
+          controller: 'PracticeResultCtrl'
+        }
+      }
+    })
+
+    .state('nav.practice', {
+      url: 'nav/practice',
+      cache: false,
+      views: {
+        'sideContent': {
+          templateUrl: 'templates/practice.html',
+          controller: 'PracticeCtrl'
+        },
+        'court@nav.practice': {
+          templateUrl: 'templates/court.html',
+          controller: 'CourtCtrl'
         }
       }
     })

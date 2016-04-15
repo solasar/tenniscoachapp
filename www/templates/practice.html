@@ -1,0 +1,61 @@
+<ion-view>
+
+  <ion-content class="padding">
+
+    <div>
+      <table>
+        <tr>
+          <th>
+            <p>Shot position: {{shot.shotposition}}</p>
+          </th>
+          <th>
+            <p>Shot type: {{shot.shottype}}</p>
+          </th>
+        </tr>
+        <tr>
+          <th>
+            <select id="ShotPosition" SIZE="7">
+              <option selected="selected" value="Position 1">Position 1</option>
+              <option value="Position 2">Position 2</option>
+              <option value="Position 3">Position 3</option>
+              <option value="Position 4">Position 4</option>
+              <option value="Position 5">Position 5</option>
+              <option value="Position 6">Position 6</option>
+              <option value="Position 7">Position 7</option>
+              <option value="Position 8">Position 8</option>
+              <option value="Position 9">Position 9</option>
+              <option value="Position 10">Position 10</option>
+              <option value="Position 11">Position 11</option>
+              <option value="Position 12">Position 12</option>
+            </select>
+          </th>
+          <th>
+            <select id="ShotType" SIZE="7">
+              <option selected="selected" value="Type 1">Type 1</option>
+              <option value="Type 2">Type 2</option>
+              <option value="Type 3">Type 3</option>
+              <option value="Type 4">Type 4</option>
+              <option value="Type 5">Type 5</option>
+              <option value="Type 6">Type 6</option>
+              <option value="Type 7">Type 7</option>
+              <option value="Type 8">Type 8</option>
+              <option value="Type 9">Type 9</option>
+              <option value="Type 10">Type 10</option>
+              <option value="Type 11">Type 11</option>
+              <option value="Type 12">Type 12</option>
+            </select>
+          </th>
+        </tr>
+      </table>
+    </div>
+
+    <p>Please select Target Zone to complete shot entry</p>
+
+    <div class="court_container container-fluid">
+      <ion-nav-view name="court" ></ion-nav-view>
+    </div>
+
+
+
+  </ion-content>
+</ion-view>
