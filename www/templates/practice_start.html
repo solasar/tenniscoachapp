@@ -1,0 +1,32 @@
+<ion-view>
+  <ion-nav-title>Tennis Trainer App</ion-nav-title>
+
+  <ion-nav-buttons side="left">
+    <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
+  </ion-nav-buttons>
+  <ion-nav-buttons side="right">
+    <button class="button ion-log-out button-calm" ng-click="$signoff()"></button>
+  </ion-nav-buttons>
+
+  <ion-content class="padding">
+    <div>
+      <!--
+      <img src="img/person.png" alt="Tennis Icon" width="150" height="200" alt="left" />
+    -->
+      <h2>Welcome, {{data.firstname}} {{data.lastname}}</h2>
+      <p>Player ID: {{data.userid}}</p>
+      <p>
+        Email: {{data.email}}
+      </p>
+      <p>
+        Phone #: {{data.phonenumber}}
+      </p>
+      <p>
+        User type: {{data.usertype}}
+      </p>
+      <p>
+        User skill: {{data.userskill}}
+      </p>
+    </div>
+  </ion-content>
+</ion-view>
