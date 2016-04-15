@@ -8,18 +8,19 @@ angular.module('account')
     var hashPassword = CryptoJS.SHA256(data.password);
     AuthService.login(data.userid, hashPassword).then(function (authenticate) {
       console.log('AuthService success!');
+      console.log(authenticate);
       AuthService.setCredential(data.userid, hashPassword);
       AuthService.getUserInfo().then(function(response) {
         console.log('Respnose: ', response.data);
         AuthService.setUserInfo(response.data);
         $state.go('nav.dashboard', {}, {reload: true});
-
       }, function(err) {
         console.log(err);
       });
 
 
     }, function (err) {
+      console.log('Login Failed', err);
       var alertPopup = $ionicPopup.alert({
         title: 'Login failed!',
         template: 'Please check your credentials.'
@@ -34,9 +35,15 @@ angular.module('account')
 
 .controller('CreateAcctCtrl', function($scope, $state, $ionicPopup, AuthService, USER_SKILLS, STORAGE_KEYS) {
   $scope.data = {};
+  $scope.level = USER_SKILLS;
   $scope.newAccount = function (data) {
+    console.log('This is password, not hashed: ', data.password);
+    console.log('This is hashed password, before adding into var: ', CryptoJS.SHA256(data.password).toString(CryptoJS.enc.Hex));
+    console.log('This is hashed password, before adding into var: '+ CryptoJS.SHA256(data.password));
     var hashPassword = CryptoJS.SHA256(data.password);
-    AuthService.newAccount(data.userid, data.firstname, data.lastname, data.email, data.phonenumber, hashPassword, data.usertype).then(function (authenticate) {
+    console.log('This is hashed password: ', hashPassword);
+    AuthService.newAccount(data.userid, data.firstname, data.lastname, data.email, data.phonenumber, hashPassword.toString(CryptoJS.enc.Hex), data.usertype).then(function (authenticate) {
+      console.log('New user registered', authenticate);
       var newUser = {
         userid : data.userid,
         firstname: data.firstname,
@@ -50,6 +57,7 @@ angular.module('account')
       AuthService.setUserInfo(newUser);
       $state.go('nav.dashboard');
     }, function (err) {
+      console.log('New user failed to get registered', err);
       var alertPopup = $ionicPopup.alert({
         title: 'Creating account failed!',
         template: 'Please make sure to put correct information.'

@@ -13,8 +13,9 @@ angular.module('account')
 })
 
 .constant('USER_TYPES', {
-  player: 'Player',
-  coach: 'Coach'
+  player: 'P',
+  coach: 'C',
+  both: 'B'
 })
 
 .constant('AUTH_EVENTS', {

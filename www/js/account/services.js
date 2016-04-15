@@ -18,12 +18,20 @@ angular.module('account')
     // Temporary local authentication - userid = user , password = password
 */
     //Actual http post call
-    return $http.post('/api/authenticate', {userid: userid, password: password});
+    return $http.post('http://54.164.54.3/login', {name: 'userneame', pwhash: 'password'});
+/*
+    return $http.post('/api/authenticate', {userid: userid, password: password});*/
   };
 
   var newAccount = function(id, firstname, lastname, email, phone, password, type) {
-    return $http.post('/api/create_account',
-      {userid: id, firstname: firstname, lastname: lastname, email: email, phone: phone, password: password, usertype: type, userSkill: USER_SKILLS.beginner});
+    var temp = {
+      id: id,
+      firstname: firstname
+    }
+    console.log('check this temp', temp);
+    console.log('accounttype: ' + type);
+    return $http.post('http://54.164.54.3/registration',
+      {userid: id, firstname: firstname, lastname: lastname, email: email, phone: phone, password: password, usertype: 'P'});
   };
 
   var getUserInfo = function() {

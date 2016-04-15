@@ -30,6 +30,9 @@ angular.module('starter', ['ionic', 'account', 'assessment','tennis', 'ngMockE2E
   $httpBackend.whenGET('/api/get_user_info').respond(Accounts.all());
   $httpBackend.whenPOST('/api/authenticate', {userid: Accounts.all().userid, password: CryptoJS.SHA256(Accounts.all().password)}).respond(200, {message: 'Fake login success'});
   $httpBackend.whenPOST('/api/create_account').respond(200, {message: 'Fake new account success'});
+  $httpBackend.whenPOST('http://54.164.54.3/login').passThrough();
+  $httpBackend.whenPOST('http://54.164.54.3/registration').passThrough();
+  $httpBackend.whenGET('http://jsonplaceholder.typicode.com/posts').passThrough();
   $httpBackend.whenGET(/templates\/\w+.*/).passThrough();
 })
 
