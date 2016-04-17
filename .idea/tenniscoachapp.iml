@@ -6,9 +6,5 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-<<<<<<< HEAD
-    <orderEntry type="library" name="tenniscoachapp node_modules" level="project" />
-=======
->>>>>>> 21eb4220466a6a9ddb739ad785691dc73aef0181
   </component>
 </module>

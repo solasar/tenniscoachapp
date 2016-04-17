@@ -15,6 +15,43 @@ angular.module('practice')
       value: 'None'
     }
 
+    $scope.$on('recordShotEvent', function (event, arg) {
+      $scope.shotPosition = none;
+      $scope.targetZone = {
+        key: arg.key,
+        value: arg.value
+      }
+      var positionPopup = $ionicPopup.show({
+        title: 'Select Shot Position',
+        scope: $scope,
+        template: '<ion-list overflow-scroll="true">' +
+        ' <ion-radio ng-repeat="position in shotPositionConsts" ng-model="$parent.$parent.shotPosition" ng-value="{key: position.key, value: position.value}" ng-click="nextPopup()">' +
+        '   <p>{{position.value}}<p>' +
+        ' </ion-radio>' +
+        '</ion-list>',
+        buttons: [
+          {
+            text: 'Position Unknown',
+            type: 'button-positive',
+            onTap: function () {
+              $scope.shotPosition = none;
+              console.log('User does not want to input shot position.');
+              $scope.nextPopup();
+            }
+          },
+          {
+            text: 'Cancel',
+            type: 'button-positive'
+          }
+        ]
+      });
+
+      $scope.nextPopup = function () {
+        $scope.showShotTypePopup();
+        positionPopup.close();
+      }
+    });
+
     $scope.showShotTypePopup = function () {
       $scope.shotType = none;
       var typePopup = $ionicPopup.show({
@@ -26,13 +63,19 @@ angular.module('practice')
         '</ion-radio>' +
         '</ion-list>',
         buttons: [{
-          type: 'button-positive ion-close-round',
+          text: 'Type Unknown',
+          type: 'button-positive',
           onTap: function () {
             $scope.shotType = none;
             console.log('User does not want to input shot type.');
             $scope.recordShot();
           }
-        }]
+        },
+          {
+            text: 'Cancel',
+            type: 'button-positive'
+          }
+        ]
       });
 
       $scope.recordShot = function () {
@@ -48,36 +91,6 @@ angular.module('practice')
       }
       console.log("You clicked something in list");
     };
-
-    $scope.$on('recordShotEvent', function (event, arg) {
-      $scope.shotPosition = none;
-      $scope.targetZone = {
-        key: arg.key,
-        value: arg.value
-      }
-      var positionPopup = $ionicPopup.show({
-        title: 'Select Shot Position',
-        scope: $scope,
-        template: '<ion-list overflow-scroll="true">' +
-        ' <ion-radio ng-repeat="position in shotPositionConsts" ng-model="$parent.$parent.shotPosition" ng-value="{key: position.key, value: position.value}" ng-click="nextPopup()">' +
-        '   <p>{{position.value}}<p>' +
-        ' </ion-radio>' +
-        '</ion-list>',
-        buttons: [{
-          type: 'button-positive ion-close-round',
-          onTap: function() {
-            $scope.shotPosition = none;
-            console.log('User does not want to input shot position.');
-            $scope.nextPopup();
-          }
-        }]
-      });
-
-      $scope.nextPopup = function () {
-        $scope.showShotTypePopup();
-        positionPopup.close();
-      }
-    });
 
     $scope.submitRecord = function () {
       console.log('Display record: ', shotRecords);
