@@ -1,103 +1,93 @@
 angular.module('practice')
-  .controller('PracticeCtrl', function ($scope, $state, $ionicPopup, $http, TennisService, STORAGE_KEYS, PracticeService) {
+  .controller('PracticeCtrl', function ($scope, $state, $ionicPopup, $ionicModal, $http, SHOT_POSITIONS, SHOT_TYPES, TennisService, STORAGE_KEYS, PracticeService) {
     //Always assign the nav bar title from the parent view, using the var name 'title'
     $scope.title = 'Practice';
+    $scope.shotPosition = {value: 'This is the 1st shot'};
+    $scope.shotType = {value: 'This is the 1st shot'};
+    $scope.targetZone = {value: 'This is the 1st shot'};
+    $scope.shotPositionConsts = [];
+    $scope.shotTypeConsts = [];
+    $scope.shotPositionConsts = PracticeService.getShotPositionConsts();
+    $scope.shotTypeConsts = PracticeService.getShotTypeConsts();
+    var shotRecords = [];
+    var none = {
+      key: 'None',
+      value: 'None'
+    }
 
-    $scope.data = {};
-    $scope.shot = {};
+    $scope.showShotTypePopup = function () {
+      $scope.shotType = none;
+      var typePopup = $ionicPopup.show({
+        title: 'Select Shot Type',
+        scope: $scope,
+        template: '<ion-list overflow-scroll="true">' +
+        ' <ion-radio ng-repeat="type in shotTypeConsts" ng-model="$parent.$parent.shotType" ng-value="{key: type.key, value: type.value}" ng-click="recordShot()">' +
+        '   <p>{{type.value}}</p>' +
+        '</ion-radio>' +
+        '</ion-list>',
+        buttons: [{
+          type: 'button-positive ion-close-round',
+          onTap: function () {
+            $scope.shotType = none;
+            console.log('User does not want to input shot type.');
+            $scope.recordShot();
+          }
+        }]
+      });
+
+      $scope.recordShot = function () {
+        typePopup.close();
+        shotRecords.push({
+          shotposition: $scope.shotPosition.key,
+          shottype: $scope.shotType.key,
+          targetzone: $scope.targetZone.key
+        });
+        console.log('Check Type Key: ', $scope.shotType.key);
+        console.log('Shot Position: ' , $scope.shotPosition.key);
+        console.log('Target Zone: ' , $scope.targetZone.key);
+      }
+      console.log("You clicked something in list");
+    };
 
     $scope.$on('recordShotEvent', function (event, arg) {
-
-      /*
-      var PositionSelect = document.getElementById("ShotPosition");
-      var positionS = PositionSelect.options[PositionSelect.selectedIndex].value;
-      window.localStorage.setItem(STORAGE_KEYS.startPosition, positionS);
-      console.log(positionS);
-
-      var TypeSelect = document.getElementById("ShotType");
-      var typeS = TypeSelect.options[TypeSelect.selectedIndex].value;
-      window.localStorage.setItem(STORAGE_KEYS.shotType, typeS);
-      console.log(typeS);
-      */
-
-      var typePopup = $ionicPopup.alert({
-        title: 'Select Shot Type',
-        template:
-        '<ion-list overflow-scroll="true">'+
-        '<ion-item> 0 </ion-item>'+
-        '<ion-item> 0 </ion-item>'+
-        '<ion-item> 0 </ion-item>'+
-        '<ion-item> 1 </ion-item>'+
-        '<ion-item> 1 </ion-item>'+
-        '<ion-item> 1 </ion-item>'+
-        '<ion-item> 1 </ion-item>'+
-        '<ion-item> 0 </ion-item>'+
-        '<ion-item> 0 </ion-item>'+
-        '<ion-item> 0 </ion-item>'+
-        '<ion-item> 1 </ion-item>'+
-        '<ion-item> 1 </ion-item>'+
-        '<ion-item> 1 </ion-item>'+
-        '<ion-item> 1 </ion-item>'+
-        '<ion-item> 0 </ion-item>'+
-        '<ion-item> 0 </ion-item>'+
-        '<ion-item> 0 </ion-item>'+
-        '<ion-item> 1 </ion-item>'+
-        '<ion-item> 1 </ion-item>'+
-        '<ion-item> 1 </ion-item>'+
-        '<ion-item> 1 </ion-item>'+
+      $scope.shotPosition = none;
+      $scope.targetZone = {
+        key: arg.key,
+        value: arg.value
+      }
+      var positionPopup = $ionicPopup.show({
+        title: 'Select Shot Position',
+        scope: $scope,
+        template: '<ion-list overflow-scroll="true">' +
+        ' <ion-radio ng-repeat="position in shotPositionConsts" ng-model="$parent.$parent.shotPosition" ng-value="{key: position.key, value: position.value}" ng-click="nextPopup()">' +
+        '   <p>{{position.value}}<p>' +
+        ' </ion-radio>' +
         '</ion-list>',
-        buttons: [
-          {
-            text: 'OK',
-            type: 'button-positive',
-            onTap: function (e) {
-              var positionPopup = $ionicPopup.alert({
-                title: 'Select Start Position',
-                template:
-                '<ion-list overflow-scroll="true">'+
-                '<ion-item> 0 </ion-item>'+
-                '<ion-item> 0 </ion-item>'+
-                '<ion-item> 0 </ion-item>'+
-                '<ion-item> 1 </ion-item>'+
-                '<ion-item> 1 </ion-item>'+
-                '<ion-item> 1 </ion-item>'+
-                '<ion-item> 1 </ion-item>'+
-                '<ion-item> 0 </ion-item>'+
-                '<ion-item> 0 </ion-item>'+
-                '<ion-item> 0 </ion-item>'+
-                '<ion-item> 1 </ion-item>'+
-                '<ion-item> 1 </ion-item>'+
-                '<ion-item> 1 </ion-item>'+
-                '<ion-item> 1 </ion-item>'+
-                '<ion-item> 0 </ion-item>'+
-                '<ion-item> 0 </ion-item>'+
-                '<ion-item> 0 </ion-item>'+
-                '<ion-item> 1 </ion-item>'+
-                '<ion-item> 1 </ion-item>'+
-                '<ion-item> 1 </ion-item>'+
-                '<ion-item> 1 </ion-item>'+
-                '</ion-list>',
-                buttons: [
-                  {
-                    text: 'OK',
-                    type: 'button-positive',
-                    onTap: function (e) {
-                      console.log('Finished practice');
-                      window.localStorage.setItem(STORAGE_KEYS.targetZone, arg.hitzone);
-                      console.log(window.localStorage.getItem(STORAGE_KEYS.targetZone));
-                      $state.go('nav.practice_result', {}, {reload: true});
-                    }
-                  }
-                ]
-              });
-            }
+        buttons: [{
+          type: 'button-positive ion-close-round',
+          onTap: function() {
+            $scope.shotPosition = none;
+            console.log('User does not want to input shot position.');
+            $scope.nextPopup();
           }
-        ]
+        }]
       });
-    })
+
+      $scope.nextPopup = function () {
+        $scope.showShotTypePopup();
+        positionPopup.close();
+      }
+    });
+
+    $scope.submitRecord = function () {
+      console.log('Display record: ', shotRecords);
+      PracticeService.pushShotRecords(shotRecords);
+      $state.go('nav.practice_result', {records: JSON.stringify(shotRecords)}, {reload: true});
+    };
   })
 
-  .controller('PracticeStartCtrl', function($scope, $state, $ionicPopup, $http, STORAGE_KEYS, PracticeService) {
+
+  .controller('PracticeStartCtrl', function($scope, $state) {
     $scope.toRandom = function() {
       console.log("PracticeStartCtrl toRandom() reached");
       $state.go('nav.practice', {}, {reload: true});
@@ -107,8 +97,11 @@ angular.module('practice')
       console.log("Need to get Data from coach, which currently cannot be entered");
     };
   })
-  .controller('PracticeResultCtrl', function ($scope, $state, STORAGE_KEYS) {
-    console.log('In PracticeResultCtrl');
+
+  .controller('PracticeResultCtrl', function ($scope, $state, $stateParams) {
+    var shotRecords = JSON.parse($stateParams.records);
+    console.log('In PracticeResultCtrl', shotRecords);
+    $scope.recordNum = shotRecords.length;
     $scope.toRandom = function() {
       $state.go('nav.practice', {}, {reload: true});
     };
@@ -116,4 +109,4 @@ angular.module('practice')
     $scope.toHome = function() {
       $state.go('nav.dashboard', {}, {reload: true});
     };
-  })
+  });

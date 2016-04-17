@@ -1,20 +1,43 @@
 angular.module('practice')
-.service('PracticeService', function ($http, $ionicPopup, USER_SKILLS) {
-  var calcSkillLevel = function (hitCount) {
-    if (hitCount > 8 ) {
-      return USER_SKILLS.expert;
-    } else if (hitCount > 5) {
-      return USER_SKILLS.intermediate;
-    } else {
-      return USER_SKILLS.beginner;
+.service('PracticeService', function ($http, $ionicPopup, STORAGE_KEYS, SHOT_POSITIONS, SHOT_TYPES) {
+  var pushShotRecords = function (records) {
+    var allRecords = JSON.parse(window.localStorage.getItem(STORAGE_KEYS.userRecords));
+    console.log("All Records Before: ", allRecords);
+    if (allRecords == null) {
+      allRecords = [];
     }
+    for (var i = 0; i < records.length; i++) {
+      allRecords.push(records[i]);
+    }
+    console.log("All Records After: ", allRecords);
+    window.localStorage.setItem(STORAGE_KEYS.userRecords, JSON.stringify(allRecords));
   };
 
-  var typeChosen = function() {
-    console.log("Made It to type");
-  };
+  var getShotTypeConsts = function () {
+    var retArray = [];
+    for (var i = 0; i < Object.keys(SHOT_TYPES).length; i++) {
+      retArray.push({
+        key: Object.keys(SHOT_TYPES)[i],
+        value: SHOT_TYPES[Object.keys(SHOT_TYPES)[i]]
+      });
+    }
+    return retArray
+  }
+
+  var getShotPositionConsts = function () {
+    var retArray = [];
+    for (var i = 0; i < Object.keys(SHOT_POSITIONS).length; i++) {
+      retArray.push({
+        key: Object.keys(SHOT_POSITIONS)[i],
+        value: SHOT_POSITIONS[Object.keys(SHOT_POSITIONS)[i]]
+      });
+    }
+    return retArray;
+  }
 
   return {
-    calcSkillLevel: calcSkillLevel
-  };
+    pushShotRecords: pushShotRecords,
+    getShotTypeConsts: getShotTypeConsts,
+    getShotPositionConsts: getShotPositionConsts
+  }
 });

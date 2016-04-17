@@ -107,7 +107,7 @@ angular.module('starter', ['ionic', 'account', 'assessment','practice','tennis',
     })
 
     .state('nav.practice_result', {
-      url: 'nav/practice_result',
+      url: 'nav/practice_result/:records',
       cache: false,
       views: {
         'sideContent': {

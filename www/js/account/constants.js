@@ -1,5 +1,5 @@
 angular.module('account')
-  
+
 .constant('STORAGE_KEYS', {
   userInfo: 'User Info',
   userId: 'User ID',
@@ -9,7 +9,8 @@ angular.module('account')
   email: 'Email',
   phoneNumber: 'Phone Number',
   userType: 'User Type',
-  userSkill: 'User Skill'
+  userSkill: 'User Skill',
+  userRecords: 'User Records'
 })
 
 .constant('USER_TYPES', {

@@ -1,1 +1,43 @@
 /* Empty. Add your own CSS if you like */
+
+.zone_line2 {
+  height: 155px;
+  margin-bottom: 6px;
+}
+
+.zone_line1 {
+  height: 74px;
+  padding: 0;
+  margin-bottom: 6px;
+}
+
+.zone {
+  outline: black thin dotted;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.zone:active {
+  outline: red medium solid;
+}
+
+.tennis_court {
+  background-image: url("../img/court.png");
+  background-size: contain;
+  margin: auto;
+  height: 384px;
+  width: 282px;
+}
+
+.court_container {
+  height: 400px;
+  width: 100%;
+}
+
+
+table {
+  height: 20px;
+  width:100%;
+  border-collapse:collapse;
+  table-layout:fixed;
+}

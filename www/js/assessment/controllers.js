@@ -1,7 +1,7 @@
 angular.module('assessment')
   .controller('AssessCtrl', function ($scope, $state, $ionicPopup, $http, TennisService, STORAGE_KEYS, AssessService) {
     //Always assign the nav bar title from the parent view, using the var name 'title'
-    $scope.title = 'Accessment Test';
+    $scope.title = 'Assessment Test';
 
     var maxShotNum = 10;
     var hitCount = 0;
@@ -23,9 +23,9 @@ angular.module('assessment')
 
     $scope.$on('recordShotEvent', function (event, arg) {
       console.log('Received event', event);
-      console.log('With args -> ' + arg.hitzone);
+      console.log('With args -> ' + arg.value);
 
-      if ($scope.shot.targetzone == arg.hitzone) {
+      if ($scope.shot.targetzone == arg.value) {
         hitCount++;
         $scope.bar.hit = hitCount * 10;
       } else {
@@ -39,7 +39,7 @@ angular.module('assessment')
         console.log('Finished assessment');
         window.localStorage.setItem(STORAGE_KEYS.userSkill, AssessService.calcSkillLevel(hitCount));
         console.log(window.localStorage.getItem(STORAGE_KEYS.userSkill));
-        $state.go('nav.assess_result', {}, {reload: true});
+        $state.go('nav.assessment_result', {}, {reload: true});
 
 
 

@@ -18,9 +18,10 @@ angular.module('account')
     // Temporary local authentication - userid = user , password = password
 */
     //Actual http post call
-    return $http.post('http://54.164.54.3/login', {name: 'userneame', pwhash: 'password'});
-/*
-    return $http.post('/api/authenticate', {userid: userid, password: password});*/
+    //return $http.post('http://54.164.54.3/login', {name: 'userneame', pwhash: 'password'});
+
+    return $http.post('/api/authenticate', {userid: userid, password: password});
+
   };
 
   var newAccount = function(id, firstname, lastname, email, phone, password, type) {

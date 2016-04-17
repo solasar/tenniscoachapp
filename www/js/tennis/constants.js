@@ -16,7 +16,17 @@ angular.module('tennis')
   rightNoMansLand: 'Right No Mans Land',
   leftServiceBox: 'Left Service Box',
   centerServiceBox: 'Center Service Box',
-  rightServiceBox: 'Right Service Box'
+  rightServiceBox: 'Right Service Box',
+
+
+  a: 'a',
+  b: 'b',
+  c: 'c',
+  d: 'd',
+  e: 'e',
+  f: 'f',
+  g: 'g',
+  h: 'h'
 })
 
 .constant('TARGET_ZONES', {
