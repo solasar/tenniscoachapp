@@ -4,6 +4,7 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 angular.module('tennis', []);
+angular.module('statistic', []);
 angular.module('assessment', ['tennis', 'account']);
 angular.module('practice', ['tennis', 'account']);
 angular.module('account', ['utf8-base64']);
