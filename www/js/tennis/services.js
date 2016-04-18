@@ -45,11 +45,36 @@ angular.module('tennis')
     }
   };
 
+  var setHitMap_Y2G = function (zoneStats) {
+    for (var i = 0; i < zoneStats.length; i++) {
+      document.getElementById(i.toString()).style.backgroundColor = 'rgb(' + Math.round(255 * (100 - zoneStats[i]) / 100) + ', 255, 0)';
+      document.getElementById(i.toString()).style.opacity = '0.7';
+    }
+  }
+
+  var setHitMap_R2G = function (zoneStats) {
+    for (var i = 0; i < zoneStats.length; i++) {
+      document.getElementById(i.toString()).style.backgroundColor = 'rgb(' + Math.round(255 * zoneStats[i] / 100) + ', ' + Math.round(255 * (100 - zoneStats[i]) / 100) + ', 0)';
+      document.getElementById(i.toString()).style.opacity = '0.7';
+    }
+  }
+
+  var setHitMap_Teal = function (zoneStats) {
+    for (var i = 0; i < zoneStats.length; i++) {
+      document.getElementById(i.toString()).style.backgroundColor = 'rgb(' + Math.round(200 * (100 - zoneStats[i]) / 100) + ', 255 , 255)';
+      document.getElementById(i.toString()).style.opacity = '0.7';
+    }
+  }
+
+
 
   return {
     getShotPosition: getShotPosition,
     getShotType: getShotType,
     getTargetZone: getTargetZone,
-    getShotOrder: getShotOrder
+    getShotOrder: getShotOrder,
+    setHitMap_Y2G: setHitMap_Y2G,
+    setHitMap_R2G: setHitMap_R2G,
+    setHitMap_Teal: setHitMap_Teal
   };
 });

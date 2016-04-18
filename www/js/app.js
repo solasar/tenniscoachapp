@@ -4,11 +4,12 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 angular.module('tennis', []);
-angular.module('statistic', []);
+angular.module('statistic', ['tennis']);
 angular.module('assessment', ['tennis', 'account']);
 angular.module('practice', ['tennis', 'account']);
 angular.module('account', ['utf8-base64']);
-angular.module('starter', ['ionic', 'account', 'assessment','practice','tennis', 'ngMockE2E'])
+//Make sure to inject all new modules into starter module
+angular.module('starter', ['ionic', 'account', 'assessment','practice','statistic', 'tennis', 'ngMockE2E'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -129,6 +130,21 @@ angular.module('starter', ['ionic', 'account', 'assessment','practice','tennis',
           controller: 'PracticeCtrl'
         },
         'court@nav.practice': {
+          templateUrl: 'templates/court.html',
+          controller: 'CourtCtrl'
+        }
+      }
+    })
+
+    .state('nav.statistic', {
+      url: 'nav/statistic',
+      cache: false,
+      views: {
+        'sideContent': {
+          templateUrl: 'templates/statistic.html',
+          controller: 'StatsScoreCtrl'
+        },
+        'court@nav.statistic': {
           templateUrl: 'templates/court.html',
           controller: 'CourtCtrl'
         }
