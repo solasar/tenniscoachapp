@@ -7,7 +7,6 @@ angular.module('statistic')
     var dataArr = [];
     /* var uid = window.localStorage.getItem(STORAGE_KEYS.userId);
      console.log("STATS TEST: " + uid); */
-    console.log("All Records After: ", allRecords);
     $http.post('http://54.164.54.3/getHeat', {username: "alpha"})
       .success(function (data, status, headers, config){
         var shots = data.response;

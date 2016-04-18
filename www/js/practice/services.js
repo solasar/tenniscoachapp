@@ -9,6 +9,44 @@ angular.module('practice')
     for (var i = 0; i < records.length; i++) {
       allRecords.push(records[i]);
     }
+
+    /////////////////////
+    // BEGIN UGLY TESTING
+
+    var dataArr = [];
+    /* var uid = window.localStorage.getItem(STORAGE_KEYS.userId);
+     console.log("STATS TEST: " + uid); */
+    $http.post('http://54.164.54.3/getZone', {username: "alpha"})
+      .success(function (data, status, headers, config){
+        var shots = data.response;
+        console.log("post success");
+        // Compute percentages per section.
+      }).error(function (data, status, headers, config){
+      console.log("post failed " + status);
+    }).then(function (response) {
+      // Init the data array
+      for (var pos in TARGET_ZONES) {
+        for (var type in SHOT_TYPES) {
+          dataArr[TARGET_ZONES[pos]][type] = {"Success":0, "Total":0, "Percent":0};
+        }
+      }
+      //Compute %'s
+      for (var i = 0; i < response.data.length; i++) {
+        var zone = response.data[i]["Zone"];
+        var type = response.data[i]["Type"];
+        console.log("zone: " + zone + " type: " + type);
+        // dataArr[zone]["Success"] += response.data[i]["Made"] * response.data[i]["Count(*)"];
+        // dataArr[zone]["Total"] += response.data[i]["Count(*)"];
+      }
+      // for (var i = 0; i < dataArr.length; i++) {
+      //   dataArr[i]["Percent"] = Math.round(100 * (dataArr[i]["Success"] / dataArr[i]["Total"]));
+      //   console.log("ZONE: " + i + " PERCENT: " + dataArr[i]["Percent"]);
+      // }
+    });
+
+    // END UGLY TESTING
+    /////////////////////
+
     console.log("All Records After: ", allRecords);
     window.localStorage.setItem(STORAGE_KEYS.userRecords, JSON.stringify(allRecords));
   };
