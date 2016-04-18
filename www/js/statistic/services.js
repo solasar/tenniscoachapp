@@ -1,6 +1,5 @@
 angular.module('statistic')
-.service('StatisticService', function ($http, $ionicPopup, STORAGE_KEYS, SHOT_POSITIONS, SHOT_TYPES) {
-
+  .service('StatisticService', function ($http, $ionicPopup, STORAGE_KEYS, SHOT_POSITIONS, SHOT_TYPES, TARGET_ZONES) {
   var heatMapValues = function() {
     // NOTE: you should only return the post response here, don't do anything else
     // begin ugly testing stuff
@@ -76,5 +75,5 @@ angular.module('statistic')
     heatMap: heatMapValues,
     zoneStat: zoneStatValues
   }
+  });
 
-});

@@ -9,13 +9,7 @@ angular.module('practice')
     for (var i = 0; i < records.length; i++) {
       allRecords.push(records[i]);
     }
-
-    /////////////////////
-    // BEGIN UGLY TESTING
-
-    // END UGLY TESTING
-    /////////////////////
-
+    
     console.log("All Records After: ", allRecords);
     window.localStorage.setItem(STORAGE_KEYS.userRecords, JSON.stringify(allRecords));
   };
