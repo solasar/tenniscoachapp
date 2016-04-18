@@ -75,6 +75,18 @@ angular.module('account')
     usertype: window.localStorage.getItem(STORAGE_KEYS.userType),
     userskill: window.localStorage.getItem(STORAGE_KEYS.userSkill)
   };
+
+  $scope.toAssessment = function () {
+    $state.go('nav.assessment', {}, {reload: true});
+  }
+
+  $scope.toMatch = function () {
+    $state.go('nav.practice', {}, {reload: true});
+  }
+
+  $scope.toStatistic = function () {
+    $state.go('nav.statistic', {}, {reload: true});
+  }
 /*
   console.log('Stored password:', window.localStorage.getItem(STORAGE_KEYS.password));
 

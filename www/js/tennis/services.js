@@ -66,6 +66,13 @@ angular.module('tennis')
     }
   }
 
+  var setHitMap_Y2P = function (zoneStats) {
+    for (var i = 0; i < zoneStats.length; i++) {
+      document.getElementById(i.toString()).style.backgroundColor = 'rgb(255, ' + Math.round(255 * (100 - zoneStats[i]) / 100) + ', ' + Math.round(255 * zoneStats[i] / 100) + ')';
+      document.getElementById(i.toString()).style.opacity = '0.7';
+    }
+  }
+
 
 
   return {
@@ -75,6 +82,7 @@ angular.module('tennis')
     getShotOrder: getShotOrder,
     setHitMap_Y2G: setHitMap_Y2G,
     setHitMap_R2G: setHitMap_R2G,
-    setHitMap_Teal: setHitMap_Teal
+    setHitMap_Teal: setHitMap_Teal,
+    setHitMap_Y2P: setHitMap_Y2P
   };
 });

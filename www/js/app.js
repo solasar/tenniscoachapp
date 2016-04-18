@@ -99,17 +99,6 @@ angular.module('starter', ['ionic', 'account', 'assessment','practice','statisti
       }
     })
 
-    .state('nav.practice_start', {
-      url: 'nav/practice_start',
-      cache: false,
-      views: {
-        'sideContent': {
-          templateUrl: 'templates/practice_start.html',
-          controller: 'PracticeStartCtrl'
-        }
-      }
-    })
-
     .state('nav.practice_result', {
       url: 'nav/practice_result/:records',
       cache: false,

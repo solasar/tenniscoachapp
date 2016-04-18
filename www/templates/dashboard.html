@@ -5,7 +5,7 @@
     <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
   </ion-nav-buttons>
   <ion-nav-buttons side="right">
-    <button class="button ion-log-out button-calm" ng-click="$signoff()"></button>
+    <button class="button ion-log-out button-balanced" ng-click="$signoff()"></button>
   </ion-nav-buttons>
 
   <ion-content class="padding">
@@ -27,6 +27,11 @@
       <p>
         User skill: {{data.userskill}}
       </p>
+    </div>
+    <div>
+      <button class="button button-block button-positive" ng-click="toAssessment()">Skill Challenge</button>
+      <button class="button button-block button-positive" ng-click="toMatch()">Match Logger</button>
+      <button class="button button-block button-positive" ng-click="toStatistic()">Statistic</button>
     </div>
   </ion-content>
 </ion-view>

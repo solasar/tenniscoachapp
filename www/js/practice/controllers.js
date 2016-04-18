@@ -1,7 +1,7 @@
 angular.module('practice')
   .controller('PracticeCtrl', function ($scope, $state, $ionicPopup, $ionicModal, $http, SHOT_POSITIONS, SHOT_TYPES, TennisService, STORAGE_KEYS, PracticeService) {
     //Always assign the nav bar title from the parent view, using the var name 'title'
-    $scope.title = 'Practice';
+    $scope.title = 'Record Scoring Shots!';
     $scope.shotPosition = {value: 'This is the 1st shot'};
     $scope.shotType = {value: 'This is the 1st shot'};
     $scope.targetZone = {value: 'This is the 1st shot'};

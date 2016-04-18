@@ -6,41 +6,34 @@ angular.module('statistic')
     var dataArr = [];
     /* var uid = window.localStorage.getItem(STORAGE_KEYS.userId);
      console.log("STATS TEST: " + uid); */
-     return $http.post('http://54.164.54.3/getHeat', {username: "alpha"});
-    //   .success(function (data, status, headers, config){
-    //     var shots = data.response;
-    //     console.log("post success");
-    //     // Compute percentages per section.
-    //   }).error(function (data, status, headers, config){
-    //   console.log("post failed " + status);
-    // }).then(function (response) {
-    //   // Init the data array
-    //   for (var pos in TARGET_ZONES) {
-    //     dataArr[TARGET_ZONES[pos]] = {"Success":0, "Total":0, "Percent":0};
-    //   }
-    //   //Compute %'s
-    //   for (var i = 0; i < response.data.length; i++) {
-    //     var zone = response.data[i]["Zone"];
-    //     dataArr[zone]["Success"] += response.data[i]["Made"] * response.data[i]["Count(*)"];
-    //     dataArr[zone]["Total"] += response.data[i]["Count(*)"];
-    //   }
-    //   for (var i = 0; i < dataArr.length; i++) {
-    //     if (dataArr[i]["Total"] == 0) {
-    //       dataArr[i]["Total"] = 1;
-    //     }
-    //     dataArr[i]["Percent"] = Math.round(100 * (dataArr[i]["Success"] / dataArr[i]["Total"]));
-    //
-    //   }
-    //
-    //   var retArr = [];
-    //   for (var i; i < dataArr.length; i++) {
-    //     retArr[i] = dataArr[i]["Percent"];
-    //     console.log("ZONE: " + i + " PERCENT: " + retArr[i]);
-    //   }
-    //   return retArr;
-    // });
-    // end ugly testing stuff
-
+     return $http.post('http://54.164.54.3/getHeat', {username: "alpha"})
+       .then(function (response) {
+       var dataArr = [];
+       var retArr = [];
+       // Init the data array
+       for (var pos in TARGET_ZONES) {
+         dataArr[TARGET_ZONES[pos]] = {"Success":0, "Total":0, "Percent":0};
+       }
+       //Compute %'s
+       for (var i = 0; i < response.data.length; i++) {
+         var zone = response.data[i]["Zone"];
+         dataArr[zone]["Success"] += response.data[i]["Made"] * response.data[i]["Count(*)"];
+         dataArr[zone]["Total"] += response.data[i]["Count(*)"];
+       }
+       for (var i = 0; i < dataArr.length; i++) {
+         if (dataArr[i]["Total"] == 0) {
+           dataArr[i]["Total"] = 1;
+         }
+         dataArr[i]["Percent"] = Math.round(100 * (dataArr[i]["Success"] / dataArr[i]["Total"]));
+         //console.log("ZONE: " + i + " PERCENT: " + dataArr[i]["Percent"]);
+       }
+       //console.log("Check: " + dataArr.length);
+       for (var i = 0; i < dataArr.length; i++) {
+         retArr.push(dataArr[i]["Percent"]);
+         //console.log("!!RETURN!! ZONE: " + i + " PERCENT: " + retArr[i]);
+       }
+       return retArr;
+     });
   };
 
   var zoneStatValues = function() {
@@ -48,14 +41,8 @@ angular.module('statistic')
     var dataArr = [];
     /* var uid = window.localStorage.getItem(STORAGE_KEYS.userId);
      console.log("STATS TEST: " + uid); */
-    $http.post('http://54.164.54.3/getZone', {username: "alpha"})
-      .success(function (data, status, headers, config){
-        var shots = data.response;
-        console.log("post success");
-        // Compute percentages per section.
-      }).error(function (data, status, headers, config){
-      console.log("post failed " + status);
-    }).then(function (response) {
+    return $http.post('http://54.164.54.3/getZone', {username: "alpha"})
+      .then(function (response) {
       // Init the data array
       for (var pos in TARGET_ZONES) {
         dataArr[TARGET_ZONES[pos]] = new Array(Object.keys(SHOT_TYPES).length).fill(0);
@@ -76,17 +63,21 @@ angular.module('statistic')
             dataArr[i][type]["Total"] = 1;
           }
           dataArr[i][type]["Percent"] = Math.round(100 * (dataArr[i][type]["Success"] / dataArr[i][type]["Total"]));
-          console.log("ZONE: " + i + " TYPE: " + type + " PERCENT: " + dataArr[i][type]["Percent"]);
+          //console.log("ZONE: " + i + " TYPE: " + type + " PERCENT: " + dataArr[i][type]["Percent"]);
         }
       }
-    });
-    var retArr = [];
-    for (var i; i < dataArr.length; i++) {
-      for (var j; j < dataArr[0].length; j++) {
-        retArr[i][j] = dataArr[i][j]["Percent"];
+      var retArr = [];
+      for (var i = 0; i < dataArr.length; i++) {
+        for (var j in dataArr[0]) {
+          if (!retArr[i]) {
+            retArr[i] = [];
+          }
+          retArr[i][j] = dataArr[i][j]["Percent"];
+        }
       }
-    }
-    return retArr;
+      console.log('retArr from zoneStatValues', retArr);
+      return retArr;
+    });
   };
 
   return {

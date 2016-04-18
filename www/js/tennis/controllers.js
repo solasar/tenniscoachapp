@@ -19,6 +19,11 @@ angular.module('tennis')
     TennisService.setHitMap_Teal(arg);
   })
 
+  $scope.$on('createHitMapEvent_Y2P', function (event, arg) {
+    TennisService.setHitMap_Y2P(arg);
+  })
+  
+
 
   $scope.$emit('courtReadyForEvent');
 });
