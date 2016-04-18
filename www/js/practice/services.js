@@ -41,6 +41,10 @@ angular.module('practice')
     // // Now do your summations and calculations
     // // end ugly testing stuff
 
+    // MORE UGLY TESTING STUFF
+
+    // END MORE UGLY TESTING STUFF
+
     window.localStorage.setItem(STORAGE_KEYS.userRecords, JSON.stringify(allRecords));
   };
 
