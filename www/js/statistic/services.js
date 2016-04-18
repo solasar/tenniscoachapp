@@ -25,12 +25,19 @@ angular.module('statistic')
         dataArr[zone]["Total"] += response.data[i]["Count(*)"];
       }
       for (var i = 0; i < dataArr.length; i++) {
+        if (dataArr[i]["Total"] == 0) {
+          dataArr[i]["Total"] = 1;
+        }
         dataArr[i]["Percent"] = Math.round(100 * (dataArr[i]["Success"] / dataArr[i]["Total"]));
         console.log("ZONE: " + i + " PERCENT: " + dataArr[i]["Percent"]);
       }
     });
     // end ugly testing stuff
-    return dataArr;
+    var retArr = [];
+    for (var i; i < dataArr.length; i++) {
+      retArr[i] = dataArr[i]["Percent"];
+    }
+    return retArr;
   };
 
   var zoneStatValues = function() {
@@ -62,13 +69,21 @@ angular.module('statistic')
       }
       for (var i = 0; i < dataArr.length; i++) {
         for (var type in dataArr[0]) {
+          if (dataArr[i][type]["Total"] == 0) {
+            dataArr[i][type]["Total"] = 1;
+          }
           dataArr[i][type]["Percent"] = Math.round(100 * (dataArr[i][type]["Success"] / dataArr[i][type]["Total"]));
           console.log("ZONE: " + i + " TYPE: " + type + " PERCENT: " + dataArr[i][type]["Percent"]);
         }
       }
     });
-
-    return dataArr;
+    var retArr = [];
+    for (var i; i < dataArr.length; i++) {
+      for (var j; j < dataArr[0].length; j++) {
+        retArr[i][j] = dataArr[i][j]["Percent"];
+      }
+    }
+    return retArr;
   };
 
   return {
