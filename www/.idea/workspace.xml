@@ -59,11 +59,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="services.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="services.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/js/practice/services.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="816">
-              <caret line="74" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="74" selection-end-column="0" />
+            <state relative-caret-position="204">
+              <caret line="12" column="0" selection-start-line="12" selection-start-column="0" selection-end-line="41" selection-end-column="32" />
               <folding />
             </state>
           </provider>
@@ -89,7 +89,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="constants.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="constants.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/js/statistic/constants.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="476">
@@ -171,8 +171,8 @@
         <option value="$PROJECT_DIR$/js/statistic/controllers.js" />
         <option value="$PROJECT_DIR$/js/statistic/services.js" />
         <option value="$PROJECT_DIR$/js/app.js" />
-        <option value="$PROJECT_DIR$/js/practice/services.js" />
         <option value="$PROJECT_DIR$/js/statistic/constants.js" />
+        <option value="$PROJECT_DIR$/js/practice/services.js" />
       </list>
     </option>
   </component>
@@ -320,7 +320,7 @@
       <workItem from="1460415711663" duration="1587000" />
       <workItem from="1460729785306" duration="803000" />
       <workItem from="1460754069733" duration="33196000" />
-      <workItem from="1460931010407" duration="6477000" />
+      <workItem from="1460931010407" duration="6869000" />
     </task>
     <task id="LOCAL-00001" summary="Added Practice Module">
       <created>1460883352362</created>
@@ -333,7 +333,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="150278000" />
+    <option name="totallyTimeSpent" value="150670000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -684,14 +684,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/js/practice/constants.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
-          <caret line="7" column="0" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/js/account/services.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="476">
@@ -732,18 +724,26 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/js/practice/services.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="816">
-          <caret line="74" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="74" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/js/statistic/constants.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="476">
           <caret line="28" column="9" selection-start-line="28" selection-start-column="9" selection-end-line="28" selection-end-column="9" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/practice/constants.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="7" column="0" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/practice/services.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="204">
+          <caret line="12" column="0" selection-start-line="12" selection-start-column="0" selection-end-line="41" selection-end-column="32" />
           <folding />
         </state>
       </provider>
