@@ -34,6 +34,7 @@ angular.module('starter', ['ionic', 'account', 'assessment','practice','tennis',
   $httpBackend.whenPOST('/api/create_account').respond(200, {message: 'Fake new account success'});
   $httpBackend.whenPOST('http://54.164.54.3/login').passThrough();
   $httpBackend.whenPOST('http://54.164.54.3/registration').passThrough();
+  $httpBackend.whenPOST('http://54.164.54.3/getHeat').passThrough();
   $httpBackend.whenGET('http://jsonplaceholder.typicode.com/posts').passThrough();
   $httpBackend.whenGET(/templates\/\w+.*/).passThrough();
 })
