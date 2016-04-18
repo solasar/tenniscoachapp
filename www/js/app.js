@@ -35,6 +35,7 @@ angular.module('starter', ['ionic', 'account', 'assessment','practice','tennis',
   $httpBackend.whenPOST('http://54.164.54.3/login').passThrough();
   $httpBackend.whenPOST('http://54.164.54.3/registration').passThrough();
   $httpBackend.whenPOST('http://54.164.54.3/getHeat').passThrough();
+  $httpBackend.whenPOST('http://54.164.54.3/getZone').passThrough();
   $httpBackend.whenGET('http://jsonplaceholder.typicode.com/posts').passThrough();
   $httpBackend.whenGET(/templates\/\w+.*/).passThrough();
 })
