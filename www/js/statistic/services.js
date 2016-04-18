@@ -6,7 +6,7 @@ angular.module('statistic')
     var dataArr = [];
     /* var uid = window.localStorage.getItem(STORAGE_KEYS.userId);
      console.log("STATS TEST: " + uid); */
-    $http.post('http://54.164.54.3/getHeat', {username: "alpha"})
+    return $http.post('http://54.164.54.3/getHeat', {username: "alpha"})
       .success(function (data, status, headers, config){
         var shots = data.response;
         console.log("post success");
@@ -31,13 +31,15 @@ angular.module('statistic')
         dataArr[i]["Percent"] = Math.round(100 * (dataArr[i]["Success"] / dataArr[i]["Total"]));
         console.log("ZONE: " + i + " PERCENT: " + dataArr[i]["Percent"]);
       }
+
+      var retArr = [];
+      for (var i; i < dataArr.length; i++) {
+        retArr[i] = dataArr[i]["Percent"];
+      }
+      return retArr;
     });
     // end ugly testing stuff
-    var retArr = [];
-    for (var i; i < dataArr.length; i++) {
-      retArr[i] = dataArr[i]["Percent"];
-    }
-    return retArr;
+
   };
 
   var zoneStatValues = function() {
@@ -90,5 +92,5 @@ angular.module('statistic')
     heatMap: heatMapValues,
     zoneStat: zoneStatValues
   }
-  });
+});
 
