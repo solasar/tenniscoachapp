@@ -3,10 +3,16 @@ angular.module('statistic')
   //Always assign the nav bar title from the parent view, using the var name 'title'
   $scope.title = 'Statistic';
   console.log('In StatsScoreCtrl');
-  var zoneStats = [12, 23, 35, 42, 53, 65, 71, 88, 93, 12, 11, 53, 93, 38, 52, 12, 58, 42, 18, 52, 82, 12, 60, 29, 100];
-  var zoneStats2 = [62, 23, 56, 29, 75, 95, 3, 35, 91, 30, 95, 11, 23, 87, 12, 98, 22, 69, 88, 12, 42, 35, 93, 72, 100];
+  var tempZoneStats1 = [12, 23, 35, 42, 53, 65, 71, 88, 93, 12, 11, 53, 93, 38, 52, 12, 58, 42, 18, 52, 82, 12, 60, 29, 100];
+  var tempZoneStats2 = [62, 23, 56, 29, 75, 95, 3, 35, 91, 30, 95, 11, 23, 87, 12, 98, 22, 69, 88, 12, 42, 35, 93, 72, 100];
 
   var defaultMode = true; //score mode in this case
+
+  var zoneStats;
+  StatisticService.zoneStat().then(function (result) {
+    zoneStats = result;
+  })
+
 
   /*
   StatisticService.heatMap().then(function (result) {
@@ -32,7 +38,7 @@ angular.module('statistic')
     element = document.getElementById('tabRight');
     element.setAttribute('class','tab-item');
     element.innerHTML = '<p>Accuracy</p>';
-    $rootScope.$broadcast('createHitMapEvent_Y2P', zoneStats);
+    $rootScope.$broadcast('createHitMapEvent_Y2P', tempZoneStats1);
   }
 
   $scope.accuracyStats = function () {
@@ -45,7 +51,7 @@ angular.module('statistic')
     element = document.getElementById('tabRight');
     element.setAttribute('class','tab-item active');
     element.innerHTML = '<p><b>Accuracy</b></p>';
-    $rootScope.$broadcast('createHitMapEvent_R2G', zoneStats2);
+    $rootScope.$broadcast('createHitMapEvent_R2G', tempZoneStats2);
   };
 
 
@@ -62,6 +68,7 @@ angular.module('statistic')
 
   $scope.$on('recordShotEvent', function (event, arg) {
     $scope.zone = [];
+    console.log('Zone Stats', zoneStats);
     for (var i = 0; i < zoneStats[arg.value].length; i++) {
       $scope.zone.push({
         shottype: SHOT_TYPES[Object.keys(SHOT_TYPES)[i]],
