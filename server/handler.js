@@ -168,3 +168,39 @@ var shotQuery = connection.query('Select Count(*), Username, Zone, Made, Type fr
 
 });
 
+app.post('/getZoneOrdered', function(req, res) {
+var zone = req.body['zone'];
+var uid = req.body['username'];
+var inserts = [uid,zone];
+var query = mysql.format("Select Count(*), Username, Type from Shot where Username=? and Zone=? Group by Type Order by Count(*) DESC", inserts);
+var queryAct = connection.query(query,  function(err, rows, fields) {
+
+	if(err) {
+		console.log(err);
+		res.status('401').send();
+	}
+	else {
+		res.contentType('application/json');
+		res.header('Access-Control-Allow-Headers', 'Content-Type');
+		res.status('200').send(JSON.stringify(rows));
+	}
+});
+});
+
+app.post('/profile', function(req, res) {
+
+var uid = req.body['username'];
+
+var query = connection.query("Select * from User where Username = " + connection.escape(uid), function(err, rows, fields) {
+
+	if(err) {
+		console.log(err);
+		res.status('401').send();
+	}
+	else {
+		res.contentType('application/json');
+		res.header('Access-Control-Allow-Headers', 'Content-Type');
+		res.status('200').send(JSON.stringify(rows));
+	}
+});
+});
