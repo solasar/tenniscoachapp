@@ -204,3 +204,36 @@ var query = connection.query("Select * from User where Username = " + connection
 	}
 });
 });
+
+app.post('/passwordChange', function(req, res) {
+var uid = req.body['username'];
+var pwold = req.body['pwold'];
+var pwnew = req.body['pwnew'];
+
+var loginQuery = connection.query('Select Password from User where Username = ' + connection.escape(uid), function(err, rows, fields) {
+
+	if(err) {
+		console.log(err);
+		res.status('401').send();
+	}
+	else {
+		try {
+		if(pwold === rows[0].Password) {
+		var pQuery = mysql.format('Update User Set Password = ?  Where Username = ?', [pwnew, uid]);
+		var pActQuery = connection.query(pQuery, function(err, rows, fields) {
+			res.contentType('application/json');
+			res.header('Access-Control-Allow-Headers', 'Content-Type');
+			res.status('200').send();
+		});}
+		else {
+			res.status('400').send();
+		}
+		}
+		catch(err) {
+			res.status('400').send();
+		}
+	}
+
+});
+
+});
