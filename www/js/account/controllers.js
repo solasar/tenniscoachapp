@@ -5,11 +5,10 @@ angular.module('account')
   AuthService.clearCredential();
   $scope.login =  function(data) {
     $scope.dataLoading = true;
-    var hashPassword = CryptoJS.SHA256(data.password);
-    AuthService.login(data.userid, hashPassword).then(function (authenticate) {
+    AuthService.login(data.userid, data.password).then(function (authenticate) {
       console.log('AuthService success!');
       console.log(authenticate);
-      AuthService.setCredential(data.userid, hashPassword);
+      AuthService.setCredential(data.userid, data.password);
       AuthService.getUserInfo().then(function(response) {
         console.log('Respnose: ', response.data);
         AuthService.setUserInfo(response.data);
@@ -33,36 +32,58 @@ angular.module('account')
   };
 })
 
-.controller('CreateAcctCtrl', function($scope, $state, $ionicPopup, AuthService, USER_SKILLS, STORAGE_KEYS) {
+.controller('CreateAcctCtrl', function($scope, $state, $ionicPopup, AuthService, USER_TYPES, USER_SKILLS, STORAGE_KEYS) {
   $scope.data = {};
-  $scope.level = USER_SKILLS;
+  $scope.level = USER_TYPES;
   $scope.newAccount = function (data) {
-    console.log('This is password, not hashed: ', data.password);
-    console.log('This is hashed password, before adding into var: ', CryptoJS.SHA256(data.password).toString(CryptoJS.enc.Hex));
-    console.log('This is hashed password, before adding into var: '+ CryptoJS.SHA256(data.password));
-    var hashPassword = CryptoJS.SHA256(data.password);
-    console.log('This is hashed password: ', hashPassword);
-    AuthService.newAccount(data.userid, data.firstname, data.lastname, data.email, data.phonenumber, hashPassword.toString(CryptoJS.enc.Hex), data.usertype).then(function (authenticate) {
-      console.log('New user registered', authenticate);
-      var newUser = {
-        userid : data.userid,
-        firstname: data.firstname,
-        lastname: data.lastname,
-        email: data.email,
-        phonenumber: data.phonenumber,
-        password: hashPassword,
-        usertype: data.usertype,
-        userskill: USER_SKILLS.beginner
-      }
-      AuthService.setUserInfo(newUser);
-      $state.go('nav.dashboard');
-    }, function (err) {
-      console.log('New user failed to get registered', err);
+    var popup_msg = "";
+    if (!AuthService.validateId(data.userid)) {
+      popup_msg = "Please type in valid user id";
+    } else if (!AuthService.validateName(data.firstname)) {
+      popup_msg = "Please type in valid first name";
+    } else if (!AuthService.validateName(data.lastname)) {
+      popup_msg = "Please type in valid last name";
+    } else if (!AuthService.validateEmail(data.email)) {
+      popup_msg = "Please type in valid email";
+    } else if (!AuthService.validatePhone(data.phonenumber)) {
+      popup_msg = "Please type in valid phone number";
+    } else if (data.usertype == "") {
+      popup_msg = "Please pick a user type";
+    }
+    if (popup_msg == "") {
+      console.log('This is password, not hashed: ', data.password);
+      console.log('This is hashed password, before adding into var: '+ CryptoJS.SHA256(data.password).toString(CryptoJS.enc.Hex));
+      console.log('This is hashed password, before adding into var: '+ CryptoJS.SHA256(data.password));
+      var hashPassword = CryptoJS.SHA256(data.password);
+      console.log('This is hashed password: ', hashPassword);
+      AuthService.newAccount(data.userid, data.firstname, data.lastname, data.email, data.phonenumber, hashPassword.toString(CryptoJS.enc.Hex), data.usertype).then(function (authenticate) {
+        console.log('New user registered', authenticate);
+        var newUser = {
+          userid : data.userid,
+          firstname: data.firstname,
+          lastname: data.lastname,
+          email: data.email,
+          phonenumber: data.phonenumber,
+          password: hashPassword,
+          usertype: data.usertype,
+          userskill: USER_SKILLS.beginner
+        }
+        AuthService.setUserInfo(newUser);
+        $state.go('nav.dashboard');
+      }, function (err) {
+        console.log('New user failed to get registered', err);
+        var alertPopup = $ionicPopup.alert({
+          title: 'Creating account failed!',
+          template: 'Server failed to register new account'
+        });
+      });
+    } else {
       var alertPopup = $ionicPopup.alert({
-        title: 'Creating account failed!',
-        template: 'Please make sure to put correct information.'
-      })
-    })
+        title: 'Invalid user info',
+        template: popup_msg
+      });
+    }
+
   };
 })
 .controller('DashCtrl', function($state, $scope, $http, AuthService, STORAGE_KEYS) {

@@ -2,6 +2,7 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var http = require('http');
 var mysql = require('mysql');
+var crypt = require('crypto');
 var connection = mysql.createConnection({
 
 host: 'localhost',
@@ -17,7 +18,7 @@ var result = false;
 var i = 0;
 
 app.get('/', function (req, res) {
-    
+
     i++;
     res.send('get request #' + i);
 
@@ -32,7 +33,7 @@ app.post('/login', function (req, res) {
 	if (err) {
 		data ='400'
 	}
-	else if (rows[0].Password ===  pwhash) {
+	else if (crypto.createHash('sha256').update(rows[0].Password).digest("hex") ==  pwhash) {
 		data = '200';
 	}
 	else {
@@ -40,7 +41,7 @@ app.post('/login', function (req, res) {
 	}}
 	catch(err) {}
 	res.status(data);
-	res.send();	
+	res.send();
 	}
 );
 });
@@ -49,7 +50,7 @@ app.listen(80, function() {
     console.log('Starting login handler on port 80...');
 });
 
-app.post('/registration', function(req, res) {	
+app.post('/registration', function(req, res) {
 
 
 uid = req.body['username'];
@@ -120,9 +121,9 @@ var loginConnection = connection.query("Select Password from User where Username
 	catch(error) {
 	res.status('400');
 	res.send();
-	}	
+	}
 });
- 
+
 });
 
 app.post('/getHeat', function(req, res) {

@@ -1,18 +1,21 @@
 <ion-view view-title="Login">
-  <ion-content class="padding">
-    <div class="list list-inset">
-      <label class="item item-input">
-        <input type="text" placeholder="Username" ng-model="data.userid"/>
-      </label>
-      <label class="item item-input">
-        <input type="password" placeholder="Password" ng-model="data.password"/>
-      </label>
-    </div>
-    <br />
+  <ion-content class="padding login_background">
+    <div class="center">
+      <div class="list">
+        <label class="item item-input item-floating-label transparent">
+          <span class="input-label">User Name</span>
+          <input type="text" placeholder="User Name" ng-model="data.userid"/>
+        </label>
+        <label class="item item-input item-floating-label transparent">
+          <span class="input-label">Password</span>
+          <input type="password" placeholder="Password" ng-model="data.password"/>
+        </label>
+      </div>
 
-    <div>
-      <button class="button button-block button-positive" ng-click="login(data)">Login</button>
-      <button class="button button-block button-positive" ng-click="toCreateAccount()">Create Account</button>
+      <div>
+        <button class="button button-block button-positive btn_fnt_sz " ng-click="login(data)">Login</button>
+        <button class="button button-block button-positive" ng-click="toCreateAccount()">Create Account</button>
+      </div>
     </div>
   </ion-content>
 </ion-view>

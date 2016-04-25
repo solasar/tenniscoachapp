@@ -18,9 +18,11 @@ angular.module('account')
     // Temporary local authentication - userid = user , password = password
 */
     //Actual http post call
-    //return $http.post('http://54.164.54.3/login', {name: 'userneame', pwhash: 'password'});
+    
+    console.log("password ", password.toString(CryptoJS.enc.Hex));
+    return $http.post('http://54.164.54.3/login', {name: userid, pwhash: CryptoJS.SHA256(password).toString(CryptoJS.enc.Hex)});
 
-    return $http.post('/api/authenticate', {userid: userid, password: password});
+    //return $http.post('/api/authenticate', {userid: userid, password: password});
 
   };
 
@@ -32,7 +34,7 @@ angular.module('account')
     console.log('check this temp', temp);
     console.log('accounttype: ' + type);
     return $http.post('http://54.164.54.3/registration',
-      {userid: id, firstname: firstname, lastname: lastname, email: email, phone: phone, password: password, usertype: 'P'});
+      {username: id, firstname: firstname, lastname: lastname, email: email, phone: phone, password: password, usertype: type});
   };
 
   var getUserInfo = function() {
@@ -77,7 +79,8 @@ angular.module('account')
     */
   };
 
-  var setCredential = function(userid, hashPassword) {
+  var setCredential = function(userid, password) {
+    var hashPassword = CryptoJS.SHA256(password).toString(CryptoJS.enc.Hex);
     var authData = base64.encode(userid + ':' + hashPassword);
     console.log('Basic64: ' + authData);
     $http.defaults.headers.common['Authorization'] = 'Basic ' + authData;
@@ -98,6 +101,26 @@ angular.module('account')
     clearCredential();
   };
 
+  var validateId = function (id) {
+    var regex = /^[A-Za-z0-9-]/;
+    return (typeof(id) != 'undefined') && regex.test(id);
+  }
+
+  var validateName  = function (name) {
+    var regex = /^[A-Za-z-]/;
+    return (typeof(name) != 'undefined') && regex.test(name);
+  }
+
+  var validateEmail = function (email) {
+    var regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return (typeof(email) != 'undefined') && regex.test(email);
+  }
+
+  var validatePhone = function (phone) {
+    var regex = /^\(?([2-9][0-9]{2})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
+    return (typeof(phone) != 'undefined') && regex.test(phone);
+  }
+
   return {
     login: login,
     setCredential: setCredential,
@@ -105,6 +128,10 @@ angular.module('account')
     getUserInfo: getUserInfo,
     setUserInfo: setUserInfo,
     newAccount: newAccount,
+    validateId: validateId,
+    validateName: validateName,
+    validateEmail: validateEmail,
+    validatePhone: validatePhone,
     isAuthenticated: function () {return isAuthenticated;},
     userid: function () {return window.localStorage.getItem(STORAGE_KEYS.userId) || '';},
     password: function () {return window.localStorage.getItem(STORAGE_KEYS.password) || '';}
