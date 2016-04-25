@@ -205,6 +205,23 @@ var query = connection.query("Select * from User where Username = " + connection
 });
 });
 
+app.post('/rank', function(req, res) {
+
+var uid = req.body['username'];
+var query = connection.query("Select Level from Player where username = " + connection.escape(uid), function(err, rows, fields) {
+if(err) {
+	console.log(err);
+	res.status('401').send();
+}
+else {
+	res.contentType('application/json');
+	res.header('Access-Control-Allow-Headers', 'Content-Type');
+	res.status('200').send(JSON.stringify(rows));
+}
+});
+
+});
+
 app.post('/passwordChange', function(req, res) {
 var uid = req.body['username'];
 var pwold = req.body['pwold'];
