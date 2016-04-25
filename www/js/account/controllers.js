@@ -10,8 +10,8 @@ angular.module('account')
       console.log(authenticate);
       AuthService.setCredential(data.userid, data.password);
       AuthService.getUserInfo().then(function(response) {
-        console.log('Respnose: ', response.data);
-        AuthService.setUserInfo(response.data);
+        console.log('Respnose: ', response.data[0]);
+        AuthService.setUserInfo(response.data[0]);
         $state.go('nav.dashboard', {}, {reload: true});
       }, function(err) {
         console.log(err);
@@ -57,14 +57,14 @@ angular.module('account')
       AuthService.newAccount(data.userid, data.firstname, data.lastname, data.email, data.phonenumber, hashPassword.toString(CryptoJS.enc.Hex), data.usertype).then(function (authenticate) {
         console.log('New user registered', authenticate);
         var newUser = {
-          userid : data.userid,
-          firstname: data.firstname,
-          lastname: data.lastname,
-          email: data.email,
-          phonenumber: data.phonenumber,
-          password: hashPassword,
-          usertype: data.usertype,
-          userskill: USER_SKILLS.beginner
+          Username : data.userid,
+          FirstName: data.firstname,
+          LastName: data.lastname,
+          Email: data.email,
+          PhoneNumber : data.phonenumber,
+          Password: hashPassword,
+          Type: data.usertype,
+          UserSkill: USER_SKILLS.beginner
         }
         AuthService.setUserInfo(newUser);
         $state.go('nav.dashboard');
@@ -86,7 +86,7 @@ angular.module('account')
 })
 
 .controller('EditAcctCtrl', function($http, $state, $scope) {
-  
+
 })
 
 .controller('AccessCtrl', function($state, $scope, $stateParam) {

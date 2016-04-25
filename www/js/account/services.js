@@ -33,14 +33,14 @@ angular.module('account')
   //structure of data parameter was decided by the backend server
   var setUserInfo = function(data) {
     console.log("profile call answer", data);
-    window.localStorage.setItem(STORAGE_KEYS.userId, data.username);
-    window.localStorage.setItem(STORAGE_KEYS.password, data.password);
-    window.localStorage.setItem(STORAGE_KEYS.firstName, data.firstname);
-    window.localStorage.setItem(STORAGE_KEYS.lastName, data.lastname);
-    window.localStorage.setItem(STORAGE_KEYS.email, data.email);
-    window.localStorage.setItem(STORAGE_KEYS.phoneNumber, data.phonenumber);
-    window.localStorage.setItem(STORAGE_KEYS.userType, data.usertype);
-    window.localStorage.setItem(STORAGE_KEYS.userSkill, data.userskill);
+    window.localStorage.setItem(STORAGE_KEYS.userId, data.Username);
+    window.localStorage.setItem(STORAGE_KEYS.password, data.Password);
+    window.localStorage.setItem(STORAGE_KEYS.firstName, data.FirstName);
+    window.localStorage.setItem(STORAGE_KEYS.lastName, data.LastName);
+    window.localStorage.setItem(STORAGE_KEYS.email, data.Email);
+    window.localStorage.setItem(STORAGE_KEYS.phoneNumber, data.PhoneNumber);
+    window.localStorage.setItem(STORAGE_KEYS.userType, data.Type);
+    window.localStorage.setItem(STORAGE_KEYS.userSkill, data.UserSkill);
 /*
     window.localStorage.setItem(STORAGE_KEYS.userId, data.userid);
     window.localStorage.setItem(STORAGE_KEYS.password, data.password);
