@@ -1,12 +1,12 @@
 angular.module('statistic')
-  .service('StatisticService', function ($http, $ionicPopup, STORAGE_KEYS, SHOT_POSITIONS, SHOT_TYPES, TARGET_ZONES) {
+  .service('StatisticService', function ($http, $ionicPopup, STORAGE_KEYS, SHOT_POSITIONS, SHOT_TYPES, TARGET_ZONES, ServerURL) {
   var heatMapValues = function() {
     // NOTE: you should only return the post response here, don't do anything else
     // begin ugly testing stuff
     var dataArr = [];
     /* var uid = window.localStorage.getItem(STORAGE_KEYS.userId);
      console.log("STATS TEST: " + uid); */
-     return $http.post('http://54.164.54.3/getHeat', {username: "alpha"})
+     return $http.post(ServerURL + 'getHeat', {username: window.localStorage.getItem(STORAGE_KEYS.userId)})
        .then(function (response) {
        var dataArr = [];
        var retArr = [];
@@ -41,7 +41,7 @@ angular.module('statistic')
     var dataArr = [];
     /* var uid = window.localStorage.getItem(STORAGE_KEYS.userId);
      console.log("STATS TEST: " + uid); */
-    return $http.post('http://54.164.54.3/getZone', {username: "alpha"})
+    return $http.post('http://54.164.54.3/getZone', {username: window.localStorage.getItem(STORAGE_KEYS.userId)})
       .then(function (response) {
       // Init the data array
       for (var pos in TARGET_ZONES) {

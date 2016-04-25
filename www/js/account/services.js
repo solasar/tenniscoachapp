@@ -30,6 +30,20 @@ angular.module('account')
     }
   }
 
+  var getUserSkill = function () {
+    console.log("in get user skill");
+    if (isAuthenticated) {
+      console.log("About to get user skill");
+      return $http.post(ServerURL + 'rank', {username: window.localStorage.getItem(STORAGE_KEYS.userId)});
+    }
+  }
+
+  var setUserSkill = function (skill) {
+    console.log('really setting user skill', skill);
+    window.localStorage.setItem(STORAGE_KEYS.userSkill, skill);
+    console.log('after setting user skill in localstorage', window.localStorage.getItem(STORAGE_KEYS.userSkill));
+  }
+
   //structure of data parameter was decided by the backend server
   var setUserInfo = function(data) {
     console.log("profile call answer", data);
@@ -40,7 +54,7 @@ angular.module('account')
     window.localStorage.setItem(STORAGE_KEYS.email, data.Email);
     window.localStorage.setItem(STORAGE_KEYS.phoneNumber, data.PhoneNumber);
     window.localStorage.setItem(STORAGE_KEYS.userType, data.Type);
-    window.localStorage.setItem(STORAGE_KEYS.userSkill, data.UserSkill);
+    isAuthenticated = true;
 /*
     window.localStorage.setItem(STORAGE_KEYS.userId, data.userid);
     window.localStorage.setItem(STORAGE_KEYS.password, data.password);
@@ -108,6 +122,8 @@ angular.module('account')
     getUserInfo: getUserInfo,
     setUserInfo: setUserInfo,
     newAccount: newAccount,
+    getUserSkill: getUserSkill,
+    setUserSkill: setUserSkill,
     validateId: validateId,
     validateName: validateName,
     validateEmail: validateEmail,

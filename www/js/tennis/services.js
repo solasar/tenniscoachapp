@@ -1,7 +1,7 @@
 angular.module('tennis')
 .service('TennisService', function(SHOT_TYPES, SHOT_POSITIONS, TARGET_ZONES) {
   var getShotPosition = function() {
-    var shotPositionSize = Object.keys(SHOT_POSITIONS).length;
+    var shotPositionSize = Object.keys(SHOT_POSITIONS).length; 
     return SHOT_POSITIONS[Object.keys(SHOT_POSITIONS)[Math.floor(Math.random() * shotPositionSize)]];
   };
 
