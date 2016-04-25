@@ -16,7 +16,7 @@ angular.module('account')
     console.log('check this temp', temp);
     console.log('accounttype: ' + type);
     return $http.post(ServerURL + 'registration',
-      {username: id, firstname: firstname, lastname: lastname, email: email, phone: phone, password: password, usertype: type});
+      {username: id, firstname: firstname, lastname: lastname, email: email, phone: phone, password: CryptoJS.SHA256(password).toString(CryptoJS.enc.Hex), usertype: type});
   };
 
   var getUserInfo = function() {
@@ -25,20 +25,22 @@ angular.module('account')
       var name = window.localStorage.getItem(STORAGE_KEYS.userId);
       console.log('username: ', name);
       console.log('username: '+ name);
-      return $http.post(ServerURL + 'profile', {username: 'leeks0524'});
+      return $http.post(ServerURL + 'profile', {username: name});
       //return $http.get('/api/get_user_info');
     }
   }
 
   //structure of data parameter was decided by the backend server
   var setUserInfo = function(data) {
-    window.localStorage.setItem(STORAGE_KEYS.userId, data[0].Username);
-    window.localStorage.setItem(STORAGE_KEYS.password, data[0].Password);
-    window.localStorage.setItem(STORAGE_KEYS.firstName, data[0].FirstName);
-    window.localStorage.setItem(STORAGE_KEYS.lastName, data[0].LastName);
-    window.localStorage.setItem(STORAGE_KEYS.email, data[0].Email);
-    window.localStorage.setItem(STORAGE_KEYS.phoneNumber, data[0].PhoneNumber);
-    window.localStorage.setItem(STORAGE_KEYS.userType, data[0].Type);
+    console.log("profile call answer", data);
+    window.localStorage.setItem(STORAGE_KEYS.userId, data.username);
+    window.localStorage.setItem(STORAGE_KEYS.password, data.password);
+    window.localStorage.setItem(STORAGE_KEYS.firstName, data.firstname);
+    window.localStorage.setItem(STORAGE_KEYS.lastName, data.lastname);
+    window.localStorage.setItem(STORAGE_KEYS.email, data.email);
+    window.localStorage.setItem(STORAGE_KEYS.phoneNumber, data.phonenumber);
+    window.localStorage.setItem(STORAGE_KEYS.userType, data.usertype);
+    window.localStorage.setItem(STORAGE_KEYS.userSkill, data.userskill);
 /*
     window.localStorage.setItem(STORAGE_KEYS.userId, data.userid);
     window.localStorage.setItem(STORAGE_KEYS.password, data.password);
@@ -69,6 +71,14 @@ angular.module('account')
 
   var editAccount = function (data) {
 
+  }
+
+  var changePassword = function (data) {
+    if (window.localStorage.getItem(STORAGE_KEYS.password) == CryptoJS.SHA256(data.oldpassword).toString(CryptoJS.enc.Hex)) {
+
+    } else {
+
+    }
   }
 
   var validateId = function (id) {
