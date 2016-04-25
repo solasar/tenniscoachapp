@@ -38,6 +38,7 @@ angular.module('starter', ['ionic', 'account', 'assessment','practice','statisti
   $httpBackend.whenPOST(ServerURL + 'profile').passThrough();
   $httpBackend.whenPOST(ServerURL + 'getHeat').passThrough();
   $httpBackend.whenPOST(ServerURL + 'getZone').passThrough();
+  $httpBackend.whenPOST(ServerURL + 'rank').passThrough();
   $httpBackend.whenGET('http://jsonplaceholder.typicode.com/posts').passThrough();
   $httpBackend.whenGET(/templates\/\w+.*/).passThrough();
 })
@@ -145,7 +146,7 @@ angular.module('starter', ['ionic', 'account', 'assessment','practice','statisti
   $ionicConfigProvider.navBar.alignTitle('center')
 })
 
-.controller('DashCtrl', function($state, $scope, $http, AuthService, STORAGE_KEYS) {
+.controller('DashCtrl', function($state, $scope, $http, AuthService, STORAGE_KEYS, USER_TYPES) {
   $scope.data = $scope.data = {
     firstname: window.localStorage.getItem(STORAGE_KEYS.firstName),
     lastname: window.localStorage.getItem(STORAGE_KEYS.lastName),
@@ -155,6 +156,8 @@ angular.module('starter', ['ionic', 'account', 'assessment','practice','statisti
     usertype: window.localStorage.getItem(STORAGE_KEYS.userType),
     userskill: window.localStorage.getItem(STORAGE_KEYS.userSkill)
   };
+
+  //console.log('KEUN@@', Object.keys(USER_TYPES).filter(function(key) {return USER_TYPES[key] === 'P '})[0]);
 
   $scope.toAssessment = function () {
     $state.go('nav.assessment', {}, {reload: true});
@@ -187,6 +190,7 @@ angular.module('starter', ['ionic', 'account', 'assessment','practice','statisti
   });
 })
 
+//Global variable for server url. Must be used in all api calls.
 .factory('ServerURL', function () {
   return 'http://54.164.54.3/';
 })

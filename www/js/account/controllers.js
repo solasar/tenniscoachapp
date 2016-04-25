@@ -12,10 +12,17 @@ angular.module('account')
       AuthService.getUserInfo().then(function(response) {
         console.log('Respnose: ', response.data[0]);
         AuthService.setUserInfo(response.data[0]);
-        $state.go('nav.dashboard', {}, {reload: true});
+        AuthService.getUserSkill().then(function (response) {
+          console.log("Getting user skill", response.data[0].Level);
+          AuthService.setUserSkill(response.data[0].Level);
+          $state.go('nav.dashboard', {}, {reload: true});
+        }), function (err) {
+          console.log(err);
+        };
       }, function(err) {
         console.log(err);
       });
+
     }, function (err) {
       console.log('Login Failed', err);
       var alertPopup = $ionicPopup.alert({
@@ -52,9 +59,7 @@ angular.module('account')
       console.log('This is password, not hashed: ', data.password);
       console.log('This is hashed password, before adding into var: '+ CryptoJS.SHA256(data.password).toString(CryptoJS.enc.Hex));
       console.log('This is hashed password, before adding into var: '+ CryptoJS.SHA256(data.password));
-      var hashPassword = CryptoJS.SHA256(data.password);
-      console.log('This is hashed password: ', hashPassword);
-      AuthService.newAccount(data.userid, data.firstname, data.lastname, data.email, data.phonenumber, hashPassword.toString(CryptoJS.enc.Hex), data.usertype).then(function (authenticate) {
+      AuthService.newAccount(data.userid, data.firstname, data.lastname, data.email, data.phonenumber, data.password, data.usertype).then(function (authenticate) {
         console.log('New user registered', authenticate);
         var newUser = {
           Username : data.userid,
@@ -62,12 +67,16 @@ angular.module('account')
           LastName: data.lastname,
           Email: data.email,
           PhoneNumber : data.phonenumber,
-          Password: hashPassword,
-          Type: data.usertype,
-          UserSkill: USER_SKILLS.beginner
+          Password: CryptoJS.SHA256(data.password).toString(CryptoJS.enc.Hex),
+          Type: data.usertype
         }
         AuthService.setUserInfo(newUser);
-        $state.go('nav.dashboard');
+
+        AuthService.getUserSkill().then(function (content) {
+          console.log('in getuserskill', content);
+          AuthService.setUserSkill(content.data[0].Level);
+          $state.go('nav.dashboard');
+        });
       }, function (err) {
         console.log('New user failed to get registered', err);
         var alertPopup = $ionicPopup.alert({
