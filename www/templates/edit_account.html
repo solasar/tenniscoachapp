@@ -1,0 +1,31 @@
+<ion-view view-title="Edit Account Info">
+  <ion-nav-buttons side="right">
+    <button class="button ion-log-out button-balanced" ng-click="$signoff()"></button>
+  </ion-nav-buttons>
+  <ion-content class="padding">
+    <p>Edit User Information</p>
+    <div class="list">
+      <label class="item item-input">
+        <span class="input-label">User ID</span>
+        <input type="text" placeholder="data.userid" ng-model="data.userid"/>
+      </label>
+      <label class="item item-input">
+        <span class="input-label">First name</span>
+        <input type="text" placeholder="data.firstname" ng-model="data.firstname"/>
+      </label>
+      <label class="item item-input">
+        <span class="input-label">Last name</span>
+        <input type="text" placeholder="data.lastname" ng-model="data.lastname"/>
+      </label>
+      <label class="item item-input">
+        <span class="input-label">Email</span>
+        <input type="email" placeholder="data.email" ng-model="data.email"/>
+      </label>
+      <label class="item item-input">
+        <span class="input-label">Phone #</span>
+        <input type="tel" placeholder="data.phone" ng-model="data.phonenumber"/>
+      </label>
+    </div>
+    <button class="button button-block button-positive" ng-click="editAccount(data)">Submit</button>
+  </ion-content>
+</ion-view>

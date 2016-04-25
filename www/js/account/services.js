@@ -1,29 +1,11 @@
 angular.module('account')
-.service('AuthService', function($http , base64, $q, $ionicPopup, STORAGE_KEYS, USER_SKILLS, USER_TYPES, Accounts) {
+.service('AuthService', function($http , base64, $q, $ionicPopup, STORAGE_KEYS, ServerURL, USER_TYPES, Accounts) {
   var isAuthenticated = false;
-  var rootUrl = 'http://jsonplaceholder.typicode.com';
 
   var login = function(userid, password) {
-    /* Temporary local authentication - userid = user , password = password
-    return $q(function (resolve, reject) {
-      var defaultPassword = CryptoJS.SHA256(tempUser.password);
-      console.log('userid again: ' + userid);
-      console.log('defaultPassword: ' + defaultPassword);
-      if (userid == tempUser.userid && angular.equals(hashPassword, defaultPassword)) {
-        resolve('Login success.');
-      } else {console.log('no');
-        reject('userid or password is incorrect.');
-      }
-    });
-    // Temporary local authentication - userid = user , password = password
-*/
-    //Actual http post call
-    
     console.log("password ", password.toString(CryptoJS.enc.Hex));
-    return $http.post('http://54.164.54.3/login', {name: userid, pwhash: CryptoJS.SHA256(password).toString(CryptoJS.enc.Hex)});
-
+    return $http.post(ServerURL + 'login', {name: userid, pwhash: CryptoJS.SHA256(password).toString(CryptoJS.enc.Hex)});
     //return $http.post('/api/authenticate', {userid: userid, password: password});
-
   };
 
   var newAccount = function(id, firstname, lastname, email, phone, password, type) {
@@ -33,20 +15,31 @@ angular.module('account')
     }
     console.log('check this temp', temp);
     console.log('accounttype: ' + type);
-    return $http.post('http://54.164.54.3/registration',
+    return $http.post(ServerURL + 'registration',
       {username: id, firstname: firstname, lastname: lastname, email: email, phone: phone, password: password, usertype: type});
   };
 
   var getUserInfo = function() {
-    console.log('getuserinfo');
     if (isAuthenticated) {
       console.log('Authenticated');
-      return $http.get('/api/get_user_info');
+      var name = window.localStorage.getItem(STORAGE_KEYS.userId);
+      console.log('username: ', name);
+      console.log('username: '+ name);
+      return $http.post(ServerURL + 'profile', {username: 'leeks0524'});
+      //return $http.get('/api/get_user_info');
     }
   }
 
-
+  //structure of data parameter was decided by the backend server
   var setUserInfo = function(data) {
+    window.localStorage.setItem(STORAGE_KEYS.userId, data[0].Username);
+    window.localStorage.setItem(STORAGE_KEYS.password, data[0].Password);
+    window.localStorage.setItem(STORAGE_KEYS.firstName, data[0].FirstName);
+    window.localStorage.setItem(STORAGE_KEYS.lastName, data[0].LastName);
+    window.localStorage.setItem(STORAGE_KEYS.email, data[0].Email);
+    window.localStorage.setItem(STORAGE_KEYS.phoneNumber, data[0].PhoneNumber);
+    window.localStorage.setItem(STORAGE_KEYS.userType, data[0].Type);
+/*
     window.localStorage.setItem(STORAGE_KEYS.userId, data.userid);
     window.localStorage.setItem(STORAGE_KEYS.password, data.password);
     window.localStorage.setItem(STORAGE_KEYS.firstName, data.firstname);
@@ -55,28 +48,7 @@ angular.module('account')
     window.localStorage.setItem(STORAGE_KEYS.phoneNumber, data.phonenumber);
     window.localStorage.setItem(STORAGE_KEYS.userType, data.usertype);
     window.localStorage.setItem(STORAGE_KEYS.userSkill, data.userskill);
-    /*
-    window.localStorage.setItem(STORAGE_KEYS.userInfo, JSON.stringify(data));
-
-    window.localStorage.setItem(STORAGE_KEYS.userId, JSON.stringify(data.userid));
-    window.localStorage.setItem(STORAGE_KEYS.password, JSON.stringify(data.password));
-    window.localStorage.setItem(STORAGE_KEYS.firstName, JSON.stringify(data.firstname));
-    window.localStorage.setItem(STORAGE_KEYS.lastName, JSON.stringify(data.lastname));
-    window.localStorage.setItem(STORAGE_KEYS.email, JSON.stringify(data.email));
-    window.localStorage.setItem(STORAGE_KEYS.phoneNumber, JSON.stringify(data.phonenumber));
-    window.localStorage.setItem(STORAGE_KEYS.userType, JSON.stringify(data.usertype));
-    window.localStorage.setItem(STORAGE_KEYS.userSkill, JSON.stringify(data.userskill));
-
-
-    console.log(window.localStorage.getItem(STORAGE_KEYS.userInfo));
-    */
-    /*
-    window.localStorage.setItem(STORAGE_KEYS.firstName, data.firstname);
-    window.localStorage.setItem(STORAGE_KEYS.lastName, data.lastname);
-    window.localStorage.setItem(STORAGE_KEYS.email, data.email);
-    window.localStorage.setItem(STORAGE_KEYS.phoneNumber, data.phonenumber);
-    window.localStorage.setItem(STORAGE_KEYS.userType, data.usertype);
-    */
+*/
   };
 
   var setCredential = function(userid, password) {
@@ -89,37 +61,35 @@ angular.module('account')
     isAuthenticated = true;
   };
 
-
-
   function clearCredential() {
     window.localStorage.clear();
     $http.defaults.headers.common.Authorization = 'Basic ';
     isAuthenticated = false;
-  }
-
-  var logout = function() {
-    clearCredential();
   };
+
+  var editAccount = function (data) {
+
+  }
 
   var validateId = function (id) {
     var regex = /^[A-Za-z0-9-]/;
     return (typeof(id) != 'undefined') && regex.test(id);
-  }
+  };
 
   var validateName  = function (name) {
     var regex = /^[A-Za-z-]/;
     return (typeof(name) != 'undefined') && regex.test(name);
-  }
+  };
 
   var validateEmail = function (email) {
     var regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return (typeof(email) != 'undefined') && regex.test(email);
-  }
+  };
 
   var validatePhone = function (phone) {
     var regex = /^\(?([2-9][0-9]{2})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
     return (typeof(phone) != 'undefined') && regex.test(phone);
-  }
+  };
 
   return {
     login: login,
@@ -137,7 +107,6 @@ angular.module('account')
     password: function () {return window.localStorage.getItem(STORAGE_KEYS.password) || '';}
   };
 })
-
 
 .factory('Accounts', function () {
   var accounts = {

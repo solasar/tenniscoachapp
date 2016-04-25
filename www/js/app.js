@@ -29,14 +29,15 @@ angular.module('starter', ['ionic', 'account', 'assessment','practice','statisti
   });
 })
 
-.run(function($httpBackend, Accounts) {
+.run(function($httpBackend, Accounts, ServerURL) {
   $httpBackend.whenGET('/api/get_user_info').respond(Accounts.all());
   $httpBackend.whenPOST('/api/authenticate', {userid: Accounts.all().userid, password: CryptoJS.SHA256(Accounts.all().password)}).respond(200, {message: 'Fake login success'});
   $httpBackend.whenPOST('/api/create_account').respond(200, {message: 'Fake new account success'});
-  $httpBackend.whenPOST('http://54.164.54.3/login').passThrough();
-  $httpBackend.whenPOST('http://54.164.54.3/registration').passThrough();
-  $httpBackend.whenPOST('http://54.164.54.3/getHeat').passThrough();
-  $httpBackend.whenPOST('http://54.164.54.3/getZone').passThrough();
+  $httpBackend.whenPOST(ServerURL + 'login').passThrough();
+  $httpBackend.whenPOST(ServerURL + 'registration').passThrough();
+  $httpBackend.whenPOST(ServerURL + 'profile').passThrough();
+  $httpBackend.whenPOST(ServerURL + 'getHeat').passThrough();
+  $httpBackend.whenPOST(ServerURL + 'getZone').passThrough();
   $httpBackend.whenGET('http://jsonplaceholder.typicode.com/posts').passThrough();
   $httpBackend.whenGET(/templates\/\w+.*/).passThrough();
 })
@@ -144,6 +145,30 @@ angular.module('starter', ['ionic', 'account', 'assessment','practice','statisti
   $ionicConfigProvider.navBar.alignTitle('center')
 })
 
+.controller('DashCtrl', function($state, $scope, $http, AuthService, STORAGE_KEYS) {
+  $scope.data = $scope.data = {
+    firstname: window.localStorage.getItem(STORAGE_KEYS.firstName),
+    lastname: window.localStorage.getItem(STORAGE_KEYS.lastName),
+    userid: window.localStorage.getItem(STORAGE_KEYS.userId),
+    email: window.localStorage.getItem(STORAGE_KEYS.email),
+    phonenumber: window.localStorage.getItem(STORAGE_KEYS.phoneNumber),
+    usertype: window.localStorage.getItem(STORAGE_KEYS.userType),
+    userskill: window.localStorage.getItem(STORAGE_KEYS.userSkill)
+  };
+
+  $scope.toAssessment = function () {
+    $state.go('nav.assessment', {}, {reload: true});
+  }
+
+  $scope.toMatch = function () {
+    $state.go('nav.practice', {}, {reload: true});
+  }
+
+  $scope.toStatistic = function () {
+    $state.go('nav.statistic', {}, {reload: true});
+  }
+})
+
 .controller('AppCtrl', function($scope, $state, $ionicPopup, AUTH_EVENTS, AuthService) {
   $scope.$back = function() {
     window.history.back();
@@ -160,4 +185,8 @@ angular.module('starter', ['ionic', 'account', 'assessment','practice','statisti
       template: 'You are not allowed to accesss this page.'
     });
   });
-});
+})
+
+.factory('ServerURL', function () {
+  return 'http://54.164.54.3/';
+})

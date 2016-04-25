@@ -2,7 +2,6 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var http = require('http');
 var mysql = require('mysql');
-var crypt = require('crypto');
 var connection = mysql.createConnection({
 
 host: 'localhost',
@@ -33,7 +32,7 @@ app.post('/login', function (req, res) {
 	if (err) {
 		data ='400'
 	}
-	else if (crypto.createHash('sha256').update(rows[0].Password).digest("hex") ==  pwhash) {
+	else if (rows[0].Password ==  pwhash) {
 		data = '200';
 	}
 	else {

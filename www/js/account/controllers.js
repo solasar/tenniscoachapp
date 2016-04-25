@@ -1,6 +1,6 @@
 angular.module('account')
 
-.controller('LoginCtrl', function($scope, $state, $ionicPopup, AuthService, STORAGE_KEYS) {
+.controller('LoginCtrl', function($scope, $state, $ionicPopup, AuthService) {
   $scope.data = {};
   AuthService.clearCredential();
   $scope.login =  function(data) {
@@ -16,8 +16,6 @@ angular.module('account')
       }, function(err) {
         console.log(err);
       });
-
-
     }, function (err) {
       console.log('Login Failed', err);
       var alertPopup = $ionicPopup.alert({
@@ -32,7 +30,7 @@ angular.module('account')
   };
 })
 
-.controller('CreateAcctCtrl', function($scope, $state, $ionicPopup, AuthService, USER_TYPES, USER_SKILLS, STORAGE_KEYS) {
+.controller('CreateAcctCtrl', function($scope, $state, $ionicPopup, AuthService, USER_TYPES, USER_SKILLS) {
   $scope.data = {};
   $scope.level = USER_TYPES;
   $scope.newAccount = function (data) {
@@ -86,53 +84,9 @@ angular.module('account')
 
   };
 })
-.controller('DashCtrl', function($state, $scope, $http, AuthService, STORAGE_KEYS) {
-  $scope.data = $scope.data = {
-    firstname: window.localStorage.getItem(STORAGE_KEYS.firstName),
-    lastname: window.localStorage.getItem(STORAGE_KEYS.lastName),
-    userid: window.localStorage.getItem(STORAGE_KEYS.userId),
-    email: window.localStorage.getItem(STORAGE_KEYS.email),
-    phonenumber: window.localStorage.getItem(STORAGE_KEYS.phoneNumber),
-    usertype: window.localStorage.getItem(STORAGE_KEYS.userType),
-    userskill: window.localStorage.getItem(STORAGE_KEYS.userSkill)
-  };
 
-  $scope.toAssessment = function () {
-    $state.go('nav.assessment', {}, {reload: true});
-  }
-
-  $scope.toMatch = function () {
-    $state.go('nav.practice', {}, {reload: true});
-  }
-
-  $scope.toStatistic = function () {
-    $state.go('nav.statistic', {}, {reload: true});
-  }
-/*
-  console.log('Stored password:', window.localStorage.getItem(STORAGE_KEYS.password));
-
-  if (window.localStorage.getItem(STORAGE_KEYS.userInfo)) {
-    console.log('localstorage not empty');
-    $scope.data = {
-      firstname: JSON.parse(window.localStorage.getItem(STORAGE_KEYS.firstName)),
-      lastname: JSON.parse(window.localStorage.getItem(STORAGE_KEYS.lastName)),
-      userid: JSON.parse(window.localStorage.getItem(STORAGE_KEYS.userId)),
-      email: JSON.parse(window.localStorage.getItem(STORAGE_KEYS.email)),
-      phonenumber: JSON.parse(window.localStorage.getItem(STORAGE_KEYS.phoneNumber)),
-      usertype: JSON.parse(window.localStorage.getItem(STORAGE_KEYS.userType)),
-      userskill: JSON.parse(window.localStorage.getItem(STORAGE_KEYS.userSkill))
-    }
-  } else {console.log('localstorage empty');
-    $http.get('/api/get_user_info').then(function (response) {
-      $scope.data = response.data;
-
-      AuthService.setUserInfo(response.data);
-      console.log('Test: ' + window.localStorage.getItem(STORAGE_KEYS.userType));
-    }, function (err) {
-      console.log(err);
-    });
-  }
-  */
+.controller('EditAcctCtrl', function($http, $state, $scope) {
+  
 })
 
 .controller('AccessCtrl', function($state, $scope, $stateParam) {
