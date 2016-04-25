@@ -254,3 +254,20 @@ var loginQuery = connection.query('Select Password from User where Username = ' 
 });
 
 });
+
+app.post('/rankUpdate', function(req, res) {
+
+var uid = req.body['username'];
+var level = req.body['level'];
+
+var query = connection.query("Update Player Set Level = " + connection.escape(level) + ' Where Username = ' + connection.escape(uid), function(err, rows, fields) {
+	if(err) {
+		console.log(err);
+		res.status('401').send();
+	}
+	else {
+		res.status('200').send();
+	}
+});
+
+});
