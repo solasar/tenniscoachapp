@@ -97,8 +97,8 @@ var pwhash = req.body['pwhash'];
 var type = req.body['type'];
 var zone = req.body['zone'];
 var success = req.body['success'];
+var startLoc = req.body['start'];
 
-var shotQuery = {Username: uid, Type: type, Zone: zone, Made:  success};
 
 var loginConnection = connection.query("Select Password from User where Username = " + connection.escape(uid), function(err, rows, fields) {
 	if(err) {
@@ -106,16 +106,22 @@ var loginConnection = connection.query("Select Password from User where Username
 	}
 	try {
 	if(rows[0].Password === pwhash) {
-		var shotConnection = connection.query("INSERT INTO Shot SET ?", shotQuery, function(err, rows, fields) {
+		var typeShotConnection = connection.query("Select keyString from StartingPosition where keyValue = " + connection.escape(startLoc), function(err, rows, fields) {
 			if(err) {
-				res.status('401');
-				res.send();
+				res.status('400').send();
 			}
-			else {
-				res.status('200');
-				res.send();
-			}
-	});
+			var shotQuery = {Username: uid, Type: type, Zone: zone, Made:  success, startingPosition: rows[0].keyString };
+			var shotConnection = connection.query("INSERT INTO Shot SET ?", shotQuery, function(err, rows, fields) {
+			
+				if(err) {
+					res.status('401');
+					res.send();
+				}
+				else {
+					res.status('200');
+					res.send();
+				}
+	});});
 	}}
 	catch(error) {
 	res.status('400');
