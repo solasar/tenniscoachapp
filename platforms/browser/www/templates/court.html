@@ -1,0 +1,52 @@
+<ion-view>
+
+  <ion-nav-title>{{title}}</ion-nav-title>
+
+  <ion-nav-buttons side="left">
+    <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
+  </ion-nav-buttons>
+
+  <ion-nav-buttons side="right">
+    <button class="button ion-log-out button-calm" ng-click="$signoff()"></button>
+  </ion-nav-buttons>
+
+  <ion-content>
+    <br>
+    <div class="tennis_court">
+      <div class="row row-no-padding zone_line2 ">
+        <div class="col zone" ng-click="shot('TLLL')">1</div>
+        <div class="col zone" ng-click="shot('TLLR')">2</div>
+        <div class="col zone" ng-click="shot('TLRL')">3</div>
+        <div class="col zone" ng-click="shot('TLRR')">4</div>
+        <div class="col zone" ng-click="shot('TRLL')">5</div>
+        <div class="col zone" ng-click="shot('TRLR')">6</div>
+        <div class="col zone" ng-click="shot('TRRL')">7</div>
+        <div class="col zone" ng-click="shot('TRRR')">8</div>
+      </div>
+      <div class="row row-no-padding zone_line1 ">
+        <div class="col zone" ng-click="shot('MLLL')">9</div>
+        <div class="col zone" ng-click="shot('MLLR')">10</div>
+        <div class="col zone" ng-click="shot('MLRL')">11</div>
+        <div class="col zone" ng-click="shot('MLRR')">12</div>
+        <div class="col zone" ng-click="shot('MRLL')">13</div>
+        <div class="col zone" ng-click="shot('MRLR')">14</div>
+        <div class="col zone" ng-click="shot('MRRL')">15</div>
+        <div class="col zone" ng-click="shot('MRRR')">16</div>
+      </div>
+      <div class="row row-no-padding zone_line1 ">
+        <div class="col zone" ng-click="shot('BLLL')">17</div>
+        <div class="col zone" ng-click="shot('BLLR')">18</div>
+        <div class="col zone" ng-click="shot('BLRL')">19</div>
+        <div class="col zone" ng-click="shot('BLRR')">20</div>
+        <div class="col zone" ng-click="shot('BRLL')">21</div>
+        <div class="col zone" ng-click="shot('BRLR')">22</div>
+        <div class="col zone" ng-click="shot('BRRL')">23</div>
+        <div class="col zone" ng-click="shot('BRRR')">24</div>
+      </div>
+      <div class="row zone_line1">
+        <div class="col zone" ng-click="shot('out')">OUT</div>
+      </div>
+    </div>
+  </ion-content>
+
+</ion-view>

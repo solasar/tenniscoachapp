@@ -1,0 +1,37 @@
+<ion-view view-title="Creat Account">
+  <ion-nav-buttons side="left">
+    <button class="button ion-android-arrow-back button-calm" ng-click="$back()"></button>
+  </ion-nav-buttons>
+  <ion-nav-buttons side="right">
+    <button class="button ion-log-out button-calm" ng-click="$signoff()"></button>
+  </ion-nav-buttons>
+  <ion-content class="padding">
+    <div class="list list-inset">
+      <label class="item item-input">
+        <input type="text" placeholder="User ID" ng-model="data.userid"/>
+      </label>
+      <label class="item item-input">
+        <input type="text" placeholder="First name" ng-model="data.firstname"/>
+      </label>
+      <label class="item item-input">
+        <input type="password" placeholder="Last name" ng-model="data.lastname"/>
+      </label>
+      <label class="item item-input">
+        <input type="password" placeholder="Email" ng-model="data.email"/>
+      </label>
+      <label class="item item-input">
+        <input type="password" placeholder="Phone number" ng-model="data.phonenumber"/>
+      </label>
+      <label class="item item-input">
+        <input type="password" placeholder="Password" ng-model="data.password"/>
+      </label>
+      <br />
+      <p>
+        Choose your account type.
+      </p>
+      <ion-radio ng-model="data.usertype" ng-value="level.player">Player</ion-radio>
+      <ion-radio ng-model="data.usertype" ng-value="level.coach">Coach</ion-radio>
+    </div>
+    <button class="button button-block button-positive" ng-click="newAccount(data)">Create Account</button>
+  </ion-content>
+</ion-view>

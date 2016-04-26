@@ -1,0 +1,31 @@
+<ion-view>
+
+  <ion-content class="padding">
+
+    <div>
+      <p>Shot position: {{shot.shotposition}}</p>
+      <p>Shot type: {{shot.shottype}}</p>
+      <p>Target zone: <b>{{shot.targetzone}}</b></p>
+      <p>Shots made: {{count.shotcount}} / {{count.maxshotnum}}</p>
+    </div>
+
+    <p>Assessment progress</p>
+    <table>
+      <tr>
+        <td width="{{bar.hit}}%" style="background-color: #4cd964; outline-color: white">
+        </td>
+        <td width="{{bar.miss}}%" style="background-color: yellow; outline-color: white">
+        </td>
+        <td width="{{bar.none}}%" style="background-color: grey; outline-color: white">
+        </td>
+      </tr>
+    </table>
+
+    <div class="court_container container-fluid">
+      <ion-nav-view name="court" ></ion-nav-view>
+    </div>
+
+
+
+  </ion-content>
+</ion-view>

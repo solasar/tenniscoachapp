@@ -1,0 +1,28 @@
+<ion-view>
+  <ion-nav-title>Practice Result</ion-nav-title>
+
+  <ion-nav-buttons side="left">
+    <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
+  </ion-nav-buttons>
+
+  <ion-nav-buttons side="right">
+    <button class="button ion-log-out button-calm" ng-click="$signoff()"></button>
+  </ion-nav-buttons>
+
+  <ion-content class="padding">
+    <div>
+      <h2>Practice</h2>
+      <p>
+        Your shot has been entered!
+      </p>
+      <p>
+        Would you like to continue?
+      </p>
+    </div>
+
+    <div>
+      <button class="button button-block button-positive" ng-click="toRandom()">Yes</button>
+      <button class="button button-block button-positive" ng-click="toHome()">No, take me to the home page</button>
+    </div>
+  </ion-content>
+</ion-view>
