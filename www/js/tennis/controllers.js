@@ -23,6 +23,10 @@ angular.module('tennis')
     TennisService.setHitMap_Y2P(arg);
   })
   
+  $scope.$on('setCourtSectionEvent', function (event, arg) {
+    TennisService.setCourtSection();
+  })
+  
 
 
   $scope.$emit('courtReadyForEvent');

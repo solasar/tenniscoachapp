@@ -1,4 +1,4 @@
-angular.module('practice')
+angular.module('match')
 
 .constant('STORAGE_KEYS', {
   shotType: 'ShotType',

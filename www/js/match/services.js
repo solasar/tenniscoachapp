@@ -1,5 +1,5 @@
-angular.module('practice')
-.service('PracticeService', function ($http, $ionicPopup, STORAGE_KEYS, SHOT_POSITIONS, SHOT_TYPES, TARGET_ZONES) {
+angular.module('match')
+.service('MatchService', function ($http, $ionicPopup, STORAGE_KEYS, SHOT_POSITIONS, SHOT_TYPES, TARGET_ZONES) {
   var pushShotRecords = function (records) {
     var allRecords = JSON.parse(window.localStorage.getItem(STORAGE_KEYS.userRecords));
     console.log("All Records Before: ", allRecords);
@@ -9,7 +9,7 @@ angular.module('practice')
     for (var i = 0; i < records.length; i++) {
       allRecords.push(records[i]);
     }
-    
+
     console.log("All Records After: ", allRecords);
     window.localStorage.setItem(STORAGE_KEYS.userRecords, JSON.stringify(allRecords));
   };

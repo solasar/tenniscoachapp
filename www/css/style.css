@@ -56,12 +56,14 @@
 .zone_line2 {
   height: 155px;
   margin-bottom: 6px;
+  line-height: 155px;
 }
 
 .zone_line1 {
   height: 74px;
   padding: 0;
   margin-bottom: 6px;
+  line-height: 74px;
 }
 
 .zone {
@@ -69,6 +71,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  text-align: center;
 }
 .zone:active {
   outline: red medium solid;

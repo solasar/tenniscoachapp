@@ -1,5 +1,5 @@
-angular.module('practice')
-  .controller('PracticeCtrl', function ($scope, $state, $ionicPopup, $ionicModal, $http, SHOT_POSITIONS, SHOT_TYPES, TennisService, STORAGE_KEYS, PracticeService) {
+angular.module('match')
+  .controller('MatchCtrl', function ($scope, $state, $ionicPopup, $ionicModal, $http, SHOT_POSITIONS, SHOT_TYPES, TennisService, STORAGE_KEYS, MatchService) {
     //Always assign the nav bar title from the parent view, using the var name 'title'
     $scope.title = 'Record Scoring Shots!';
     $scope.shotPosition = {value: 'This is the 1st shot'};
@@ -7,8 +7,8 @@ angular.module('practice')
     $scope.targetZone = {value: 'This is the 1st shot'};
     $scope.shotPositionConsts = [];
     $scope.shotTypeConsts = [];
-    $scope.shotPositionConsts = PracticeService.getShotPositionConsts();
-    $scope.shotTypeConsts = PracticeService.getShotTypeConsts();
+    $scope.shotPositionConsts = MatchService.getShotPositionConsts();
+    $scope.shotTypeConsts = MatchService.getShotTypeConsts();
     var shotRecords = [];
     var none = {
       key: 'None',
@@ -94,29 +94,17 @@ angular.module('practice')
 
     $scope.submitRecord = function () {
       console.log('Display record: ', shotRecords);
-      PracticeService.pushShotRecords(shotRecords);
-      $state.go('nav.practice_result', {records: JSON.stringify(shotRecords)}, {reload: true});
+      MatchService.pushShotRecords(shotRecords);
+      $state.go('nav.match_result', {records: JSON.stringify(shotRecords)}, {reload: true});
     };
   })
 
-
-  .controller('PracticeStartCtrl', function($scope, $state) {
-    $scope.toRandom = function() {
-      console.log("PracticeStartCtrl toRandom() reached");
-      $state.go('nav.practice', {}, {reload: true});
-    };
-
-    $scope.toCoach = function() {
-      console.log("Need to get Data from coach, which currently cannot be entered");
-    };
-  })
-
-  .controller('PracticeResultCtrl', function ($scope, $state, $stateParams) {
+  .controller('MatchResultCtrl', function ($scope, $state, $stateParams) {
     var shotRecords = JSON.parse($stateParams.records);
-    console.log('In PracticeResultCtrl', shotRecords);
+    console.log('In MatchResultCtrl', shotRecords);
     $scope.recordNum = shotRecords.length;
-    $scope.toRandom = function() {
-      $state.go('nav.practice', {}, {reload: true});
+    $scope.toMatch = function() {
+      $state.go('nav.match', {}, {reload: true});
     };
 
     $scope.toHome = function() {

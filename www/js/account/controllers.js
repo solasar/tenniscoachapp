@@ -1,6 +1,6 @@
 angular.module('account')
 
-.controller('LoginCtrl', function($scope, $state, $ionicPopup, AuthService) {
+.controller('LoginCtrl', function($scope, $state, $ionicPopup, AuthService, TARGET_ZONES) {
   $scope.data = {};
   AuthService.clearCredential();
   $scope.login =  function(data) {
@@ -104,7 +104,7 @@ angular.module('account')
 
 })
 
-.controller('PracticeCtrl', function() {
+.controller('MatchCtrl', function() {
 
 })
 

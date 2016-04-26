@@ -4,12 +4,13 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 angular.module('tennis', []);
+angular.module('exercise', ['tennis', 'account']);
 angular.module('statistic', ['tennis', 'account']);
 angular.module('assessment', ['tennis', 'account']);
-angular.module('practice', ['tennis', 'account']);
+angular.module('match', ['tennis', 'account']);
 angular.module('account', ['utf8-base64']);
 //Make sure to inject all new modules into starter module
-angular.module('starter', ['ionic', 'account', 'assessment','practice','statistic', 'tennis', 'ngMockE2E'])
+angular.module('starter', ['ionic', 'account', 'assessment','match', 'exercise', 'statistic', 'tennis', 'ngMockE2E'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -101,26 +102,26 @@ angular.module('starter', ['ionic', 'account', 'assessment','practice','statisti
       }
     })
 
-    .state('nav.practice_result', {
-      url: 'nav/practice_result/:records',
+    .state('nav.match_result', {
+      url: 'nav/match_result/:records',
       cache: false,
       views: {
         'sideContent': {
-          templateUrl: 'templates/practice_result.html',
-          controller: 'PracticeResultCtrl'
+          templateUrl: 'templates/match_result.html',
+          controller: 'MatchResultCtrl'
         }
       }
     })
 
-    .state('nav.practice', {
-      url: 'nav/practice',
+    .state('nav.match', {
+      url: 'nav/match',
       cache: false,
       views: {
         'sideContent': {
-          templateUrl: 'templates/practice.html',
-          controller: 'PracticeCtrl'
+          templateUrl: 'templates/match.html',
+          controller: 'MatchCtrl'
         },
-        'court@nav.practice': {
+        'court@nav.match': {
           templateUrl: 'templates/court.html',
           controller: 'CourtCtrl'
         }
@@ -138,6 +139,32 @@ angular.module('starter', ['ionic', 'account', 'assessment','practice','statisti
         'court@nav.statistic': {
           templateUrl: 'templates/court.html',
           controller: 'CourtCtrl'
+        }
+      }
+    })
+
+    .state('nav.exercise', {
+      url: 'nav/exercise',
+      cache: false,
+      views: {
+        'sideContent': {
+          templateUrl: 'templates/exercise.html',
+          controller: 'ExerciseCtrl'
+        },
+        'court@nav.exercise': {
+          templateUrl: 'templates/court.html',
+          controller: 'CourtCtrl'
+        }
+      }
+    })
+
+    .state('nav.exercise_result', {
+      url: 'nav/exercise_result/:records',
+      cache: false,
+      views: {
+        'sideContent': {
+          templateUrl: 'templates/exercise_result.html',
+          controller: 'ExerciseResultCtrl'
         }
       }
     })
@@ -164,11 +191,15 @@ angular.module('starter', ['ionic', 'account', 'assessment','practice','statisti
   }
 
   $scope.toMatch = function () {
-    $state.go('nav.practice', {}, {reload: true});
+    $state.go('nav.match', {}, {reload: true});
   }
 
   $scope.toStatistic = function () {
     $state.go('nav.statistic', {}, {reload: true});
+  }
+
+  $scope.toExercise = function () {
+    $state.go('nav.exercise', {}, {reload: true});
   }
 })
 

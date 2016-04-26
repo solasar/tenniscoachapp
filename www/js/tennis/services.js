@@ -1,7 +1,7 @@
 angular.module('tennis')
-.service('TennisService', function(SHOT_TYPES, SHOT_POSITIONS, TARGET_ZONES) {
+.service('TennisService', function(SHOT_TYPES, SHOT_POSITIONS, TARGET_ZONES, LEFT_SECTION, CENTER_SECTION, RIGHT_SECTION) {
   var getShotPosition = function() {
-    var shotPositionSize = Object.keys(SHOT_POSITIONS).length; 
+    var shotPositionSize = Object.keys(SHOT_POSITIONS).length;
     return SHOT_POSITIONS[Object.keys(SHOT_POSITIONS)[Math.floor(Math.random() * shotPositionSize)]];
   };
 
@@ -45,6 +45,33 @@ angular.module('tennis')
     }
   };
 
+  var getTargetZoneBySection = function (shottype, section) {
+    if (shottype == SHOT_TYPES.serve) {
+      var servezone = Object.keys(section).filter(function (key) {
+        //Assuming that zone 1~8 are serve zones
+        return key <= 8 && key != 0;
+      });
+      console.log('IN SERVE, Zones are here.', servezone);
+      var serveZoneSize = servezone.length;
+      return Object.keys(servezone)[Math.floor(Math.random() * (serveZoneSize - 1)) + 1];
+    } else {
+
+      var targetZoneSize = Object.keys(section).length;
+      return Object.keys(section)[Math.floor(Math.random() * (targetZoneSize - 1)) + 1];
+    }
+  }
+
+  var getShotOrderBySection = function (section) {
+    var shotPosition = getShotPosition();
+    var shotType = getShotType(shotPosition);
+    var targetZone = getTargetZoneBySection(shotType, section);
+    return {
+      shotposition: shotPosition,
+      shottype: shotType,
+      targetzone: targetZone
+    }
+  };
+
   var setHitMap_Y2G = function (zoneStats) {
     for (var i = 0; i < zoneStats.length; i++) {
       document.getElementById(i.toString()).style.backgroundColor = 'rgb(' + Math.round(255 * (100 - zoneStats[i]) / 100) + ', 255, 0)';
@@ -73,6 +100,24 @@ angular.module('tennis')
     }
   }
 
+  var setCourtSection = function () {
+    Object.keys(LEFT_SECTION).forEach(function (entry) {
+      console.log('ENTRY', entry);
+      document.getElementById(entry.toString()).style.backgroundColor = 'pink';
+      document.getElementById(entry.toString()).style.opacity = '0.7';
+    });
+    Object.keys(CENTER_SECTION).forEach(function (entry) {
+      console.log('ENTRY', entry);
+      document.getElementById(entry.toString()).style.backgroundColor = 'yellow';
+      document.getElementById(entry.toString()).style.opacity = '0.7';
+    });
+    Object.keys(RIGHT_SECTION).forEach(function (entry) {
+      console.log('ENTRY', entry);
+      document.getElementById(entry.toString()).style.backgroundColor = 'orange';
+      document.getElementById(entry.toString()).style.opacity = '0.7';
+    });
+  }
+
 
 
   return {
@@ -80,9 +125,12 @@ angular.module('tennis')
     getShotType: getShotType,
     getTargetZone: getTargetZone,
     getShotOrder: getShotOrder,
+    getTargetZoneBySection: getTargetZoneBySection,
+    getShotOrderBySection: getShotOrderBySection,
     setHitMap_Y2G: setHitMap_Y2G,
     setHitMap_R2G: setHitMap_R2G,
     setHitMap_Teal: setHitMap_Teal,
-    setHitMap_Y2P: setHitMap_Y2P
+    setHitMap_Y2P: setHitMap_Y2P,
+    setCourtSection: setCourtSection
   };
 });
