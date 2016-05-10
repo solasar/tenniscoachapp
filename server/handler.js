@@ -91,10 +91,10 @@ var coachQuery = connection.query("INSERT INTO Coach set ?", {Username: uid} , f
 });
 
 app.post('/dinput', function(req, res) {
-  var rows = [];
+  var records = [];
   for (var i = 0; i < req.body.length; i++) {
     var row = req.body[i];
-    rows.push([row['username'], row['zone'], row['success'], row['type'], row['start']]);
+    records.push([row['username'], row['zone'], row['success'], row['type'], row['start']]);
   }
   /*
 var uid = req.body['username'];
@@ -105,15 +105,15 @@ var success = req.body['success'];
 var startLoc = req.body['start'];
 */
 
-var loginConnection = connection.query("Select Password from User where Username = " + connection.escape(req.body[0]['username']), function(err, rows, fields) {
+var loginConnection = connection.query("Select Password from User where Username = " + connection.escape(records.body[0]['username']), function(err, rows, fields) {
 	if(err) {
 		res.status('400').send();
 	}
 	try {
-	if(rows[0].Password === req.body[0]['pwhash']) {
+	if(rows[0].Password === records.body[0]['pwhash']) {
 
     var sql = connection.query("INSERT INTO Shot (Username, Zone, Made, Type, startingPosition) VALUES ?");
-    conection.query(sql, [rows], function (err) {
+    connection.query(sql, [records], function (err) {
       if (err) {
         res.status('401');
         res.send();
