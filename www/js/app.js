@@ -40,6 +40,7 @@ angular.module('starter', ['ionic', 'account', 'assessment','match', 'exercise',
   $httpBackend.whenPOST(ServerURL + 'getHeat').passThrough();
   $httpBackend.whenPOST(ServerURL + 'getZone').passThrough();
   $httpBackend.whenPOST(ServerURL + 'rank').passThrough();
+  $httpBackend.whenPOST(ServerURL + 'dinput').passThrough();
   $httpBackend.whenGET('http://jsonplaceholder.typicode.com/posts').passThrough();
   $httpBackend.whenGET(/templates\/\w+.*/).passThrough();
 })
@@ -92,7 +93,7 @@ angular.module('starter', ['ionic', 'account', 'assessment','match', 'exercise',
     })
 
     .state('nav.assessment_result', {
-      url: 'nav/assessment_result',
+      url: 'nav/assessment_result/:records',
       cache: false,
       views: {
         'sideContent': {

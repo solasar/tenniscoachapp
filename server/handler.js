@@ -91,28 +91,46 @@ var coachQuery = connection.query("INSERT INTO Coach set ?", {Username: uid} , f
 });
 
 app.post('/dinput', function(req, res) {
-
+  var rows = [];
+  for (var i = 0; i < req.body.length; i++) {
+    var row = req.body[i];
+    rows.push([row['username'], row['zone'], row['success'], row['type'], row['start']]);
+  }
+  /*
 var uid = req.body['username'];
 var pwhash = req.body['pwhash'];
 var type = req.body['type'];
 var zone = req.body['zone'];
 var success = req.body['success'];
 var startLoc = req.body['start'];
+*/
 
-
-var loginConnection = connection.query("Select Password from User where Username = " + connection.escape(uid), function(err, rows, fields) {
+var loginConnection = connection.query("Select Password from User where Username = " + connection.escape(req.body[0]['username']), function(err, rows, fields) {
 	if(err) {
 		res.status('400').send();
 	}
 	try {
-	if(rows[0].Password === pwhash) {
+	if(rows[0].Password === req.body[0]['pwhash']) {
+
+    var sql = connection.query("INSERT INTO Shot (Username, Zone, Made, Type, startingPosition) VALUES ?");
+    conection.query(sql, [rows], function (err) {
+      if (err) {
+        res.status('401');
+        res.send();
+      } else {
+        res.status('200');
+        res.send();
+      }
+    });
+
+/*
 		var typeShotConnection = connection.query("Select keyString from StartingPosition where keyValue = " + connection.escape(startLoc), function(err, rows, fields) {
 			if(err) {
 				res.status('400').send();
 			}
-			var shotQuery = {Username: uid, Type: type, Zone: zone, Made:  success, startingPosition: rows[0].keyString };
+			var shotQuery = {Username: uid, Type: type, Zone: zone, Made: success, startingPosition: rows[0].keyString};
 			var shotConnection = connection.query("INSERT INTO Shot SET ?", shotQuery, function(err, rows, fields) {
-			
+
 				if(err) {
 					res.status('401');
 					res.send();
@@ -121,7 +139,7 @@ var loginConnection = connection.query("Select Password from User where Username
 					res.status('200');
 					res.send();
 				}
-	});});
+	});});*/
 	}}
 	catch(error) {
 	res.status('400');
