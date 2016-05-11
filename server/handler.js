@@ -105,7 +105,7 @@ var success = req.body['success'];
 var startLoc = req.body['start'];
 */
 
-var loginConnection = connection.query("Select Password from User where Username = " + connection.escape(records.body[0]['username']), function(err, rows, fields) {
+var loginConnection = connection.query("Select Password from User where Username = " + connection.escape(req.body[0]['username']), function(err, rows, fields) {
 	if(err) {
 		res.status('400').send();
 	}
