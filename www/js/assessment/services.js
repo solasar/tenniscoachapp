@@ -15,8 +15,18 @@ angular.module('assessment')
     return $http.post(ServerURL + 'dinput', records);
   }
 
+  var postSkillLevelUpdate = function (name, level) {
+    console.log('assessment service post skill level update', level);
+    var param = {
+      username: name,
+      level: level
+    }
+    return $http.post(ServerURL + 'rankUpdate', param);
+  }
+
   return {
     calcSkillLevel: calcSkillLevel,
-    postAssessmentShots: postAssessmentShots
+    postAssessmentShots: postAssessmentShots,
+    postSkillLevelUpdate: postSkillLevelUpdate
   };
 });

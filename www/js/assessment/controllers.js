@@ -65,19 +65,36 @@ angular.module('assessment')
 
     })
   })
-  .controller('AssessResultCtrl', function ($scope, $state, $stateParams, $ionicPopup, AssessService, STORAGE_KEYS) {
+  .controller('AssessResultCtrl', function ($scope, $state, $stateParams, $ionicPopup, $ionicLoading, AssessService, STORAGE_KEYS) {
+    $ionicLoading.show();
+    $scope.level = '';
     console.log('In AssessResultCtrl');
     var shotRecords = JSON.parse($stateParams.records);
-    $scope.level = window.localStorage.getItem(STORAGE_KEYS.userSkill);
     AssessService.postAssessmentShots(shotRecords).then(function (success) {
-      console.log("AssessResultCtrl was success");
-
+      console.log("AssessService.postAssessmentShots was success");
+      AssessService.postSkillLevelUpdate(window.localStorage.getItem(STORAGE_KEYS.userId),
+          window.localStorage.getItem(STORAGE_KEYS.userSkill)).then(function (success) {
+        console.log("AssessService.postSkillLevelUpdate was success");
+        $scope.level = window.localStorage.getItem(STORAGE_KEYS.userSkill);
+        $ionicLoading.hide();
+      }, function (err) {
+        var alertPopup = $ionicPopup.alert({
+          title: 'Post skill level update failed',
+          template: 'Your new skill level has not been recorded in server'
+        });
+      });
     }, function (err) {
       var alertPopup = $ionicPopup.alert({
         title: 'Post assessment shots data failed',
         template: 'Your assessment shots data has not been recorded in server'
       });
     });
+    $scope.toAssessment = function () {
+      $state.go('nav.assessment', {}, {reload: true});
+    }
+    $scope.toHome = function() {
+      $state.go('nav.dashboard', {}, {reload: true});
+    };
   })
 
 

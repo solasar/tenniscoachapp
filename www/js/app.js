@@ -41,6 +41,7 @@ angular.module('starter', ['ionic', 'account', 'assessment','match', 'exercise',
   $httpBackend.whenPOST(ServerURL + 'getZone').passThrough();
   $httpBackend.whenPOST(ServerURL + 'rank').passThrough();
   $httpBackend.whenPOST(ServerURL + 'dinput').passThrough();
+  $httpBackend.whenPOST(ServerURL + 'rankUpdate').passThrough();
   $httpBackend.whenGET('http://jsonplaceholder.typicode.com/posts').passThrough();
   $httpBackend.whenGET(/templates\/\w+.*/).passThrough();
 })

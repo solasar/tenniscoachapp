@@ -10,9 +10,21 @@
   </ion-nav-buttons>
 
   <ion-content class="padding">
-    <h2>Your new skill level is</h2>
-    <br>
-    <h1>{{level}}</h1>
+      <div>
+        <h2>Skill Challenge has finished</h2>
+        <p>
+          Your new skill level is <b>{{level}}</b>
+        </p>
+        <br>
+        <p>
+          Would you like to try again?
+        </p>
+      </div>
+
+      <div>
+        <button class="button button-block button-positive" ng-click="toAssessment()">Yes</button>
+        <button class="button button-block button-positive" ng-click="toHome()">No, take me to the home page</button>
+      </div>
 
   </ion-content>
 </ion-view>
