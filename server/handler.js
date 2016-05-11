@@ -110,9 +110,9 @@ var loginConnection = connection.query("Select Password from User where Username
 		res.status('400').send();
 	}
 	try {
-	if(rows[0].Password === records.body[0]['pwhash']) {
+	if(rows[0].Password === req.body[0]['pwhash']) {
 
-    var sql = connection.query("INSERT INTO Shot (Username, Zone, Made, Type, startingPosition) VALUES ?");
+    var sql = "INSERT INTO Shot (Username, Zone, Made, Type, startingPosition) VALUES ?";
     connection.query(sql, [records], function (err) {
       if (err) {
         res.status('401');
@@ -142,7 +142,7 @@ var loginConnection = connection.query("Select Password from User where Username
 	});});*/
 	}}
 	catch(error) {
-	res.status('400');
+	res.status('402');
 	res.send();
 	}
 });
