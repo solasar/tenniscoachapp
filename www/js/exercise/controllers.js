@@ -6,11 +6,14 @@ angular.module('exercise')
 
   $scope.userlevel = window.localStorage.getItem(STORAGE_KEYS.userSkill);
 
-  var shotRecords = {
+  var username = window.localStorage.getItem(STORAGE_KEYS.userId);
+  var pwhash = window.localStorage.getItem(STORAGE_KEYS.password);
+  var allRecords = {
     left: [],
     center: [],
     right: []
-  };
+  };;
+  var record = {};
 
   var leftMaxShotNum = 10;
   var leftHitCount = 0;
@@ -52,10 +55,18 @@ angular.module('exercise')
     console.log('Received event with args', arg.value);
     overallCount++;
     var shotHit;
-    if (ExerciseService.exerciseShotHit(arg.value, $scope.shot.targetzone)) {
+    if (ExerciseService.exerciseShotHit(arg.value, $scope.shot.targetzone, window.localStorage.getItem(STORAGE_KEYS.userSkill))) {
       shotHit = true;
     } else {
       shotHit = false;
+    }
+    record = {
+      username: username,
+      pwhash: pwhash,
+      start: $scope.shot.shotposition,
+      type: $scope.shot.shottype,
+      zone: $scope.shot.targetzone,
+      success: ((shotHit)? '1' : '0')
     }
     if (overallCount <= leftMaxShotNum) {
       if (shotHit) {
@@ -66,12 +77,7 @@ angular.module('exercise')
         $scope.left.miss = leftMissCount * 10;
       }
       $scope.left.none = (leftMaxShotNum - leftHitCount - leftMissCount) * 10;
-      shotRecords.left.push({
-        shotposition: $scope.shot.shotposition,
-        shottype: $scope.shot.shottype,
-        targetzone: $scope.shot.targetzone,
-        success: ((shotHit)? '1' : '0')
-      })
+      allRecords.left.push(record);
     } else if (overallCount <= (leftMaxShotNum + centerMaxShotNum)) {
       if (shotHit) {
         centerHitCount++;
@@ -81,12 +87,7 @@ angular.module('exercise')
         $scope.center.miss = centerMissCount * 10;
       }
       $scope.center.none = (centerMaxShotNum - centerHitCount - centerMissCount) * 10;
-      shotRecords.center.push({
-        shotposition: $scope.shot.shotposition,
-        shottype: $scope.shot.shottype,
-        targetzone: $scope.shot.targetzone,
-        success: ((shotHit)? '1' : '0')
-      })
+      allRecords.center.push(record);
     } else if (overallCount <= (leftMaxShotNum + centerMaxShotNum +rightMaxShotNum)) {
       if (shotHit) {
         rightHitCount++;
@@ -96,12 +97,7 @@ angular.module('exercise')
         $scope.right.miss = rightMissCount * 10;
       }
       $scope.right.none = (rightMaxShotNum - rightHitCount - rightMissCount) * 10;
-      shotRecords.right.push({
-        shotposition: $scope.shot.shotposition,
-        shottype: $scope.shot.shottype,
-        targetzone: $scope.shot.targetzone,
-        success: ((shotHit)? '1' : '0')
-      })
+      allRecords.right.push(record);
     } else {
       var alert = $ionicPopup.alert({
         title: 'Quick Exercise Error',
@@ -111,7 +107,7 @@ angular.module('exercise')
 
     if (overallCount == (leftMaxShotNum + centerMaxShotNum + rightMaxShotNum)) {
       console.log('Finish exercise');
-      $state.go('nav.exercise_result', {records: JSON.stringify(shotRecords)}, {reload: true});
+      $state.go('nav.exercise_result', {records: JSON.stringify(allRecords)}, {reload: true});
     } else {
       var currentSection;
       if (overallCount < leftMaxShotNum) {
@@ -131,44 +127,55 @@ angular.module('exercise')
   })
 })
 
-.controller('ExerciseResultCtrl', function ($scope, $state, $stateParams) {
+.controller('ExerciseResultCtrl', function ($scope, $state, $stateParams, $ionicPopup, $ionicLoading, ExerciseService) {
+  $ionicLoading.show();
   var shotRecords = JSON.parse($stateParams.records);
   console.log('In Exercise Result', shotRecords);
-
+  var allRecords = [];
   var leftHit = 0;
   var leftMiss = 0;
   var centerHit = 0;
   var centerMiss = 0;
   var rightHit = 0;
   var rightMiss = 0;
-
   shotRecords.left.forEach(function (entry) {
     if (entry.success == '1') {
       leftHit++;
     } else {
       leftMiss++;
     }
+    allRecords.push(entry);
   });
-
   shotRecords.center.forEach(function (entry) {
     if (entry.success == '1') {
       centerHit++;
     } else {
       centerMiss++;
     }
+    allRecords.push(entry);
   });
-
   shotRecords.right.forEach(function (entry) {
     if (entry.success == '1') {
       rightHit++;
     } else {
       rightMiss++;
     }
+    allRecords.push(entry);
   });
-
   $scope.leftPercentage = Math.round(leftHit / (leftHit + leftMiss) * 100);
   $scope.centerPercentage = Math.round(centerHit / (centerHit + centerMiss) * 100);
   $scope.rightPercentage = Math.round(rightHit / (rightHit + rightMiss) * 100);
+
+  console.log('exercise result controller', allRecords);
+  ExerciseService.postExerciseShots(allRecords).then(function (success) {
+    $ionicLoading.hide();
+  }, function (err) {
+    var alertPopup = $ionicPopup.alert({
+      title: 'Post exercise shots data failed',
+      template: 'Your exercise shots data have not been recorded in the server'
+    });
+    $ionicLoading.hide();
+  })
 
   $scope.toExercise = function() {
     $state.go('nav.exercise', {}, {reload: true});

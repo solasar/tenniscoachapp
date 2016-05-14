@@ -1,8 +1,7 @@
 angular.module('exercise')
-.service('ExerciseService', function (STORAGE_KEYS, $ionicPopup, USER_SKILLS) {
+.service('ExerciseService', function ($http, STORAGE_KEYS, $ionicPopup, USER_SKILLS, ServerURL) {
   //expect parameters to be an integer between 0~24
-  var exerciseShotHit = function (hitzone, targetzone) {
-    var userLevel = window.localStorage.getItem(STORAGE_KEYS.userSkill);
+  var exerciseShotHit = function (hitzone, targetzone, userLevel) {
     if (userLevel == USER_SKILLS.beginner) {
       return beginnerShotHit(hitzone, targetzone);
     } else if (userLevel == USER_SKILLS.intermediate) {
@@ -60,10 +59,16 @@ angular.module('exercise')
     }
   };
 
+  var postExerciseShots = function (records) {
+    console.log('exercise service postExerciseShots', records);
+    return $http.post(ServerURL + 'dinput', records);
+  }
+
   return {
     exerciseShotHit: exerciseShotHit,
     beginnerShotHit: beginnerShotHit,
     intermediateShotHit: intermediateShotHit,
-    expertShotHit: expertShotHit
+    expertShotHit: expertShotHit,
+    postExerciseShots: postExerciseShots
   };
 })

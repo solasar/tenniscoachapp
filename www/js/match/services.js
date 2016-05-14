@@ -1,6 +1,6 @@
 angular.module('match')
-.service('MatchService', function ($http, $ionicPopup, STORAGE_KEYS, SHOT_POSITIONS, SHOT_TYPES, TARGET_ZONES) {
-  var pushShotRecords = function (records) {
+.service('MatchService', function ($http, $ionicPopup, STORAGE_KEYS, SHOT_POSITIONS, SHOT_TYPES, ServerURL) {
+  var localSetMatchShots = function (records) {
     var allRecords = JSON.parse(window.localStorage.getItem(STORAGE_KEYS.userRecords));
     console.log("All Records Before: ", allRecords);
     if (allRecords == null) {
@@ -9,10 +9,14 @@ angular.module('match')
     for (var i = 0; i < records.length; i++) {
       allRecords.push(records[i]);
     }
-
     console.log("All Records After: ", allRecords);
     window.localStorage.setItem(STORAGE_KEYS.userRecords, JSON.stringify(allRecords));
   };
+  
+  var postMatchShots = function (records) {
+    console.log('match service postMatchShots', records);
+    return $http.post(ServerURL + 'dinput', records);
+  }
 
   var getShotTypeConsts = function () {
     var retArray = [];
@@ -37,7 +41,8 @@ angular.module('match')
   }
 
   return {
-    pushShotRecords: pushShotRecords,
+    localSetMatchShots: localSetMatchShots,
+    postMatchShots: postMatchShots,
     getShotTypeConsts: getShotTypeConsts,
     getShotPositionConsts: getShotPositionConsts
   }

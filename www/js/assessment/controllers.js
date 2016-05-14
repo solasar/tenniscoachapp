@@ -10,7 +10,7 @@ angular.module('assessment')
     var username = window.localStorage.getItem(STORAGE_KEYS.userId);
     var pwhash = window.localStorage.getItem(STORAGE_KEYS.password);
     var allRecords = [];
-    var record = [];
+    var record = {};
 
     $scope.bar = {
       hit: 0,
