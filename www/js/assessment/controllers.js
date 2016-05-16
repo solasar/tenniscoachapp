@@ -1,5 +1,5 @@
 angular.module('assessment')
-  .controller('AssessCtrl', function ($scope, $state, $ionicPopup, $http, TennisService, STORAGE_KEYS, AssessService) {
+  .controller('AssessCtrl', function ($scope, $state, $ionicPopup, $http, $rootScope, TennisService, STORAGE_KEYS, AssessService) {
     //Always assign the nav bar title from the parent view, using the var name 'title'
     $scope.title = 'Test Your Skills!';
 
@@ -25,6 +25,11 @@ angular.module('assessment')
     }
     $scope.shot = TennisService.getShotOrder();
     console.log('This is random shot order', $scope.shot);
+    $scope.$on('courtReadyForEvent', function (event, arg) {
+      $rootScope.$broadcast('tintTargetZoneEvent', $scope.shot.targetzone);
+    })
+
+
 
     $scope.$on('recordShotEvent', function (event, arg) {
       console.log('Received event', event);
@@ -51,6 +56,8 @@ angular.module('assessment')
       $scope.count.shotcount = hitCount + missCount;
       $scope.bar.none = (maxShotNum - $scope.count.shotcount) * 10;
 
+      $rootScope.$broadcast('unTintTargetZoneEvent', $scope.shot.targetzone);
+
       if (hitCount + missCount >= maxShotNum) {
         console.log('Finished assessment');
         window.localStorage.setItem(STORAGE_KEYS.userSkill, AssessService.calcSkillLevel(hitCount));
@@ -59,6 +66,7 @@ angular.module('assessment')
 
       } else {
         $scope.shot = TennisService.getShotOrder();
+        $rootScope.$broadcast('tintTargetZoneEvent', $scope.shot.targetzone);
         console.log('This is random shot order', $scope.shot);
         console.log('Hit: ' + hitCount + ', Miss: ' + missCount);
       }

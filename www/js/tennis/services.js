@@ -45,6 +45,16 @@ angular.module('tennis')
     }
   };
 
+  var tintTargetZone = function (zone) {
+    console.log('highlighttargetzone', zone);
+    document.getElementById(zone.toString()).style.backgroundColor = 'green';
+    document.getElementById(zone.toString()).style.opacity = '0.7';
+  };
+
+  var unTintTargetZone = function (zone) {
+    document.getElementById(zone.toString()).style.backgroundColor = 'transparent';
+  }
+  
   var getTargetZoneBySection = function (shottype, section) {
     if (shottype == SHOT_TYPES.serve) {
       var servezone = Object.keys(section).filter(function (key) {
@@ -59,7 +69,7 @@ angular.module('tennis')
       var targetZoneSize = Object.keys(section).length;
       return Object.keys(section)[Math.floor(Math.random() * (targetZoneSize - 1)) + 1];
     }
-  }
+  };
 
   var getShotOrderBySection = function (section) {
     var shotPosition = getShotPosition();
@@ -70,6 +80,15 @@ angular.module('tennis')
       shottype: shotType,
       targetzone: targetZone
     }
+  };
+  
+  var tintTargetZones = function (mainZone, acceptZones) {
+    acceptZones.forEach(function (acceptZone) {
+      document.getElementById(acceptZone.toString()).style.backgroundColor = 'green';
+      document.getElementById(acceptZone.toString()).style.opacity = '0.3';
+    })
+    document.getElementById(mainZone.toString()).style.backgroundColor = 'green';
+    document.getElementById(mainZone.toString()).style.opacity = '0.7';
   };
 
   var setHitMap_Y2G = function (zoneStats) {
@@ -125,8 +144,11 @@ angular.module('tennis')
     getShotType: getShotType,
     getTargetZone: getTargetZone,
     getShotOrder: getShotOrder,
+    tintTargetZone: tintTargetZone,
+    unTintTargetZone: unTintTargetZone,
     getTargetZoneBySection: getTargetZoneBySection,
     getShotOrderBySection: getShotOrderBySection,
+    tintTargetZones: tintTargetZones,
     setHitMap_Y2G: setHitMap_Y2G,
     setHitMap_R2G: setHitMap_R2G,
     setHitMap_Teal: setHitMap_Teal,

@@ -6,6 +6,7 @@ angular.module('exercise')
 
   $scope.userlevel = window.localStorage.getItem(STORAGE_KEYS.userSkill);
 
+  var acceptZones = [];
   var username = window.localStorage.getItem(STORAGE_KEYS.userId);
   var pwhash = window.localStorage.getItem(STORAGE_KEYS.password);
   var allRecords = {
@@ -44,21 +45,26 @@ angular.module('exercise')
     none: 100
   }
 
-  $scope.$on('courtReadyForEvent', function (event, arg) {
-    $rootScope.$broadcast('setCourtSectionEvent');
-  });
-
   $scope.shot = TennisService.getShotOrderBySection(LEFT_SECTION);
   console.log('This is random shot order', $scope.shot);
 
+  $scope.$on('courtReadyForEvent', function (event, arg) {
+    $rootScope.$broadcast('setCourtSectionEvent');
+    acceptZones = ExerciseService.exerciseAcceptZones($scope.shot.targetzone, $scope.userlevel);
+    console.log('Acceptable Zones:', acceptZones);
+    $rootScope.$broadcast('tintTargetZonesEvent', [$scope.shot.targetzone, acceptZones]);
+  });
+
   $scope.$on('recordShotEvent',function (event, arg) {
     console.log('Received event with args', arg.value);
+    $rootScope.$broadcast('setCourtSectionEvent');
     overallCount++;
     var shotHit;
-    if (ExerciseService.exerciseShotHit(arg.value, $scope.shot.targetzone, window.localStorage.getItem(STORAGE_KEYS.userSkill))) {
-      shotHit = true;
-    } else {
+    //if (ExerciseService.exerciseShotHit(arg.value, $scope.shot.targetzone, window.localStorage.getItem(STORAGE_KEYS.userSkill))) {
+    if (acceptZones.indexOf(arg.value) == -1) {
       shotHit = false;
+    } else {
+      shotHit = true;
     }
     record = {
       username: username,
@@ -123,6 +129,8 @@ angular.module('exercise')
         });
       }
       $scope.shot = TennisService.getShotOrderBySection(currentSection);
+      acceptZones = ExerciseService.exerciseAcceptZones($scope.shot.targetzone, $scope.userlevel);
+      $rootScope.$broadcast('tintTargetZonesEvent', [$scope.shot.targetzone, acceptZones]);
     }
   })
 })

@@ -22,12 +22,27 @@ angular.module('tennis')
   $scope.$on('createHitMapEvent_Y2P', function (event, arg) {
     TennisService.setHitMap_Y2P(arg);
   })
-  
+
   $scope.$on('setCourtSectionEvent', function (event, arg) {
     TennisService.setCourtSection();
   })
-  
 
+  $scope.$on('tintTargetZoneEvent', function (event, arg) {
+    console.log('tintTargetZoneEvent', arg);
+    TennisService.tintTargetZone(arg);
+  })
+
+  $scope.$on('unTintTargetZoneEvent', function (event, arg) {
+    TennisService.unTintTargetZone(arg);
+  })
+
+  $scope.$on('tintTargetZonesEvent', function (event, args) {
+    TennisService.tintTargetZones(args[0], args[1]);
+  })
+
+  $scope.$on('unTintTargetZonesEvent', function (event, arg) {
+    TennisService.unTintTargetZones(arg);
+  })
 
   $scope.$emit('courtReadyForEvent');
 });
