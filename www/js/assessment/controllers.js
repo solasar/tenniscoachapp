@@ -76,8 +76,11 @@ angular.module('assessment')
   .controller('AssessResultCtrl', function ($scope, $state, $stateParams, $ionicPopup, $ionicLoading, AssessService, STORAGE_KEYS) {
     $ionicLoading.show();
     $scope.level = '';
+    $scope.resultCards = ['a', 'b', 'c'];
+
     console.log('In AssessResultCtrl');
     var shotRecords = JSON.parse($stateParams.records);
+    $scope.resultCards = shotRecords;
     AssessService.postAssessmentShots(shotRecords).then(function (success) {
       console.log("AssessService.postAssessmentShots was success");
       AssessService.postSkillLevelUpdate(window.localStorage.getItem(STORAGE_KEYS.userId),

@@ -10,21 +10,39 @@
   </ion-nav-buttons>
 
   <ion-content class="padding">
-      <div>
-        <h2>Skill Challenge has finished</h2>
-        <p>
-          Your new skill level is <b>{{level}}</b>
-        </p>
-        <br>
-        <p>
-          Would you like to try again?
-        </p>
-      </div>
+    <div>
+      <h2>Skill Challenge has finished</h2>
+      <p>
+        Your new skill level is <b>{{level}}</b>
+      </p>
+      <br>
+      <p>
+        Would you like to try again?
+      </p>
+    </div>
 
-      <div>
-        <button class="button button-block button-positive" ng-click="toAssessment()">Yes</button>
-        <button class="button button-block button-positive" ng-click="toHome()">No, take me to the home page</button>
+    <div>
+      <button class="button button-block button-positive" ng-click="toAssessment()">Yes</button>
+      <button class="button button-block button-positive" ng-click="toHome()">No, take me to the home page</button>
+    </div>
+
+    <br>
+    <p>Shots Detail</p>
+
+    <div class="list card" ng-repeat="result in resultCards">
+      <div class="item item-icon-right">
+        <div ng-switch on={{result.success}}>
+          <div ng-switch-when="1"><i class="icon ion-checkmark"></i></div>
+          <div ng-switch-default><i class="icon ion-close"></i></div>
+        </div>
+
+        <div id="cardIcon"></div>
+        <p>Shot Position: {{result.start}}</p>
+        <p>Target Zone: {{result.zone}}</p>
+        <p>Shot Type: {{result.type}}</p>
       </div>
+    </div>
+
 
   </ion-content>
 </ion-view>
