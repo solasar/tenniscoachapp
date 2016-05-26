@@ -178,7 +178,7 @@ app.post('/getZone', function(req, res) {
 
 var  uid = req.body['username'];
 var pwhash = req.body['pwhash'];
-var shotQuery = connection.query('Select Count(*), Username, Zone, Made, Type from Shot Where Username = ' + connection.escape(uid) +  " group by zone, made, Type", function(err, rows, fields) {
+var shotQuery = connection.query('Select Count(*), Username, Zone, Made, Type from Shot Where Username = ' + connection.escape(uid) +  " AND (Made = 0 OR Made = 1) group by zone, made, Type", function(err, rows, fields) {
 	if(err) {
 		console.log(err);
 		res.status('401').send();
