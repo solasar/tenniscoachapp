@@ -3,7 +3,7 @@ angular.module('statistic')
   var heatMapValues = function() {
     // NOTE: you should only return the post response here, don't do anything else
     // begin ugly testing stuff
-    var dataArr = [];
+
     /* var uid = window.localStorage.getItem(STORAGE_KEYS.userId);
      console.log("STATS TEST: " + uid); */
      return $http.post(ServerURL + 'getHeat', {username: window.localStorage.getItem(STORAGE_KEYS.userId)})

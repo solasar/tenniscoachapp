@@ -2,9 +2,20 @@ angular.module('tennis')
 
 .constant('SHOT_TYPES', {
   serve: 'Serve',
+  serveAdvantage: 'Serve Advantage',
+  serveDeuce: 'Serve Deuce',
+
   backhand: 'Backhand',
+  backhandApproach: 'Backhand Approach',
+  backhandDrop: 'Backhand Drop',
+  backhandLob: 'Backhand Lob',
+  backhandVolley: 'Backhand Volley',
+
   forehand: 'Forehand',
-  volley: 'Volley'
+  forehandApproach: 'Forehand Approach',
+  forehandDrop: 'Forehand Drop',
+  forehandLob: 'Forehand Lob',
+  forehandVolley: 'Forehand Volley'
 })
 
 .constant('SHOT_POSITIONS', {

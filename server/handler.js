@@ -159,7 +159,7 @@ var loginConnection = connection.query("Select Password from User where Username
 	}
 	//try {
 	//if(rows[0].Password === pwhash) {
-		var shotQuery = connection.query('SELECT Count(*), Username, Zone, Made FROM `Shot` WHERE Username = ' + connection.escape(uid) + '  group by zone, made', function(err, rows, fields) {
+		var shotQuery = connection.query('SELECT Count(*), Username, Zone, Made FROM `Shot` WHERE Username = ' + connection.escape(uid) + ' AND (Made = 0 OR Made = 1) group by zone, made', function(err, rows, fields) {
 			if(err) {
 				res.status('401').send();
 			}
