@@ -10,10 +10,11 @@ angular.module('statistic')
 
   var zoneStats;
   var heatStats;
+  /*
   StatisticService.zoneStat().then(function (result) {
     zoneStats = result;
   })
-
+*/
 
   /*
   StatisticService.heatMap().then(function (result) {
@@ -69,13 +70,16 @@ angular.module('statistic')
 
   $scope.$on('recordShotEvent', function (event, arg) {
     $scope.zone = [];
-    console.log('Zone Stats', zoneStats);
-    for (var i = 0; i < zoneStats[arg.value].length; i++) {
-      $scope.zone.push({
-        shottype: SHOT_TYPES[Object.keys(SHOT_TYPES)[i]],
-        shotrate: zoneStats[arg.value][i]
+    //console.log('Zone Stats', zoneStats);
+
+    StatisticService.zoneStat(arg.value).then(function (result) {
+      Object.keys(result).forEach(function (key, index) {
+        $scope.zone.push({
+          shottype: key,
+          shotrate: result[key]
+        });
       });
-    }
+    });
     $scope.modal.show();
   });
 });

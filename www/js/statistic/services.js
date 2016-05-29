@@ -53,14 +53,26 @@ angular.module('statistic')
       }
       */
       //Compute %'s
-      for (var i = 0; i < response.data.length; i++) {
-        var zone = response.data[i]["Zone"];
-        var type = response.data[i]["Type"] - 1; //Types don't index from 0, so reduce by 1.
-        console.log('Keun Type: ', type);
-        console.log('KEUN: ', response.data);
-        dataArr[zone][type]["Success"] += response.data[i]["Made"] * response.data[i]["Count(*)"];
-        dataArr[zone][type]["Total"] += response.data[i]["Count(*)"];
-      }
+        for (var i = 0; i < response.data.length; i++) {
+          //var zone = response.data[i]["Zone"];
+          var type = response.data[i]["Type"];
+          console.log('Keun Type: ', type);
+          console.log('KEUN: ', response.data);
+          if (typeof dataArr[type] === 'undefined') {
+            dataArr[type] = {"Success":0, "Total":0};
+          }
+          dataArr[type]["Success"] += response.data[i]["Made"] * response.data[i]["Count(*)"];
+          dataArr[type]["Total"] += response.data[i]["Count(*)"];
+        }
+
+        var retArr = [];
+        Object.keys(dataArr).forEach(function (key, index) {
+          if (dataArr[key]["Total"] == 0) {
+            dataArr[key]["Total"] == 1;
+          }
+          retArr[key] = Math.round(100 * (dataArr[key]["Success"] / dataArr[key]["Total"]));
+        });
+/*
       for (var i = 0; i < dataArr.length; i++) {
         for (var type in dataArr[0]) {
           if (dataArr[i][type]["Total"] == 0) {
@@ -70,6 +82,8 @@ angular.module('statistic')
           //console.log("ZONE: " + i + " TYPE: " + type + " PERCENT: " + dataArr[i][type]["Percent"]);
         }
       }
+        
+        
       var retArr = [];
       for (var i = 0; i < dataArr.length; i++) {
         for (var j in dataArr[0]) {
@@ -79,6 +93,7 @@ angular.module('statistic')
           retArr[i][j] = dataArr[i][j]["Percent"];
         }
       }
+      */
       console.log('retArr from zoneStatValues', retArr);
       return retArr;
     });
