@@ -36,24 +36,28 @@ angular.module('statistic')
      });
   };
 
-  var zoneStatValues = function() {
+  var zoneStatValues = function(selectedZone) {
     // NOTE: you should only return the post response here, don't do anything else
     var dataArr = [];
     /* var uid = window.localStorage.getItem(STORAGE_KEYS.userId);
      console.log("STATS TEST: " + uid); */
-    return $http.post('http://54.164.54.3/getZone', {username: window.localStorage.getItem(STORAGE_KEYS.userId)})
+    return $http.post(ServerURL + 'getZone', {username: window.localStorage.getItem(STORAGE_KEYS.userId), zone: selectedZone})
       .then(function (response) {
       // Init the data array
+        /*
       for (var pos in TARGET_ZONES) {
         dataArr[TARGET_ZONES[pos]] = new Array(Object.keys(SHOT_TYPES).length).fill(0);
         for (var type in dataArr[0]) {
           dataArr[TARGET_ZONES[pos]][type] = {"Success":0, "Total":0, "Percent":0};
         }
       }
+      */
       //Compute %'s
       for (var i = 0; i < response.data.length; i++) {
         var zone = response.data[i]["Zone"];
         var type = response.data[i]["Type"] - 1; //Types don't index from 0, so reduce by 1.
+        console.log('Keun Type: ', type);
+        console.log('KEUN: ', response.data);
         dataArr[zone][type]["Success"] += response.data[i]["Made"] * response.data[i]["Count(*)"];
         dataArr[zone][type]["Total"] += response.data[i]["Count(*)"];
       }
