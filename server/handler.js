@@ -149,7 +149,7 @@ var loginConnection = connection.query("Select Password from User where Username
 
 });
 
-app.post('/getHeat', function(req, res) {
+app.post('/getAccuracyHeat', function(req, res) {
 
 var uid = req.body['username'];
 //var pwhash = req.body['pwhash'];
@@ -173,13 +173,32 @@ var loginConnection = connection.query("Select Password from User where Username
 });
 });
 
+app.post('/getScoreHeat', function (req, res) {
+  var uid = req.body['username'];
+  var loginConnection = connection.query("Select Password from User where Username = " + connection.escape(uid), function(err,rows,fields) {
+    if (err) {
+      res.status('401').send();
+    }
+    try {
+      var shotQuery = connection.query('SELECT Count(*), Username, Zone, Made FROM `Shot` WHERE Username = ' + connection.escape(uid) + ' AND Made IS NULL group by zone, made', function(err, rows, fields) {
+        if (err) {
+          res.status('401').send();
+        }
+        res.contentType('application/json');
+        res.status('200').send(JSON.stringify(rows));
+      });
+    } catch (error) {
+      res.status('400').send();
+    }
+  });
+});
 
-app.post('/getZone', function(req, res) {
+app.post('/getZoneAccuracy', function(req, res) {
 
 var uid = req.body['username'];
 //var pwhash = req.body['pwhash'];
 var zone = req.body['zone'];
-var shotQuery = connection.query('Select Count(*), Made, Type from Shot Where Username = ' + connection.escape(uid) +  " AND (Made = 0 OR Made = 1) AND Zone = " + connection.escape(zone) + " group by Type, Made", function(err, rows, fields) {
+var shotQuery = connection.query('Select Count(*), Made, Type from Shot Where Username = ' + connection.escape(uid) +  " AND (Made = 0 OR Made = 1) AND Zone = " + connection.escape(zone) + " group by Type, Made Order by Count(*) DESC", function(err, rows, fields) {
 	if(err) {
 		console.log(err);
 		res.status('401').send();
@@ -193,11 +212,11 @@ var shotQuery = connection.query('Select Count(*), Made, Type from Shot Where Us
 
 });
 
-app.post('/getZoneOrdered', function(req, res) {
+app.post('/getZoneScore', function(req, res) {
 var zone = req.body['zone'];
 var uid = req.body['username'];
 var inserts = [uid,zone];
-var query = mysql.format("Select Count(*), Username, Type from Shot where Username=? and Zone=? Group by Type Order by Count(*) DESC", inserts);
+var query = mysql.format("Select Count(*), Username, Type, startingPosition from Shot where Username=? and Zone=? and Made IS NULL Group by Type, startingPosition Order by Count(*) DESC", inserts);
 var queryAct = connection.query(query,  function(err, rows, fields) {
 
 	if(err) {

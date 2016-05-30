@@ -37,8 +37,10 @@ angular.module('starter', ['ionic', 'account', 'assessment','match', 'exercise',
   $httpBackend.whenPOST(ServerURL + 'login').passThrough();
   $httpBackend.whenPOST(ServerURL + 'registration').passThrough();
   $httpBackend.whenPOST(ServerURL + 'profile').passThrough();
-  $httpBackend.whenPOST(ServerURL + 'getHeat').passThrough();
-  $httpBackend.whenPOST(ServerURL + 'getZone').passThrough();
+  $httpBackend.whenPOST(ServerURL + 'getAccuracyHeat').passThrough();
+  $httpBackend.whenPOST(ServerURL + 'getScoreHeat').passThrough();
+  $httpBackend.whenPOST(ServerURL + 'getZoneAccuracy').passThrough();
+  $httpBackend.whenPOST(ServerURL + 'getZoneScore').passThrough();
   $httpBackend.whenPOST(ServerURL + 'rank').passThrough();
   $httpBackend.whenPOST(ServerURL + 'dinput').passThrough();
   $httpBackend.whenPOST(ServerURL + 'rankUpdate').passThrough();

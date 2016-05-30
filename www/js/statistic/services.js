@@ -1,12 +1,12 @@
 angular.module('statistic')
   .service('StatisticService', function ($http, $ionicPopup, STORAGE_KEYS, SHOT_POSITIONS, SHOT_TYPES, TARGET_ZONES, ServerURL) {
-  var heatMapValues = function() {
+  var accuracyHeatMapValues = function() {
     // NOTE: you should only return the post response here, don't do anything else
     // begin ugly testing stuff
 
     /* var uid = window.localStorage.getItem(STORAGE_KEYS.userId);
      console.log("STATS TEST: " + uid); */
-     return $http.post(ServerURL + 'getHeat', {username: window.localStorage.getItem(STORAGE_KEYS.userId)})
+     return $http.post(ServerURL + 'getAccuracyHeat', {username: window.localStorage.getItem(STORAGE_KEYS.userId)})
        .then(function (response) {
        var dataArr = [];
        var retArr = [];
@@ -35,23 +35,34 @@ angular.module('statistic')
        return retArr;
      });
   };
+    
+    var scoreHeatMapValues = function () {
+      return $http.post(ServerURL + 'getScoreHeat', {username: window.localStorage.getItem(STORAGE_KEYS.userId)}).then(function (response) {
+        var dataArr = [];
+        var retArr = [];
+        var totalShots = 0;
+        for (var zone in TARGET_ZONES) {
+          retArr[TARGET_ZONES[zone]] = 0;
+        }
+        for (var i = 0; i < response.data.length; i++) {
+          totalShots += response.data[i]['Count(*)'];
+        }
+        for (var i = 0; i < response.data.length; i++) {
+          var zone = response.data[i]['Zone'];
+          retArr[zone] += Math.round(100 * response.data[i]['Count(*)'] / totalShots);
+        }
+        return retArr;
+      });
+    };
 
-  var zoneStatValues = function(selectedZone) {
+  var zoneAccuracyStatValues = function(selectedZone) {
     // NOTE: you should only return the post response here, don't do anything else
     var dataArr = [];
     /* var uid = window.localStorage.getItem(STORAGE_KEYS.userId);
      console.log("STATS TEST: " + uid); */
-    return $http.post(ServerURL + 'getZone', {username: window.localStorage.getItem(STORAGE_KEYS.userId), zone: selectedZone})
+    return $http.post(ServerURL + 'getZoneAccuracy', {username: window.localStorage.getItem(STORAGE_KEYS.userId), zone: selectedZone})
       .then(function (response) {
-      // Init the data array
-        /*
-      for (var pos in TARGET_ZONES) {
-        dataArr[TARGET_ZONES[pos]] = new Array(Object.keys(SHOT_TYPES).length).fill(0);
-        for (var type in dataArr[0]) {
-          dataArr[TARGET_ZONES[pos]][type] = {"Success":0, "Total":0, "Percent":0};
-        }
-      }
-      */
+      
       //Compute %'s
         for (var i = 0; i < response.data.length; i++) {
           //var zone = response.data[i]["Zone"];
@@ -67,41 +78,41 @@ angular.module('statistic')
 
         var retArr = [];
         Object.keys(dataArr).forEach(function (key, index) {
-          if (dataArr[key]["Total"] == 0) {
-            dataArr[key]["Total"] == 1;
+          if (dataArr[key]['Total'] == 0) {
+            dataArr[key]['Total'] == 1;
           }
-          retArr[key] = Math.round(100 * (dataArr[key]["Success"] / dataArr[key]["Total"]));
+          retArr[key] = {
+            accuracy: Math.round(100 * (dataArr[key]["Success"] / dataArr[key]["Total"])),
+            total: dataArr[key]['Total']
+          };
         });
-/*
-      for (var i = 0; i < dataArr.length; i++) {
-        for (var type in dataArr[0]) {
-          if (dataArr[i][type]["Total"] == 0) {
-            dataArr[i][type]["Total"] = 1;
-          }
-          dataArr[i][type]["Percent"] = Math.round(100 * (dataArr[i][type]["Success"] / dataArr[i][type]["Total"]));
-          //console.log("ZONE: " + i + " TYPE: " + type + " PERCENT: " + dataArr[i][type]["Percent"]);
-        }
-      }
-        
-        
-      var retArr = [];
-      for (var i = 0; i < dataArr.length; i++) {
-        for (var j in dataArr[0]) {
-          if (!retArr[i]) {
-            retArr[i] = [];
-          }
-          retArr[i][j] = dataArr[i][j]["Percent"];
-        }
-      }
-      */
       console.log('retArr from zoneStatValues', retArr);
       return retArr;
     });
   };
 
+    var zoneScoreStatValues = function (selectedZone) {
+      return $http.post(ServerURL + 'getZoneScore', {
+        username: window.localStorage.getItem(STORAGE_KEYS.userId),
+        zone: selectedZone
+      }).then(function (response) {
+        var retArr = [];
+        for (var i = 0; i < response.data.length; i++) {
+          retArr[i] = {
+            shotCount: response.data[i]['Count(*)'],
+            shotType: response.data[i]['Type'],
+            shotPosition: response.data[i]['startingPosition']
+          };
+        }
+        return retArr;        
+      });
+    };
+    
   return {
-    heatMap: heatMapValues,
-    zoneStat: zoneStatValues
+    accuracyHeatMap: accuracyHeatMapValues,
+    zoneAccuracyStat: zoneAccuracyStatValues,
+    scoreHeatMap: scoreHeatMapValues,
+    zoneScoreStat: zoneScoreStatValues
   }
 });
 
