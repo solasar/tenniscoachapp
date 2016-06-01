@@ -5,10 +5,8 @@ angular.module('statistic')
   console.log('In StatsScoreCtrl');
   //var tempZoneStats1 = [12, 23, 35, 42, 53, 65, 71, 88, 93, 12, 11, 53, 93, 38, 52, 12, 58, 42, 18, 52, 82, 12, 60, 29, 100];
   //var tempZoneStats2 = [62, 23, 56, 29, 75, 95, 3, 35, 91, 30, 95, 11, 23, 87, 12, 98, 22, 69, 88, 12, 42, 35, 93, 72, 100];
-  
+
   var isAccuracyMode = true;
-  var zoneStats;
-  var heatStats;
   /*
   StatisticService.zoneStat().then(function (result) {
     zoneStats = result;
@@ -32,7 +30,8 @@ angular.module('statistic')
   $scope.scoreStats = function () {
     isAccuracyMode = false;
     $scope.header = 'Score Hit Map';
-    $scope.content = 'Pink - Favorite score zone\nYellow - Avoided score zone';
+    $scope.content1 = 'Pink - Favorite score zone';
+    $scope.content2 = 'Yellow - Avoided score zone';
     var element = document.getElementById('tabLeft');
     element.setAttribute('class', 'tab-item active');
     element.innerHTML = '<p><b>Score</b></p>';
@@ -40,15 +39,15 @@ angular.module('statistic')
     element.setAttribute('class','tab-item');
     element.innerHTML = '<p>Accuracy</p>';
     StatisticService.scoreHeatMap().then(function (result) {
-      heatStats = result;
-      $rootScope.$broadcast('createHitMapEvent_Y2P', heatStats);
+      $rootScope.$broadcast('createHitMapEvent_Y2P', result);
     });
   }
 
   $scope.accuracyStats = function () {
     isAccuracyMode = true;
     $scope.header = 'Accuracy Hit Map';
-    $scope.content = 'Red - High failure rate : Green - High success rate';
+    $scope.content1 = 'Red - High failure rate';
+    $scope.content2 = 'Green - High success rate';
     var element = document.getElementById('tabLeft');
     element.setAttribute('class', 'tab-item');
     element.innerHTML = '<p>Score</p>';
@@ -56,8 +55,7 @@ angular.module('statistic')
     element.setAttribute('class','tab-item active');
     element.innerHTML = '<p><b>Accuracy</b></p>';
     StatisticService.accuracyHeatMap().then(function (result) {
-      heatStats = result;
-      $rootScope.$broadcast('createHitMapEvent_R2G', heatStats);
+      $rootScope.$broadcast('createHitMapEvent_R2G', result);
     });
   };
 
@@ -65,11 +63,11 @@ angular.module('statistic')
   $scope.$on('courtReadyForEvent', function (event, arg) {
     console.log('In StatsScoreCtrl, received event', event);
     $scope.header = 'Score Hit Map';
-    $scope.content = 'Pink - Favorite score zone : Yellow - Avoided score zone';
+    $scope.content1 = 'Red - High failure rate';
+    $scope.content2 = 'Green - High success rate';
 
     StatisticService.accuracyHeatMap().then(function (result) {
-      heatStats = result;
-      $rootScope.$broadcast('createHitMapEvent_R2G', heatStats);
+      $rootScope.$broadcast('createHitMapEvent_R2G', result);
     });
   });
 
@@ -98,7 +96,8 @@ angular.module('statistic')
         }
       });
     }
-    
+    $scope.accuracyModel = isAccuracyMode;
+    console.log('accuracy mode is on?', $scope.accuracyMode);
     $scope.modal.show();
   });
 });

@@ -1,14 +1,22 @@
 <ion-view>
 
-  <ion-content class="padding">
-
-    <div>
-      <p>Shot position: {{shot.shotposition}}</p>
-      <p>Shot type: {{shot.shottype}}</p>
-      <p>Target zone: <b>{{shot.targetzone}}</b></p>
+  <ion-content class="padding-horizontal">
+    <div class="card">
+      <div class="item">
+        <ul>
+          <li class="exercise_card_font">
+            Shot position: {{shot.shotposition}}
+          </li>
+          <li class="exercise_card_font">
+            Shot type: &nbsp;&nbsp;&nbsp;&nbsp;{{shot.shottype}}
+          </li>
+          <li class="exercise_card_font">
+            Target zone: &nbsp;&nbsp;<b>{{shot.targetzone}}</b>
+          </li>
+        </ul>
+      </div>
     </div>
 
-    <p align="center">Exercise progress ({{userlevel}})</p>
     <div class="row">
       <div class="col-33" align="center">
         Left

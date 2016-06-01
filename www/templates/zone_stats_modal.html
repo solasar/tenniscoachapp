@@ -5,10 +5,39 @@
   </ion-header-bar>
   <ion-content has-header="true" padding="true">
 
-    <p>Shot details in this zone</p>
+    <h3 align="center">Shot details in this zone</h3>
     <ion-list>
       <ion-item ng-repeat="shot in zone">
-        <p>{{shot.shottype}}: {{shot.shotrate}}% of {{shot.shotcount}} shots</p>
+        <div ng-if="accuracyModel" class="modal_card_text">
+          <table>
+            <tr>
+              <td width="30%">
+                <h1 class="modal_card_count_indicator">
+                  {{shot.shotrate}}%
+                </h1>
+              </td>
+              <td>
+                <div class="modal_card_text">success out of <b>{{shot.shotcount}}</b> on</div>
+                <div class="modal_card_text"><b>{{shot.shottype}}</b> shots</div>
+              </td>
+            </tr>
+          </table>
+        </div>
+        <div ng-if="!accuracyModel">
+          <table>
+            <tr>
+              <td width="15%">
+                <h1 class="modal_card_count_indicator">
+                  {{shot.shotcount}}
+                </h1>
+              </td>
+              <td>
+                <div class="modal_card_text"><b>{{shot.shottype}}</b> from,</div>
+                <div class="modal_card_text"><b>{{shot.shotposition}}</b></div>
+              </td>
+            </tr>
+          </table>
+        </div>
       </ion-item>
     </ion-list>
 

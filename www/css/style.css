@@ -20,8 +20,29 @@
   font-size: 90%;
 }
 
+.assessment_card_font {
+  color: #333333;
+  font-family: "Consolas", Consolas, monospace;
+  font-size: 110%;
+  letter-spacing: -1.5px;
+}
+
+.match_card_font {
+  color: #333333;
+  font-family: "Consolas", Consolas, monospace;
+  font-size: 95%;
+  letter-spacing: -1.5px;
+}
+
+.exercise_card_font {
+  color: #333333;
+  font-family: "Consolas", Consolas, monospace;
+  font-size: 110%;
+  letter-spacing: -1.5px;
+}
+
 .center {
-  top: 50%;
+  top: 0%;
   -webkit-transform: translateY(50%);
   -moz-transform: translateY(50%);
   -ms-transform: translateY(50%);
@@ -30,10 +51,6 @@
   position: absolute;
   margin:0 auto;
   width:100%;
-
-
-
-
 }
 
 .transparent {
@@ -88,6 +105,37 @@
 .court_container {
   height: 400px;
   width: 100%;
+}
+
+.modal_card_count_indicator {
+  text-align: left;
+  top: 0%;
+  -webkit-transform: translateY(40%);
+  -moz-transform: translateY(40%);
+  -ms-transform: translateY(40%);
+  -o-transform: translateY(40%);
+  transform: translateY(40%);
+  position: absolute;
+  margin:0 auto;
+  width:100%;
+}
+
+.modal_card_text {
+  color: #333333;
+  font-family: Verdana, Geneva, sans-serif;
+  font-size: small;
+}
+
+.card-red .item{
+  background: red;
+}
+
+.card-blue .item{
+  background: blue;
+}
+
+.card-green .item{
+  background: green;
 }
 
 table {

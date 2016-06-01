@@ -1,9 +1,25 @@
 <ion-view>
 
-  <ion-content class="padding">
-    <p>Previous Shot Position: {{shotPosition.value}}</p>
-    <p>Previous Shot Type: {{shotType.value}}</p>
-    <p>Previous Target Zone: {{targetZone.value}}</p>
+  <ion-content class="padding-horizontal">
+    <div class="card">
+      <div class="item">
+        <ul>
+          <li class="match_card_font">
+            Prev. Shot Position: {{shotPosition.value}}
+          </li>
+          <li class="match_card_font">
+            Prev. Shot Type: &nbsp;&nbsp;&nbsp;&nbsp;{{shotType.value}}
+          </li>
+          <li class="match_card_font">
+            Prev. Target Zone: &nbsp;&nbsp;{{targetZone.value}}
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <p></p>
+    <p></p>
+    <p></p>
 
     <button class="button button-block button-positive" ng-click="submitRecord()">Finish & Save</button>
 
