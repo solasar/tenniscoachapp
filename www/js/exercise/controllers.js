@@ -2,7 +2,7 @@ angular.module('exercise')
 
 .controller('ExerciseCtrl', function ($scope, $rootScope, $state, $ionicPopup, TennisService, LEFT_SECTION, CENTER_SECTION, RIGHT_SECTION, STORAGE_KEYS, ExerciseService) {
   //Always assign the nav bar title from the parent view, using the var name 'title'
-  $scope.title = 'Quick Exercise';
+  $scope.title = 'Perform Quick Exercise';
 
   $scope.userlevel = window.localStorage.getItem(STORAGE_KEYS.userSkill);
 

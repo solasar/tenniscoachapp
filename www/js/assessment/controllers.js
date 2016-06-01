@@ -1,7 +1,7 @@
 angular.module('assessment')
   .controller('AssessCtrl', function ($scope, $state, $ionicPopup, $http, $rootScope, TennisService, STORAGE_KEYS, AssessService) {
     //Always assign the nav bar title from the parent view, using the var name 'title'
-    $scope.title = 'Test Your Skills!';
+    $scope.title = 'Test Your Skills';
 
     var maxShotNum = 10;
     var hitCount = 0;
