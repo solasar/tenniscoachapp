@@ -1,5 +1,5 @@
 angular.module('tennis')
-.service('TennisService', function(SHOT_TYPES, SHOT_POSITIONS, TARGET_ZONES, LEFT_SECTION, CENTER_SECTION, RIGHT_SECTION) {
+.service('TennisService', function(SHOT_TYPES, SHOT_POSITIONS, TARGET_ZONES, LEFT_SECTION, CENTER_SECTION, RIGHT_SECTION, ASSESSMENT_SHOT_TYPES) {
   var getShotPosition = function() {
     var shotPositionSize = Object.keys(SHOT_POSITIONS).length;
     return SHOT_POSITIONS[Object.keys(SHOT_POSITIONS)[Math.floor(Math.random() * shotPositionSize)]];
@@ -45,6 +45,70 @@ angular.module('tennis')
     }
   };
 
+  var getAssessmentShotOrder = function (count) {
+    var shotType, targetZone, playerPosition;
+    if (Math.floor(count / 3) < Object.keys(ASSESSMENT_SHOT_TYPES).length) {
+      shotType = ASSESSMENT_SHOT_TYPES[Object.keys(ASSESSMENT_SHOT_TYPES)[Math.floor(count / 3)]];
+    }
+
+    //customized shot order design below
+    switch (shotType) {
+      case ASSESSMENT_SHOT_TYPES.serveDeuce:
+        targetZone = TARGET_ZONES[Object.keys(TARGET_ZONES)[Math.floor(Math.random() * 3) + 5]];
+        playerPosition = SHOT_POSITIONS.rightBehindCentreMark;
+        break;
+      case ASSESSMENT_SHOT_TYPES.serveAdvantage:
+        targetZone = TARGET_ZONES[Object.keys(TARGET_ZONES)[Math.floor(Math.random() * 3) + 2]];
+        playerPosition = SHOT_POSITIONS.leftBehindCentreMark;
+        break;
+      case ASSESSMENT_SHOT_TYPES.forehand:
+      case ASSESSMENT_SHOT_TYPES.backhand:
+        randomPosition = Math.floor(Math.random() * 3);
+        switch (randomPosition) {
+          case 0:
+            playerPosition = SHOT_POSITIONS.behindLeftBaseline;
+            break;
+          case 1:
+            playerPosition = SHOT_POSITIONS.behindCenterBaseline;
+            break;
+          case 2:
+            playerPosition = SHOT_POSITIONS.behindRightBaseline;
+            break;
+        }
+        targetZone = TARGET_ZONES[Object.keys(TARGET_ZONES)[Math.floor(Math.random() * 16) + 9]];
+        break;
+      case ASSESSMENT_SHOT_TYPES.forehandVolley:
+      case ASSESSMENT_SHOT_TYPES.backhandVolley:
+        randomPosition = Math.floor(Math.random() * 3);
+        switch (randomPosition) {
+          case 0:
+            playerPosition = SHOT_POSITIONS.insideLeftServiceline;
+            break;
+          case 1:
+            playerPosition = SHOT_POSITIONS.insideTServiceline;
+            break;
+          case 2:
+            playerPosition = SHOT_POSITIONS.insideRightServiceline;
+            break;
+        }
+        targetZone = TARGET_ZONES[Object.keys(TARGET_ZONES)[Math.floor(Math.random() * 24) + 1]];
+        break;
+      default:
+        targetZone = '';
+        shotType = '';
+        targetZone = '';
+    }
+
+    return {
+      shotposition: playerPosition,
+      shottype: shotType,
+      targetzone: targetZone
+    }
+  }
+
+
+
+
   var tintTargetZone = function (zone) {
     console.log('highlighttargetzone', zone);
     document.getElementById(zone.toString()).style.backgroundColor = 'green';
@@ -54,7 +118,7 @@ angular.module('tennis')
   var unTintTargetZone = function (zone) {
     document.getElementById(zone.toString()).style.backgroundColor = 'transparent';
   }
-  
+
   var getTargetZoneBySection = function (shottype, section) {
     if (shottype == SHOT_TYPES.serve) {
       var servezone = Object.keys(section).filter(function (key) {
@@ -81,7 +145,7 @@ angular.module('tennis')
       targetzone: targetZone
     }
   };
-  
+
   var tintTargetZones = function (mainZone, acceptZones) {
     acceptZones.forEach(function (acceptZone) {
       document.getElementById(acceptZone.toString()).style.backgroundColor = 'green';
@@ -144,6 +208,7 @@ angular.module('tennis')
     getShotType: getShotType,
     getTargetZone: getTargetZone,
     getShotOrder: getShotOrder,
+    getAssessmentShotOrder: getAssessmentShotOrder,
     tintTargetZone: tintTargetZone,
     unTintTargetZone: unTintTargetZone,
     getTargetZoneBySection: getTargetZoneBySection,

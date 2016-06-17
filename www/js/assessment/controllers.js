@@ -3,9 +3,10 @@ angular.module('assessment')
     //Always assign the nav bar title from the parent view, using the var name 'title'
     $scope.title = 'Test Your Skills';
 
-    var maxShotNum = 10;
+    var maxShotNum = 18;
     var hitCount = 0;
     var missCount = 0;
+    var count = 0;
 
     var username = window.localStorage.getItem(STORAGE_KEYS.userId);
     var pwhash = window.localStorage.getItem(STORAGE_KEYS.password);
@@ -23,7 +24,7 @@ angular.module('assessment')
       shotcount: hitCount + missCount,
       maxshotnum:  maxShotNum
     }
-    $scope.shot = TennisService.getShotOrder();
+    $scope.shot = TennisService.getAssessmentShotOrder(0);
     console.log('This is random shot order', $scope.shot);
     $scope.$on('courtReadyForEvent', function (event, arg) {
       $rootScope.$broadcast('tintTargetZoneEvent', $scope.shot.targetzone);
@@ -37,10 +38,10 @@ angular.module('assessment')
 
       if ($scope.shot.targetzone == arg.value) {
         hitCount++;
-        $scope.bar.hit = hitCount * 10;
+        $scope.bar.hit = hitCount * 100 / maxShotNum;
       } else {
         missCount++;
-        $scope.bar.miss = missCount * 10;
+        $scope.bar.miss = missCount * 100 / maxShotNum;
       }
       record = {
         username: username,
@@ -54,7 +55,7 @@ angular.module('assessment')
       console.log("assessment controller all records", allRecords);
 
       $scope.count.shotcount = hitCount + missCount;
-      $scope.bar.none = (maxShotNum - $scope.count.shotcount) * 10;
+      $scope.bar.none = (maxShotNum - $scope.count.shotcount) * 100 / maxShotNum;
 
       $rootScope.$broadcast('unTintTargetZoneEvent', $scope.shot.targetzone);
 
@@ -65,7 +66,7 @@ angular.module('assessment')
         $state.go('nav.assessment_result', {records: JSON.stringify(allRecords)}, {reload: true});
 
       } else {
-        $scope.shot = TennisService.getShotOrder();
+        $scope.shot = TennisService.getAssessmentShotOrder($scope.count.shotcount);
         $rootScope.$broadcast('tintTargetZoneEvent', $scope.shot.targetzone);
         console.log('This is random shot order', $scope.shot);
         console.log('Hit: ' + hitCount + ', Miss: ' + missCount);

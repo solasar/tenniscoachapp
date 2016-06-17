@@ -1,9 +1,9 @@
 angular.module('assessment')
 .service('AssessService', function ($http, $ionicPopup, USER_SKILLS, ServerURL) {
   var calcSkillLevel = function (hitCount) {
-    if (hitCount > 8 ) {
+    if (hitCount >= 14 ) {
       return USER_SKILLS.expert;
-    } else if (hitCount > 5) {
+    } else if (hitCount >= 10) {
       return USER_SKILLS.intermediate;
     } else {
       return USER_SKILLS.beginner;

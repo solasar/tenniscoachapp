@@ -18,16 +18,24 @@ angular.module('tennis')
   forehandVolley: 'Forehand Volley'
 })
 
+.constant('ASSESSMENT_SHOT_TYPES', {
+  serveDeuce: 'Serve Deuce',
+  serveAdvantage: 'Serve Advantage',
+  backhand: 'Backhand',
+  forehand: 'Forehand',
+  backhandVolley: 'Backhand Volley',
+  forehandVolley: 'Forehand Volley'
+})
+
 .constant('SHOT_POSITIONS', {
   behindLeftBaseline: 'Behind Left Baseline',
   behindCenterBaseline: 'Behind Center Baseline',
   behindRightBaseline: 'Behind Right Baseline',
-  leftNoMansLand: 'Left No Mans Land',
-  centerNoMansLand: 'Center No Mans Land',
-  rightNoMansLand: 'Right No Mans Land',
-  leftServiceBox: 'Left Service Box',
-  centerServiceBox: 'Center Service Box',
-  rightServiceBox: 'Right Service Box'
+  insideLeftServiceline: 'Inside Left Serviceline',
+  insideTServiceline: 'Inside "T" Serviceline',
+  insideRightServiceline: 'Inside Right Serviceline',
+  leftBehindCentreMark: 'Left & Behind Centre Mark',
+  rightBehindCentreMark: 'Right & Behind Centre Mark'
 })
 
 .constant('TARGET_ZONES', {
