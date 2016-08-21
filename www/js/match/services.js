@@ -12,7 +12,7 @@ angular.module('match')
     console.log("All Records After: ", allRecords);
     window.localStorage.setItem(STORAGE_KEYS.userRecords, JSON.stringify(allRecords));
   };
-  
+
   var postMatchShots = function (records) {
     console.log('match service postMatchShots', records);
     return $http.post(ServerURL + 'dinput', records);
@@ -23,7 +23,7 @@ angular.module('match')
     for (var i = 0; i < Object.keys(SHOT_TYPES).length; i++) {
       retArray.push({
         key: Object.keys(SHOT_TYPES)[i],
-        value: SHOT_TYPES[Object.keys(SHOT_TYPES)[i]]
+        value: SHOT_TYPES[Object.keys(SHOT_TYPES)[i]].name
       });
     }
     return retArray
@@ -34,7 +34,7 @@ angular.module('match')
     for (var i = 0; i < Object.keys(SHOT_POSITIONS).length; i++) {
       retArray.push({
         key: Object.keys(SHOT_POSITIONS)[i],
-        value: SHOT_POSITIONS[Object.keys(SHOT_POSITIONS)[i]]
+        value: SHOT_POSITIONS[Object.keys(SHOT_POSITIONS)[i]].name
       });
     }
     return retArray;

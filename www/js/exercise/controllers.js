@@ -1,6 +1,6 @@
 angular.module('exercise')
 
-.controller('ExerciseCtrl', function ($scope, $rootScope, $state, $ionicPopup, TennisService, LEFT_SECTION, CENTER_SECTION, RIGHT_SECTION, STORAGE_KEYS, ExerciseService) {
+.controller('ExerciseCtrl', function (SHOT_TYPES, $scope, $rootScope, $state, $ionicPopup, TennisService, LEFT_SECTION, CENTER_SECTION, RIGHT_SECTION, STORAGE_KEYS, ExerciseService) {
   //Always assign the nav bar title from the parent view, using the var name 'title'
   $scope.title = 'Perform Quick Exercise';
 
@@ -45,7 +45,7 @@ angular.module('exercise')
     none: 100
   }
 
-  $scope.shot = TennisService.getShotOrderBySection(LEFT_SECTION);
+  $scope.shot = TennisService.getExerciseShotOrder(LEFT_SECTION, $scope.userlevel );
   console.log('This is random shot order', $scope.shot);
 
   $scope.$on('courtReadyForEvent', function (event, arg) {
@@ -128,7 +128,8 @@ angular.module('exercise')
           template: 'Quick exercise should have finished already!'
         });
       }
-      $scope.shot = TennisService.getShotOrderBySection(currentSection);
+      console.log('user level before calling exercise shot: ', $scope.userlevel);
+      $scope.shot = TennisService.getExerciseShotOrder(currentSection, $scope.userlevel);
       acceptZones = ExerciseService.exerciseAcceptZones($scope.shot.targetzone, $scope.userlevel);
       $rootScope.$broadcast('tintTargetZonesEvent', [$scope.shot.targetzone, acceptZones]);
     }

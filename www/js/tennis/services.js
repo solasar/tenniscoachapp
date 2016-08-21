@@ -1,5 +1,5 @@
 angular.module('tennis')
-.service('TennisService', function(SHOT_TYPES, SHOT_POSITIONS, TARGET_ZONES, LEFT_SECTION, CENTER_SECTION, RIGHT_SECTION, ASSESSMENT_SHOT_TYPES) {
+.service('TennisService', function(SHOT_TYPES, SHOT_POSITIONS, TARGET_ZONES, LEFT_SECTION, CENTER_SECTION, RIGHT_SECTION, ASSESSMENT_SHOT_TYPES, USER_SKILLS) {
   var getShotPosition = function() {
     var shotPositionSize = Object.keys(SHOT_POSITIONS).length;
     return SHOT_POSITIONS[Object.keys(SHOT_POSITIONS)[Math.floor(Math.random() * shotPositionSize)]];
@@ -55,24 +55,24 @@ angular.module('tennis')
     switch (shotType) {
       case ASSESSMENT_SHOT_TYPES.serveDeuce:
         targetZone = TARGET_ZONES[Object.keys(TARGET_ZONES)[Math.floor(Math.random() * 3) + 5]];
-        playerPosition = SHOT_POSITIONS.rightBehindCentreMark;
+        playerPosition = SHOT_POSITIONS.rightBehindCentreMark.name;
         break;
       case ASSESSMENT_SHOT_TYPES.serveAdvantage:
         targetZone = TARGET_ZONES[Object.keys(TARGET_ZONES)[Math.floor(Math.random() * 3) + 2]];
-        playerPosition = SHOT_POSITIONS.leftBehindCentreMark;
+        playerPosition = SHOT_POSITIONS.leftBehindCentreMark.name;
         break;
       case ASSESSMENT_SHOT_TYPES.forehand:
       case ASSESSMENT_SHOT_TYPES.backhand:
         randomPosition = Math.floor(Math.random() * 3);
         switch (randomPosition) {
           case 0:
-            playerPosition = SHOT_POSITIONS.behindLeftBaseline;
+            playerPosition = SHOT_POSITIONS.behindLeftBaseline.name;
             break;
           case 1:
-            playerPosition = SHOT_POSITIONS.behindCenterBaseline;
+            playerPosition = SHOT_POSITIONS.behindCenterBaseline.name;
             break;
           case 2:
-            playerPosition = SHOT_POSITIONS.behindRightBaseline;
+            playerPosition = SHOT_POSITIONS.behindRightBaseline.name;
             break;
         }
         targetZone = TARGET_ZONES[Object.keys(TARGET_ZONES)[Math.floor(Math.random() * 16) + 9]];
@@ -82,13 +82,13 @@ angular.module('tennis')
         randomPosition = Math.floor(Math.random() * 3);
         switch (randomPosition) {
           case 0:
-            playerPosition = SHOT_POSITIONS.insideLeftServiceline;
+            playerPosition = SHOT_POSITIONS.frontLeftServiceline.name;
             break;
           case 1:
-            playerPosition = SHOT_POSITIONS.insideTServiceline;
+            playerPosition = SHOT_POSITIONS.frontTServiceline.name;
             break;
           case 2:
-            playerPosition = SHOT_POSITIONS.insideRightServiceline;
+            playerPosition = SHOT_POSITIONS.frontRightServiceline.name;
             break;
         }
         targetZone = TARGET_ZONES[Object.keys(TARGET_ZONES)[Math.floor(Math.random() * 24) + 1]];
@@ -135,13 +135,145 @@ angular.module('tennis')
     }
   };
 
-  var getShotOrderBySection = function (section) {
+  var getExerciseShotType = function (section, userLevel) {
+    var poolType;
+    if (userLevel == USER_SKILLS.beginner) {
+      poolType = 'EasyShotPool';
+      userLevel = 1;
+    } else {
+      poolType = 'HardShotPool';
+      userLevel = 2;
+    }
+    var shotPool = [];
+    if (window.localStorage.getItem(poolType) === null) {
+      for (var i = 0; i < Object.keys(SHOT_TYPES).length; i++) {
+        if (SHOT_TYPES[Object.keys(SHOT_TYPES)[i]].difficulty <= userLevel) {
+          shotPool.push(SHOT_TYPES[Object.keys(SHOT_TYPES)[i]]);
+        }
+      }
+      window.localStorage.setItem(poolType, JSON.stringify(shotPool));
+    } else {
+      shotPool = JSON.parse(window.localStorage.getItem(poolType));
+    }
+    var randomShotType;
+    do {
+      randomShotType = shotPool[Math.floor(Math.random() * shotPool.length)];
+    } while ((section == LEFT_SECTION && randomShotType.name == SHOT_TYPES.serveDeuce.name) ||
+            (section == RIGHT_SECTION && randomShotType.name == SHOT_TYPES.serveAdvantage.name))
+    console.log('Random shot type in exercise module is: ', randomShotType);
+    return randomShotType;
+  };
+
+  var getExerciseShotPosition = function(shotType) {
+    var positionPool = [];
+    if (window.localStorage.getItem(shotType.from) === null) {
+      for (var i = 0; i < Object.keys(SHOT_POSITIONS).length; i++) {
+        if (SHOT_POSITIONS[Object.keys(SHOT_POSITIONS)[i]].area == shotType.from) {
+          positionPool.push(SHOT_POSITIONS[Object.keys(SHOT_POSITIONS)[i]]);
+        }
+      }
+      window.localStorage.setItem(shotType.from, JSON.stringify(positionPool));
+    } else {
+      positionPool = JSON.parse(window.localStorage.getItem(shotType.from));
+    }
+    var randomShotPosition = positionPool[Math.floor(Math.random() * positionPool.length)];
+    console.log('Random shot position in exercise module is: ', randomShotPosition);
+    return randomShotPosition;
+  };
+
+  /*
+    This function is full of hard coded stuffs for easier coding.
+   */
+  var getExerciseTargetZone = function (shotType, section) {
+    var zonePool = [];
+
+    //Hard-coded switch with cases for every available shots.
+    switch (shotType.name) {
+      case SHOT_TYPES.serveAdvantage.name:
+            zonePool = [2, [3, 4], 0];
+            break;
+      case SHOT_TYPES.serveDeuce.name:
+            zonePool = [0, [5, 6], 7];
+            break;
+      case SHOT_TYPES.backhand.name:
+            zonePool = [[10, 18], [12, 13, 20, 21], [15, 23]];
+            break;
+      case SHOT_TYPES.forehand.name:
+            zonePool = [[10, 18], [12, 13, 20, 21], [15, 23]];
+            break;
+      case SHOT_TYPES.backhandVolley.name:
+            zonePool = [[2, 10, 18], [4, 5, 12, 13, 20, 21], [7, 15, 23]];
+            break;
+      case SHOT_TYPES.forehandVolley.name:
+            zonePool = [[2, 10, 18], [4, 5, 12, 13, 20, 21], [7, 15, 23]];
+            break;
+      case SHOT_TYPES.backhandApproach.name:
+            zonePool = [[10, 18], [12, 13, 20, 21], [15, 23]];
+            break;
+      case SHOT_TYPES.forehandApproach.name:
+            zonePool = [[10, 18], [12, 13, 20, 21], [15, 23]];
+            break;
+      case SHOT_TYPES.backhandLob.name:
+            zonePool = [18, [20, 21], 23];
+            break;
+      case SHOT_TYPES.forehandLob.name:
+            zonePool = [18, [20, 21], 23];
+            break;
+      case SHOT_TYPES.backhandDrop.name:
+            zonePool = [2, [4, 5], 7];
+            break;
+      case SHOT_TYPES.forehandDrop.name:
+            zonePool = [2, [4, 5], 7];
+            break;
+      case SHOT_TYPES.overhead.name:
+            zonePool = [[2, 10, 18], [4, 5, 12, 13, 20, 21], [7, 15, 23]];
+            break;
+      default:
+            console.log('DEFAULT:', shotType);
+            zonePool = [0, 0, 0];
+            break;
+    }
+
+    var targetZonePool;
+    switch (section) {
+      case LEFT_SECTION:
+            targetZonePool = zonePool[0];
+            break;
+      case CENTER_SECTION:
+            targetZonePool = zonePool[1];
+            break;
+      case RIGHT_SECTION:
+            targetZonePool = zonePool[2];
+            break;
+      default:
+            console.log('The target zone section parameter has wrong or no value.', section);
+            break;
+    }
+
+    var randomTargetZone;
+    if (targetZonePool.constructor === Array) {
+      randomTargetZone = targetZonePool[Math.floor(Math.random() * targetZonePool.length)];
+    } else {
+      randomTargetZone = targetZonePool;
+    }
+
+    console.log('Random target zone for exercise module shot is: ', randomTargetZone);
+    return randomTargetZone;
+  }
+
+
+  var getExerciseShotOrder = function (section, userLevel) {
+    var shotType = getExerciseShotType(section, userLevel);
+    var shotPosition = getExerciseShotPosition(shotType);
+    var targetZone = getExerciseTargetZone(shotType, section);
+    /*
     var shotPosition = getShotPosition();
     var shotType = getShotType(shotPosition);
     var targetZone = getTargetZoneBySection(shotType, section);
+    */
     return {
-      shotposition: shotPosition,
-      shottype: shotType,
+      shotposition: shotPosition.name,
+      shottype: shotType.name,
       targetzone: targetZone
     }
   };
@@ -212,7 +344,7 @@ angular.module('tennis')
     tintTargetZone: tintTargetZone,
     unTintTargetZone: unTintTargetZone,
     getTargetZoneBySection: getTargetZoneBySection,
-    getShotOrderBySection: getShotOrderBySection,
+    getExerciseShotOrder: getExerciseShotOrder,
     tintTargetZones: tintTargetZones,
     setHitMap_Y2G: setHitMap_Y2G,
     setHitMap_R2G: setHitMap_R2G,
